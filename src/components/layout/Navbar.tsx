@@ -53,21 +53,23 @@ const Navbar = ({ docked }: NavbarProps) => {
               : "fixed inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-zinc-900"
           }
         >
-          <motion.div
-            layout
-            transition={DOCK_TRANSITION}
-            className={
-              docked
-                ? "h-14 w-14 overflow-hidden rounded-full ring-2 ring-white/10"
-                : "h-32 w-32 sm:h-44 sm:w-44 overflow-hidden rounded-full"
-            }
-          >
-            <img
-              src={logo}
-              alt="Bytherix Technology logo"
-              className="h-full w-full object-cover scale-125"
-            />
-          </motion.div>
+          {/* Logo — only appears once docked, fades in after text has settled in navbar */}
+          <AnimatePresence>
+            {docked && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                className="h-14 w-14 overflow-hidden rounded-full ring-2 ring-white/10"
+              >
+                <img
+                  src={logo}
+                  alt="Bytherix Technology logo"
+                  className="h-full w-full object-cover scale-125"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <motion.div
             layout="position"
@@ -160,7 +162,6 @@ const Navbar = ({ docked }: NavbarProps) => {
           transition={{ duration: 0.2, delay: docked ? 0.1 : 0 }}
           className="relative z-10 flex items-center gap-6"
         >
-          {/* Desktop links — always visible once docked, no click needed */}
           <nav className="hidden items-center gap-6 md:flex">
             {LINKS.map((link) => (
               <a
@@ -180,7 +181,6 @@ const Navbar = ({ docked }: NavbarProps) => {
             Get a Quote
           </a>
 
-          {/* Mobile hamburger — only visible below md, opens overlay */}
           <button
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Open menu"
@@ -193,7 +193,6 @@ const Navbar = ({ docked }: NavbarProps) => {
         </motion.div>
       </header>
 
-      {/* Mobile-only full-screen overlay menu */}
       <MenuOverlay open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </>
   );
