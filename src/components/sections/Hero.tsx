@@ -47,11 +47,12 @@ const Hero = ({ docked }: HeroProps) => {
           WE BUILD
         </h1>
 
-        <div className="flex overflow-hidden py-2 sm:py-4">
-          {/* Invisible spacer — pushes the red text further right of "WE BUILD" */}
+        {/* Mobile: stacks directly below "WE BUILD".
+           sm+: original inline layout — spacer pushes red word to the right. */}
+        <div className="flex flex-col sm:flex-row sm:items-baseline overflow-hidden py-2 sm:py-4">
           <span
             aria-hidden="true"
-            className="invisible whitespace-pre text-5xl sm:text-7xl font-bold tracking-tight"
+            className="hidden sm:inline-block invisible whitespace-pre text-5xl sm:text-7xl font-bold tracking-tight"
           >
             WE BUILD{"     "}
           </span>
@@ -62,7 +63,7 @@ const Hero = ({ docked }: HeroProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -24 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="text-5xl sm:text-7xl font-bold leading-[1.05] tracking-tight text-red-500"
+              className="max-w-full whitespace-nowrap text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight text-red-500"
               style={{ textShadow: "0 0 40px rgba(239,68,68,0.55)" }}
             >
               {ROTATING_WORDS[index]}
