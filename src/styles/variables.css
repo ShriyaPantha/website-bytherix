@@ -1,0 +1,131 @@
+:root {
+  /* =====================================================
+     BYTHERIX BRAND
+  ===================================================== */
+
+  --color-navy: #2f4ebce3;
+  --color-green: #17b6a7;
+  --color-red: #c81e2c;
+  --color-cyan: #38bdf8;
+
+  /* =====================================================
+     LIGHT THEME
+  ===================================================== */
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+
+  --surface-primary: #ffffff;
+  --surface-secondary: #f8fafc;
+  --surface-elevated: #ffffff;
+
+  --text-primary: #0a1230;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --border-primary: #e2e8f0;
+  --border-secondary: #edf2f7;
+
+  /* =====================================================
+     ACCENTS - LIGHT
+  ===================================================== */
+
+  --accent-blue: #0a1230;
+  --accent-green: #17b6a7;
+  --accent-red: #c81e2c;
+
+  --brand-blue-soft: #eef3ff;
+  --brand-green-soft: #ecfaf5;
+  --brand-red-soft: #fff0f1;
+
+  --brand-blue-border: rgba(10, 18, 48, 0.18);
+  --brand-green-border: rgba(23, 182, 167, 0.22);
+  --brand-red-border: rgba(200, 30, 44, 0.22);
+
+  /* =====================================================
+     COURSE VISUAL
+  ===================================================== */
+
+  --course-visual-card: rgba(255, 255, 255, 0.78);
+  --course-visual-border: rgba(10, 18, 48, 0.16);
+
+  /* =====================================================
+     SHADOW
+  ===================================================== */
+
+  --shadow-card:
+    0 8px 30px rgba(15, 23, 42, 0.06);
+
+  --shadow-card-hover:
+    0 24px 55px rgba(15, 23, 42, 0.12);
+}
+
+/* =========================================================
+   DARK THEME
+========================================================= */
+
+.dark {
+  --bg-primary: #060914;
+  --bg-secondary: #0a1020;
+  --bg-tertiary: #0f172a;
+
+  --surface-primary: #0c1324;
+  --surface-secondary: #111a2d;
+  --surface-elevated: #121b30;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --border-primary: rgba(148, 163, 184, 0.16);
+  --border-secondary: rgba(148, 163, 184, 0.10);
+
+  /* =====================================================
+     ACCENTS - DARK
+
+     Navy becomes BRIGHT BLUE in dark mode.
+     This is the important fix.
+  ===================================================== */
+
+  --accent-blue: #60a5fa;
+  --accent-green: #2dd4bf;
+  --accent-red: #fb5c68;
+
+  --brand-blue-soft: rgba(96, 165, 250, 0.10);
+  --brand-green-soft: rgba(45, 212, 191, 0.09);
+  --brand-red-soft: rgba(251, 92, 104, 0.09);
+
+  --brand-blue-border: rgba(96, 165, 250, 0.28);
+  --brand-green-border: rgba(45, 212, 191, 0.28);
+  --brand-red-border: rgba(251, 92, 104, 0.28);
+
+  /* =====================================================
+     COURSE VISUAL
+  ===================================================== */
+
+  --course-visual-card: rgba(18, 27, 48, 0.92);
+  --course-visual-border: rgba(148, 163, 184, 0.16);
+
+  /* =====================================================
+     SHADOW
+  ===================================================== */
+
+  --shadow-card:
+    0 12px 40px rgba(0, 0, 0, 0.28);
+
+  --shadow-card-hover:
+    0 24px 60px rgba(0, 0, 0, 0.42);
+}
+
+/* =========================================================
+   TAILWIND THEME MAPPING
+   Generates utility classes like text-logo-red, bg-logo-blue,
+   used directly in components (e.g. Navbar.tsx).
+========================================================= */
+
+@theme {
+  --color-logo-blue: var(--color-navy);
+  --color-logo-green: var(--color-green);
+  --color-logo-red: var(--color-red);
+}
