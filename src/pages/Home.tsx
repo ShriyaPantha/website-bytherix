@@ -1,12 +1,14 @@
 import { lazy, Suspense } from "react";
-import AboutSection from "../components/sections/about/AboutSection";
+// import AboutSection from "../components/sections/about/AboutSection";
 
 const Hero = lazy(() => import("../components/sections/Hero"));
 // const AboutSection = lazy( () => import("../components/sections/about/AboutSection")
 // );
 const Services = lazy(() => import("../components/sections/Services"));
 const Courses = lazy(() => import("../components/sections/Courses"));
-
+const ContactHero = lazy(() => import("../components/sections/contact/ContactHero"));
+const ContactSection = lazy( () => import("../components/sections/contact/ContactSection"));
+const Footer = lazy( () => import("../components/layout/Footer"));
 interface HomeProps {
   docked: boolean;
 }
@@ -18,6 +20,9 @@ function Home({ docked }: HomeProps) {
  {/* <AboutSection/> */}
       <Services />
       <Courses />
+      <ContactHero />
+<ContactSection />
+<Footer />
     </Suspense>
   );
 }
