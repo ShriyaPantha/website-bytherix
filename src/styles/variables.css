@@ -3,7 +3,7 @@
      BYTHERIX BRAND
   ===================================================== */
 
-  --color-navy: #2f4ebce3;
+  --color-navy: #2f4ebc;
   --color-green: #17b6a7;
   --color-red: #c81e2c;
   --color-cyan: #38bdf8;
@@ -31,15 +31,15 @@
      ACCENTS - LIGHT
   ===================================================== */
 
-  --accent-blue: #0a1230;
+  --accent-blue: #2f4ebc;
   --accent-green: #17b6a7;
   --accent-red: #c81e2c;
 
-  --brand-blue-soft: #eef3ff;
-  --brand-green-soft: #ecfaf5;
-  --brand-red-soft: #fff0f1;
+  --brand-blue-soft: rgba(47, 78, 188, 0.08);
+  --brand-green-soft: rgba(23, 182, 167, 0.08);
+  --brand-red-soft: rgba(200, 30, 44, 0.08);
 
-  --brand-blue-border: rgba(10, 18, 48, 0.18);
+  --brand-blue-border: rgba(47, 78, 188, 0.20);
   --brand-green-border: rgba(23, 182, 167, 0.22);
   --brand-red-border: rgba(200, 30, 44, 0.22);
 
@@ -47,8 +47,23 @@
      COURSE VISUAL
   ===================================================== */
 
-  --course-visual-card: rgba(255, 255, 255, 0.78);
-  --course-visual-border: rgba(10, 18, 48, 0.16);
+  --course-visual-card: rgba(255, 255, 255, 0.82);
+  --course-visual-border: rgba(47, 78, 188, 0.16);
+
+  /* =====================================================
+     COURSE SHOWCASE
+  ===================================================== */
+
+  --course-showcase-bg: #0a1230;
+
+  --course-showcase-surface:
+    rgba(255, 255, 255, 0.08);
+
+  --course-showcase-border:
+    rgba(255, 255, 255, 0.14);
+
+  --course-showcase-shadow:
+    0 30px 80px rgba(10, 18, 48, 0.18);
 
   /* =====================================================
      SHADOW
@@ -60,6 +75,7 @@
   --shadow-card-hover:
     0 24px 55px rgba(15, 23, 42, 0.12);
 }
+
 
 /* =========================================================
    DARK THEME
@@ -78,34 +94,65 @@
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
 
-  --border-primary: rgba(148, 163, 184, 0.16);
-  --border-secondary: rgba(148, 163, 184, 0.10);
+  --border-primary:
+    rgba(148, 163, 184, 0.16);
+
+  --border-secondary:
+    rgba(148, 163, 184, 0.10);
 
   /* =====================================================
      ACCENTS - DARK
 
-     Navy becomes BRIGHT BLUE in dark mode.
-     This is the important fix.
+     Keep Bytherix NAVY instead of changing it
+     to bright blue.
   ===================================================== */
 
-  --accent-blue: #60a5fa;
+  --accent-blue: #2f4ebc;
   --accent-green: #2dd4bf;
   --accent-red: #fb5c68;
 
-  --brand-blue-soft: rgba(96, 165, 250, 0.10);
-  --brand-green-soft: rgba(45, 212, 191, 0.09);
-  --brand-red-soft: rgba(251, 92, 104, 0.09);
+  --brand-blue-soft:
+    rgba(47, 78, 188, 0.14);
 
-  --brand-blue-border: rgba(96, 165, 250, 0.28);
-  --brand-green-border: rgba(45, 212, 191, 0.28);
-  --brand-red-border: rgba(251, 92, 104, 0.28);
+  --brand-green-soft:
+    rgba(45, 212, 191, 0.09);
+
+  --brand-red-soft:
+    rgba(251, 92, 104, 0.09);
+
+  --brand-blue-border:
+    rgba(47, 78, 188, 0.34);
+
+  --brand-green-border:
+    rgba(45, 212, 191, 0.28);
+
+  --brand-red-border:
+    rgba(251, 92, 104, 0.28);
 
   /* =====================================================
      COURSE VISUAL
   ===================================================== */
 
-  --course-visual-card: rgba(18, 27, 48, 0.92);
-  --course-visual-border: rgba(148, 163, 184, 0.16);
+  --course-visual-card:
+    rgba(18, 27, 48, 0.92);
+
+  --course-visual-border:
+    rgba(148, 163, 184, 0.16);
+
+  /* =====================================================
+     COURSE SHOWCASE
+  ===================================================== */
+
+  --course-showcase-bg: #080d1c;
+
+  --course-showcase-surface:
+    rgba(255, 255, 255, 0.055);
+
+  --course-showcase-border:
+    rgba(148, 163, 184, 0.16);
+
+  --course-showcase-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.45);
 
   /* =====================================================
      SHADOW
@@ -118,10 +165,17 @@
     0 24px 60px rgba(0, 0, 0, 0.42);
 }
 
+
 /* =========================================================
    TAILWIND THEME MAPPING
-   Generates utility classes like text-logo-red, bg-logo-blue,
-   used directly in components (e.g. Navbar.tsx).
+
+   Generates:
+   text-logo-blue
+   text-logo-green
+   text-logo-red
+   bg-logo-blue
+   bg-logo-green
+   bg-logo-red
 ========================================================= */
 
 @theme {
