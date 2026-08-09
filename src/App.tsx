@@ -4,7 +4,6 @@ import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "./components/ui/ThemeToggle";
 
 const Home = lazy(() => import("./pages/Home"));
-
 function App() {
   const [docked, setDocked] = useState(false);
 
