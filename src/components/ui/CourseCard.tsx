@@ -7,39 +7,19 @@ import {
 
 import type { Course } from "../../data/courses";
 
-/* =========================================================
-   TYPES
-========================================================= */
-
 interface CourseCardProps {
   course: Course;
   index: number;
 }
 
-/* =========================================================
-   ACCENT SYSTEM
+interface AccentStyle {
+  color: string;
+  soft: string;
+  border: string;
+}
 
-   Light mode:
-   blue  = navy
-   green = Bytherix green
-   red   = Bytherix red
-
-   Dark mode:
-   blue  = bright blue
-   green = bright teal
-   red   = bright red
-
-   The actual values come from variables.css.
-========================================================= */
-
-const accentStyles = {
+const accentStyles: Record<string, AccentStyle> = {
   navy: {
-    color: "var(--accent-blue)",
-    soft: "var(--brand-blue-soft)",
-    border: "var(--brand-blue-border)",
-  },
-
-  blue: {
     color: "var(--accent-blue)",
     soft: "var(--brand-blue-soft)",
     border: "var(--brand-blue-border)",
@@ -64,16 +44,14 @@ export default function CourseCard({
 }: CourseCardProps) {
   const Icon = course.icon;
 
-  const accent =
-    accentStyles[
-      course.accent as keyof typeof accentStyles
-    ] ?? accentStyles.navy;
+  const accent: AccentStyle =
+    accentStyles[course.accent] ?? accentStyles.navy;
 
   return (
     <motion.article
       initial={{
         opacity: 0,
-        y: 30,
+        y: 28,
       }}
       whileInView={{
         opacity: 1,
@@ -81,43 +59,40 @@ export default function CourseCard({
       }}
       viewport={{
         once: true,
-        amount: 0.2,
+        amount: 0.15,
       }}
       transition={{
         duration: 0.65,
-        delay: index * 0.06,
+        delay: index * 0.07,
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{
-        y: -8,
+        y: -7,
       }}
       className="
         group
         relative
         flex
         h-full
+        min-w-0
         flex-col
         overflow-hidden
         rounded-[22px]
-
         border
         border-[var(--border-primary)]
-
         bg-[var(--surface-primary)]
-
         shadow-[var(--shadow-card)]
-
-        transition-all
+        transition-shadow
         duration-500
-
         hover:shadow-[var(--shadow-card-hover)]
       "
     >
-      {/* =====================================================
-          TOP ACCENT LINE
-      ===================================================== */}
+      {/* ===================================================
+          TOP ACCENT
+      =================================================== */}
 
       <motion.div
+        aria-hidden="true"
         className="
           absolute
           left-0
@@ -131,7 +106,7 @@ export default function CourseCard({
           backgroundColor: accent.color,
         }}
         initial={{
-          scaleX: 0,
+          scaleX: 0.25,
         }}
         whileHover={{
           scaleX: 1,
@@ -142,33 +117,37 @@ export default function CourseCard({
         }}
       />
 
-      {/* =====================================================
+      {/* ===================================================
           VISUAL AREA
-      ===================================================== */}
+      =================================================== */}
 
       <div
         className="
           relative
-          h-[205px]
+          h-[190px]
+          shrink-0
           overflow-hidden
           transition-colors
           duration-500
+
+          sm:h-[200px]
+          lg:h-[195px]
+          xl:h-[205px]
         "
         style={{
           backgroundColor: accent.soft,
         }}
       >
-        {/* ===================================================
-            LARGE SOFT BRAND ORB
-        =================================================== */}
+        {/* Main glow */}
 
         <motion.div
+          aria-hidden="true"
           className="
             absolute
             left-1/2
             top-1/2
-            h-36
-            w-36
+            h-32
+            w-32
             -translate-x-1/2
             -translate-y-1/2
             rounded-full
@@ -176,11 +155,11 @@ export default function CourseCard({
           "
           style={{
             backgroundColor: accent.color,
-            opacity: 0.06,
+            opacity: 0.065,
           }}
           whileHover={{
-            scale: 1.2,
-            opacity: 0.10,
+            scale: 1.25,
+            opacity: 0.11,
           }}
           transition={{
             duration: 0.65,
@@ -188,15 +167,43 @@ export default function CourseCard({
           }}
         />
 
-        {/* ===================================================
-            DECORATIVE DOTS
-        =================================================== */}
+        {/* Rotating ring */}
 
-        <span
+        <motion.div
+          aria-hidden="true"
           className="
             absolute
-            left-8
-            top-8
+            left-1/2
+            top-1/2
+            h-24
+            w-24
+            -translate-x-1/2
+            -translate-y-1/2
+            rounded-full
+            border
+          "
+          style={{
+            borderColor: accent.border,
+            opacity: 0.55,
+          }}
+          animate={{
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+
+        {/* Decorative dots */}
+
+        <span
+          aria-hidden="true"
+          className="
+            absolute
+            left-7
+            top-7
             h-1.5
             w-1.5
             rounded-full
@@ -207,10 +214,11 @@ export default function CourseCard({
         />
 
         <span
+          aria-hidden="true"
           className="
             absolute
-            right-12
-            top-10
+            right-10
+            top-8
             h-2
             w-2
             rounded-full
@@ -220,10 +228,11 @@ export default function CourseCard({
         />
 
         <span
+          aria-hidden="true"
           className="
             absolute
-            bottom-8
-            left-12
+            bottom-7
+            left-10
             h-1.5
             w-1.5
             rounded-full
@@ -233,9 +242,9 @@ export default function CourseCard({
           }}
         />
 
-        {/* ===================================================
-            MAIN ILLUSTRATION
-        =================================================== */}
+        {/* =================================================
+            COURSE VISUAL
+        ================================================= */}
 
         <motion.div
           className="
@@ -246,7 +255,7 @@ export default function CourseCard({
             justify-center
           "
           whileHover={{
-            scale: 1.055,
+            scale: 1.045,
           }}
           transition={{
             duration: 0.5,
@@ -257,33 +266,30 @@ export default function CourseCard({
             className="
               relative
               flex
-              h-28
-              w-36
+              h-[104px]
+              w-[132px]
               items-center
               justify-center
-              rounded-2xl
+              rounded-[20px]
               border
-
               backdrop-blur-md
-
               shadow-sm
-
               transition-all
               duration-500
+
+              sm:h-[112px]
+              sm:w-[142px]
 
               dark:shadow-[0_10px_30px_rgba(0,0,0,0.18)]
             "
             style={{
               backgroundColor:
                 "var(--course-visual-card)",
-
               borderColor:
                 "var(--course-visual-border)",
             }}
           >
-            {/* =============================================
-                ICON CONTAINER
-            ============================================= */}
+            {/* Icon */}
 
             <motion.div
               className="
@@ -296,21 +302,30 @@ export default function CourseCard({
                 border
                 transition-all
                 duration-500
+
+                sm:h-[68px]
+                sm:w-[68px]
               "
               style={{
                 backgroundColor: accent.soft,
                 borderColor: accent.border,
               }}
               whileHover={{
-                rotate: -3,
-                scale: 1.06,
+                rotate: -4,
+                scale: 1.08,
               }}
               transition={{
                 duration: 0.3,
               }}
             >
               <Icon
-                size={42}
+                className="
+                  h-9
+                  w-9
+
+                  sm:h-10
+                  sm:w-10
+                "
                 strokeWidth={1.6}
                 style={{
                   color: accent.color,
@@ -318,14 +333,13 @@ export default function CourseCard({
               />
             </motion.div>
 
-            {/* =============================================
-                FLOATING LEFT BLOCK
-            ============================================= */}
+            {/* Floating block — left */}
 
             <motion.span
+              aria-hidden="true"
               className="
                 absolute
-                -left-4
+                -left-3
                 top-5
                 h-6
                 w-6
@@ -333,6 +347,10 @@ export default function CourseCard({
                 border
                 bg-[var(--surface-elevated)]
                 shadow-sm
+
+                sm:-left-4
+                sm:h-7
+                sm:w-7
               "
               style={{
                 borderColor: accent.border,
@@ -346,14 +364,13 @@ export default function CourseCard({
               }}
             />
 
-            {/* =============================================
-                FLOATING RIGHT BLOCK
-            ============================================= */}
+            {/* Floating block — right */}
 
             <motion.span
+              aria-hidden="true"
               className="
                 absolute
-                -right-4
+                -right-3
                 bottom-5
                 h-7
                 w-7
@@ -361,6 +378,10 @@ export default function CourseCard({
                 border
                 bg-[var(--surface-elevated)]
                 shadow-sm
+
+                sm:-right-4
+                sm:h-8
+                sm:w-8
               "
               style={{
                 borderColor: accent.border,
@@ -374,18 +395,20 @@ export default function CourseCard({
               }}
             />
 
-            {/* =============================================
-                FLOATING DOT
-            ============================================= */}
+            {/* Floating dot */}
 
             <motion.span
+              aria-hidden="true"
               className="
                 absolute
-                -right-2
-                -top-3
+                -right-1
+                -top-2
                 h-3
                 w-3
                 rounded-full
+
+                sm:-right-2
+                sm:-top-3
               "
               style={{
                 backgroundColor: accent.color,
@@ -402,114 +425,121 @@ export default function CourseCard({
           </div>
         </motion.div>
 
-        {/* ===================================================
+        {/* =================================================
             CATEGORY
-        =================================================== */}
+        ================================================= */}
 
         <div
           className="
             absolute
             bottom-4
-            left-5
+            left-4
+            right-4
+
+            sm:left-5
+            sm:right-auto
           "
         >
           <span
             className="
+              inline-flex
+              max-w-full
+              items-center
               rounded-full
               border
               bg-[var(--surface-elevated)]
               px-3
               py-1
-
-              text-[10px]
+              text-[9px]
               font-semibold
               uppercase
-              tracking-[0.12em]
-
+              tracking-[0.1em]
               backdrop-blur-md
-
               transition-all
               duration-500
+
+              sm:text-[10px]
+              sm:tracking-[0.12em]
             "
             style={{
               color: accent.color,
               borderColor: accent.border,
             }}
           >
-            {course.category}
+            <span className="truncate">
+              {course.category}
+            </span>
           </span>
         </div>
       </div>
 
-      {/* =====================================================
-          CONTENT AREA
-      ===================================================== */}
+      {/* ===================================================
+          CONTENT
+      =================================================== */}
 
       <div
         className="
           flex
           flex-1
           flex-col
-          p-6
+          p-5
+
+          sm:p-6
         "
       >
-        {/* ===================================================
-            TITLE
-        =================================================== */}
+        {/* Title */}
 
         <h3
           className="
             text-[17px]
             font-bold
-            leading-tight
+            leading-[1.2]
             tracking-[-0.02em]
-
             text-[var(--text-primary)]
-
             transition-colors
             duration-500
+
+            sm:text-[18px]
           "
         >
           {course.title}
         </h3>
 
-        {/* ===================================================
-            DESCRIPTION
-        =================================================== */}
+        {/* Description */}
 
         <p
           className="
             mt-3
-            min-h-[48px]
-
-            text-[13px]
-            leading-6
-
+            line-clamp-3
+            min-h-[66px]
+            text-[12.5px]
+            leading-[1.75]
             text-[var(--text-secondary)]
-
             transition-colors
             duration-500
+
+            sm:text-[13px]
+            sm:leading-6
           "
         >
           {course.description}
         </p>
 
-        {/* ===================================================
+        {/* =================================================
             META
-        =================================================== */}
+        ================================================= */}
 
         <div
           className="
             mt-5
             flex
+            flex-wrap
             items-center
-            gap-4
-
+            gap-x-4
+            gap-y-2
             border-t
             border-[var(--border-secondary)]
-
             pt-4
-
             transition-colors
             duration-500
           "
@@ -519,13 +549,19 @@ export default function CourseCard({
               flex
               items-center
               gap-1.5
-              text-[11px]
+              text-[10.5px]
               font-medium
               text-[var(--text-secondary)]
+
+              sm:text-[11px]
             "
           >
-            <Clock3 size={14} />
-            {course.duration}
+            <Clock3
+              size={14}
+              strokeWidth={1.8}
+            />
+
+            <span>{course.duration}</span>
           </div>
 
           <div
@@ -533,40 +569,49 @@ export default function CourseCard({
               flex
               items-center
               gap-1.5
-              text-[11px]
+              text-[10.5px]
               font-medium
               text-[var(--text-secondary)]
+
+              sm:text-[11px]
             "
           >
-            <Signal size={14} />
-            {course.level}
+            <Signal
+              size={14}
+              strokeWidth={1.8}
+            />
+
+            <span>{course.level}</span>
           </div>
         </div>
 
-        {/* ===================================================
-            BOTTOM CTA
-        =================================================== */}
+        {/* =================================================
+            PRICE + CTA
+        ================================================= */}
 
         <div
           className="
             mt-5
             flex
-            items-center
+            items-end
             justify-between
+            gap-3
           "
         >
-          {/* Fee */}
+          {/* Price */}
 
-          <div>
+          <div className="min-w-0">
             <span
               className="
                 block
-                text-[10px]
+                text-[9px]
                 font-medium
                 uppercase
-                tracking-[0.14em]
-
+                tracking-[0.13em]
                 text-[var(--text-muted)]
+
+                sm:text-[10px]
+                sm:tracking-[0.14em]
               "
             >
               Course Fee
@@ -576,39 +621,42 @@ export default function CourseCard({
               className="
                 mt-1
                 block
-                text-[16px]
+                text-[15px]
                 font-bold
                 text-[var(--text-primary)]
+
+                sm:text-[16px]
               "
             >
               {course.price}
             </span>
           </div>
 
-          {/* =================================================
-              VIEW COURSE BUTTON
-          ================================================= */}
+          {/* CTA */}
 
           <motion.button
             type="button"
             className="
+              group/cta
               relative
-              flex
+              inline-flex
+              shrink-0
               items-center
-              gap-2
+              justify-center
+              gap-1.5
               overflow-hidden
               rounded-full
-
               border
-
-              px-4
+              px-3.5
               py-2
-
-              text-xs
+              text-[10px]
               font-semibold
-
               transition-all
               duration-300
+
+              sm:px-4
+              sm:py-2
+              sm:text-xs
             "
             style={{
               borderColor: accent.border,
@@ -616,43 +664,68 @@ export default function CourseCard({
             }}
             whileHover={{
               scale: 1.035,
-              paddingRight: "17px",
             }}
             whileTap={{
               scale: 0.97,
             }}
-            transition={{
-              duration: 0.25,
-            }}
           >
-            <span>
+            {/* CTA hover background */}
+
+            <motion.span
+              aria-hidden="true"
+              className="
+                absolute
+                inset-0
+                origin-left
+                scale-x-0
+                rounded-full
+              "
+              style={{
+                backgroundColor: accent.soft,
+              }}
+              whileHover={{
+                scaleX: 1,
+              }}
+              transition={{
+                duration: 0.3,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            />
+
+            <span className="relative z-10">
               View Course
             </span>
 
             <motion.span
+              className="
+                relative
+                z-10
+                flex
+              "
               initial={{
-                x: -3,
+                x: -2,
                 opacity: 0.7,
               }}
               whileHover={{
-                x: 3,
+                x: 2,
                 opacity: 1,
               }}
               transition={{
                 duration: 0.25,
               }}
             >
-              <ArrowUpRight size={15} />
+              <ArrowUpRight size={14} />
             </motion.span>
           </motion.button>
         </div>
       </div>
 
-      {/* =====================================================
+      {/* ===================================================
           BOTTOM ACCENT
-      ===================================================== */}
+      =================================================== */}
 
       <motion.div
+        aria-hidden="true"
         className="
           pointer-events-none
           absolute

@@ -1,11 +1,12 @@
 import { lazy, Suspense } from "react";
-import AboutSection from "../components/sections/about/AboutSection";
+
 
 const Hero = lazy(() => import("../components/sections/Hero"));
-// const AboutSection = lazy( () => import("../components/sections/about/AboutSection")
-// );
+const AboutSection = lazy( () => import("../components/sections/about/AboutSection")
+);
+
 const Services = lazy(() => import("../components/sections/Services"));
-const Courses = lazy(() => import("../components/sections/Courses"));
+const Courses = lazy(() => import("../components/sections/courses/Courses"));
 
 interface HomeProps {
   docked: boolean;
@@ -15,7 +16,7 @@ function Home({ docked }: HomeProps) {
   return (
     <Suspense fallback={null}>
       <Hero docked={docked} />
- {/* <AboutSection/> */}
+      <AboutSection />
       <Services />
       <Courses />
     </Suspense>
