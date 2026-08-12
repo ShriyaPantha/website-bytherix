@@ -7,6 +7,8 @@ const AboutSection = lazy( () => import("../components/sections/about/AboutSecti
 
 const Services = lazy(() => import("../components/sections/Services"));
 const Courses = lazy(() => import("../components/sections/courses/Courses"));
+const Testimonials = lazy(() => import("../components/sections/Testimonials"));
+
 
 const ContactHero = lazy(() => import("../components/sections/contact/ContactHero"));
 const ContactSection = lazy( () => import("../components/sections/contact/ContactSection"));
@@ -22,6 +24,7 @@ function Home({ docked }: HomeProps) {
       <AboutSection />
       <Services />
       <Courses />
+      <Testimonials />
       <ContactHero />
 <ContactSection />
 <Footer />
