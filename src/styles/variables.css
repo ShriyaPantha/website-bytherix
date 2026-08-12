@@ -1,16 +1,21 @@
-:root {
-  /* =====================================================
-     BYTHERIX BRAND
-  ===================================================== */
+/* =========================================================
+   BYTHERIX DESIGN TOKENS
+   ========================================================= */
 
-  --color-navy: #2f4ebce3;
+:root {
+  /* =======================================================
+     BRAND COLORS
+     ======================================================= */
+
+  --color-navy: #2f4ebc;
   --color-green: #17b6a7;
   --color-red: #c81e2c;
   --color-cyan: #38bdf8;
 
-  /* =====================================================
+
+  /* =======================================================
      LIGHT THEME
-  ===================================================== */
+     ======================================================= */
 
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
@@ -27,45 +32,160 @@
   --border-primary: #e2e8f0;
   --border-secondary: #edf2f7;
 
-  /* =====================================================
-     ACCENTS - LIGHT
-  ===================================================== */
 
-  --accent-blue: #0a1230;
+  /* =======================================================
+     BRAND ACCENTS — LIGHT
+     ======================================================= */
+
+  --accent-blue: #2f4ebc;
   --accent-green: #17b6a7;
   --accent-red: #c81e2c;
 
-  --brand-blue-soft: #eef3ff;
-  --brand-green-soft: #ecfaf5;
-  --brand-red-soft: #fff0f1;
+  --brand-blue-soft: rgba(47, 78, 188, 0.08);
+  --brand-green-soft: rgba(23, 182, 167, 0.08);
+  --brand-red-soft: rgba(200, 30, 44, 0.08);
 
-  --brand-blue-border: rgba(10, 18, 48, 0.18);
+  --brand-blue-border: rgba(47, 78, 188, 0.2);
   --brand-green-border: rgba(23, 182, 167, 0.22);
   --brand-red-border: rgba(200, 30, 44, 0.22);
 
-  /* =====================================================
+
+  /* =======================================================
      COURSE VISUAL
-  ===================================================== */
+     ======================================================= */
 
-  --course-visual-card: rgba(255, 255, 255, 0.78);
-  --course-visual-border: rgba(10, 18, 48, 0.16);
+  --course-visual-card: rgba(255, 255, 255, 0.82);
+  --course-visual-border: rgba(47, 78, 188, 0.16);
 
-  /* =====================================================
-     SHADOW
-  ===================================================== */
+
+  /* =======================================================
+     COURSE SHOWCASE
+     ======================================================= */
+
+  --course-showcase-bg: #ffffff;
+
+  --course-showcase-surface: rgba(248, 250, 252, 0.9);
+
+  --course-showcase-border: rgba(15, 23, 42, 0.08);
+
+  --course-showcase-shadow:
+    0 30px 80px rgba(10, 18, 48, 0.08);
+
+
+  /* =======================================================
+     COURSE CARDS
+     ======================================================= */
+
+  --course-card-bg: #ffffff;
+
+  --course-card-text: #111827;
+
+  --course-card-muted: #4b5563;
+
+  --course-border: rgba(15, 23, 42, 0.12);
+
+
+  /* =======================================================
+     COURSE ACCENTS
+     ======================================================= */
+
+  /*
+     Stronger shades for light theme so the
+     colored content remains clearly visible.
+  */
+
+  --course-navy: #2341a3;
+  --course-green: #047857;
+  --course-red: #b91c1c;
+
+
+  /* Soft accent backgrounds */
+
+  --course-navy-soft: rgba(47, 78, 188, 0.09);
+  --course-green-soft: rgba(23, 182, 167, 0.09);
+  --course-red-soft: rgba(200, 30, 44, 0.09);
+
+
+  /* Accent borders */
+
+  --course-navy-border: rgba(47, 78, 188, 0.3);
+  --course-green-border: rgba(23, 182, 167, 0.3);
+  --course-red-border: rgba(200, 30, 44, 0.3);
+
+
+  /* =======================================================
+     COURSE BADGE
+     ======================================================= */
+
+  --course-badge-bg: #c81e2c;
+  --course-badge-text: #ffffff;
+
+
+  /* =======================================================
+     COURSE ARROWS
+     ======================================================= */
+
+  --course-arrow-bg: #ffffff;
+
+  --course-arrow-text: #111827;
+
+  --course-arrow-border: rgba(15, 23, 42, 0.14);
+
+
+  /* =======================================================
+     COURSE IMAGE OVERLAY
+     ======================================================= */
+
+  --course-image-overlay:
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.55),
+      rgba(0, 0, 0, 0.04),
+      transparent
+    );
+
+
+  /* =======================================================
+     SHADOWS
+     ======================================================= */
 
   --shadow-card:
     0 8px 30px rgba(15, 23, 42, 0.06);
 
   --shadow-card-hover:
     0 24px 55px rgba(15, 23, 42, 0.12);
+
+
+  /* =======================================================
+     RADIUS
+     ======================================================= */
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+
+
+  /* =======================================================
+     MOTION
+     ======================================================= */
+
+  --transition-fast: 180ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
 }
+
 
 /* =========================================================
    DARK THEME
-========================================================= */
+   ========================================================= */
 
 .dark {
+  /* =======================================================
+     BACKGROUNDS
+     ======================================================= */
+
   --bg-primary: #060914;
   --bg-secondary: #0a1020;
   --bg-tertiary: #0f172a;
@@ -74,42 +194,172 @@
   --surface-secondary: #111a2d;
   --surface-elevated: #121b30;
 
+
+  /* =======================================================
+     TEXT
+     ======================================================= */
+
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
 
-  --border-primary: rgba(148, 163, 184, 0.16);
-  --border-secondary: rgba(148, 163, 184, 0.10);
 
-  /* =====================================================
-     ACCENTS - DARK
+  /* =======================================================
+     BORDERS
+     ======================================================= */
 
-     Navy becomes BRIGHT BLUE in dark mode.
-     This is the important fix.
-  ===================================================== */
+  --border-primary:
+    rgba(148, 163, 184, 0.16);
 
-  --accent-blue: #60a5fa;
+  --border-secondary:
+    rgba(148, 163, 184, 0.1);
+
+
+  /* =======================================================
+     BRAND ACCENTS — DARK
+     ======================================================= */
+
+  /*
+     Keep the original Bytherix navy.
+     Do NOT replace it with bright cyan.
+  */
+
+  --accent-blue: #2f4ebc;
   --accent-green: #2dd4bf;
   --accent-red: #fb5c68;
 
-  --brand-blue-soft: rgba(96, 165, 250, 0.10);
-  --brand-green-soft: rgba(45, 212, 191, 0.09);
-  --brand-red-soft: rgba(251, 92, 104, 0.09);
 
-  --brand-blue-border: rgba(96, 165, 250, 0.28);
-  --brand-green-border: rgba(45, 212, 191, 0.28);
-  --brand-red-border: rgba(251, 92, 104, 0.28);
+  /* Soft accents */
 
-  /* =====================================================
-     COURSE VISUAL
-  ===================================================== */
+  --brand-blue-soft:
+    rgba(47, 78, 188, 0.16);
 
-  --course-visual-card: rgba(18, 27, 48, 0.92);
-  --course-visual-border: rgba(148, 163, 184, 0.16);
+  --brand-green-soft:
+    rgba(45, 212, 191, 0.1);
 
-  /* =====================================================
-     SHADOW
-  ===================================================== */
+  --brand-red-soft:
+    rgba(251, 92, 104, 0.1);
+
+
+  /* Accent borders */
+
+  --brand-blue-border:
+    rgba(47, 78, 188, 0.4);
+
+  --brand-green-border:
+    rgba(45, 212, 191, 0.3);
+
+  --brand-red-border:
+    rgba(251, 92, 104, 0.3);
+
+
+  /* =======================================================
+     COURSE SHOWCASE — DARK
+     ======================================================= */
+
+  --course-showcase-bg: #060914;
+
+  --course-showcase-surface:
+    rgba(17, 26, 45, 0.78);
+
+  --course-showcase-border:
+    rgba(255, 255, 255, 0.1);
+
+  --course-showcase-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.35);
+
+
+  /* =======================================================
+     COURSE CARDS — DARK
+     ======================================================= */
+
+  --course-card-bg: #0b1020;
+
+  --course-card-text: #f8fafc;
+
+  --course-card-muted: #aab3c5;
+
+  --course-border:
+    rgba(255, 255, 255, 0.1);
+
+
+  /* =======================================================
+     COURSE ACCENTS — DARK
+     ======================================================= */
+
+  /*
+     Keep Bytherix navy visible.
+     It stays blue instead of becoming cyan.
+  */
+
+  --course-navy: #5b76d6;
+
+  --course-green: #2dd4bf;
+
+  --course-red: #fb5c68;
+
+
+  /* Soft backgrounds */
+
+  --course-navy-soft:
+    rgba(47, 78, 188, 0.18);
+
+  --course-green-soft:
+    rgba(45, 212, 191, 0.1);
+
+  --course-red-soft:
+    rgba(251, 92, 104, 0.1);
+
+
+  /* Borders */
+
+  --course-navy-border:
+    rgba(91, 118, 214, 0.42);
+
+  --course-green-border:
+    rgba(45, 212, 191, 0.3);
+
+  --course-red-border:
+    rgba(251, 92, 104, 0.3);
+
+
+  /* =======================================================
+     COURSE BADGE — DARK
+     ======================================================= */
+
+  --course-badge-bg: #c81e2c;
+
+  --course-badge-text: #ffffff;
+
+
+  /* =======================================================
+     COURSE ARROWS — DARK
+     ======================================================= */
+
+  --course-arrow-bg: #111a2d;
+
+  --course-arrow-text: #f8fafc;
+
+  --course-arrow-border:
+    rgba(255, 255, 255, 0.14);
+
+
+  /* =======================================================
+     COURSE IMAGE OVERLAY — DARK
+     ======================================================= */
+
+  --course-image-overlay:
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0.08),
+      transparent
+    );
+
+
+  /* =======================================================
+     SHADOWS — DARK
+     ======================================================= */
 
   --shadow-card:
     0 12px 40px rgba(0, 0, 0, 0.28);
@@ -118,14 +368,74 @@
     0 24px 60px rgba(0, 0, 0, 0.42);
 }
 
+
 /* =========================================================
-   TAILWIND THEME MAPPING
-   Generates utility classes like text-logo-red, bg-logo-blue,
-   used directly in components (e.g. Navbar.tsx).
-========================================================= */
+   TAILWIND CSS v4 THEME MAPPING
+   ========================================================= */
 
 @theme {
+  /* =======================================================
+     BRAND
+     ======================================================= */
+
   --color-logo-blue: var(--color-navy);
   --color-logo-green: var(--color-green);
   --color-logo-red: var(--color-red);
+  --color-logo-cyan: var(--color-cyan);
+
+
+  /* =======================================================
+     BACKGROUND
+     ======================================================= */
+
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+
+
+  /* =======================================================
+     SURFACES
+     ======================================================= */
+
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-surface-elevated: var(--surface-elevated);
+
+
+  /* =======================================================
+     TEXT
+     ======================================================= */
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+
+  /* =======================================================
+     ACCENTS
+     ======================================================= */
+
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-green: var(--accent-green);
+  --color-accent-red: var(--accent-red);
+
+
+  /* =======================================================
+     COURSE COLORS
+     ======================================================= */
+
+  --color-course-navy: var(--course-navy);
+  --color-course-green: var(--course-green);
+  --color-course-red: var(--course-red);
+
+  --color-course-card: var(--course-card-bg);
+  --color-course-muted: var(--course-card-muted);
+
+
+  /* =======================================================
+     BORDERS
+     ======================================================= */
+
+  --color-border-primary: var(--border-primary);
+  --color-border-secondary: var(--border-secondary);
 }

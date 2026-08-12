@@ -22,6 +22,14 @@ export interface Course {
   category: string;
   duration: string;
   level: string;
+
+  // New fields for course marketplace UI
+  image: string;
+  instructor: string;
+  rating: number;
+  reviews: number;
+  badge?: string;
+  featured?: boolean;
 }
 
 export const courses: Course[] = [
@@ -36,7 +44,14 @@ export const courses: Course[] = [
     category: "Web Development",
     duration: "3 Months",
     level: "Beginner",
+    image: "/courses/webdevelopment.jpeg",
+    instructor: "Bytherix Academy",
+    rating: 4.8,
+    reviews: 124,
+    badge: "Bestseller",
+    featured: true,
   },
+
   {
     id: 2,
     title: "App Development",
@@ -48,7 +63,13 @@ export const courses: Course[] = [
     category: "Mobile Development",
     duration: "3 Months",
     level: "Intermediate",
+    image: "/courses/appdevelopment.png",
+    instructor: "Bytherix Academy",
+    rating: 4.7,
+    reviews: 89,
+    featured: true,
   },
+
   {
     id: 3,
     title: "Game Development",
@@ -60,7 +81,12 @@ export const courses: Course[] = [
     category: "Game Development",
     duration: "4 Months",
     level: "Intermediate",
+    image: "/courses/gamedevelopment.png",
+    instructor: "Bytherix Academy",
+    rating: 4.6,
+    reviews: 76,
   },
+
   {
     id: 4,
     title: "Cyber Security",
@@ -72,7 +98,14 @@ export const courses: Course[] = [
     category: "Cyber Security",
     duration: "3 Months",
     level: "Intermediate",
+    image: "/courses/cybersecurity.jpeg",
+    instructor: "Bytherix Academy",
+    rating: 4.9,
+    reviews: 215,
+    badge: "Popular",
+    featured: true,
   },
+
   {
     id: 5,
     title: "AI / ML Fundamentals",
@@ -84,7 +117,13 @@ export const courses: Course[] = [
     category: "Artificial Intelligence",
     duration: "3 Months",
     level: "Intermediate",
+    image: "/courses/ai.jpeg",
+    instructor: "Bytherix Academy",
+    rating: 4.8,
+    reviews: 142,
+    badge: "New",
   },
+
   {
     id: 6,
     title: "ML Model Development",
@@ -96,7 +135,12 @@ export const courses: Course[] = [
     category: "Machine Learning",
     duration: "3 Months",
     level: "Advanced",
+    image: "/courses/ml.jpeg",
+    instructor: "Bytherix Academy",
+    rating: 4.7,
+    reviews: 98,
   },
+
   {
     id: 7,
     title: "Python Programming",
@@ -108,7 +152,13 @@ export const courses: Course[] = [
     category: "Programming",
     duration: "2 Months",
     level: "Beginner",
+    image: "/courses/python.jpeg",
+    instructor: "Bytherix Academy",
+    rating: 4.8,
+    reviews: 187,
+    badge: "Bestseller",
   },
+
   {
     id: 8,
     title: "Networking Essentials",
@@ -120,5 +170,9 @@ export const courses: Course[] = [
     category: "Networking",
     duration: "2 Months",
     level: "Beginner",
+    image: "/courses/networking.jpeg",
+    instructor: "Bytherix Academy",
+    rating: 4.6,
+    reviews: 73,
   },
 ];

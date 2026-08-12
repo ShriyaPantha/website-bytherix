@@ -2,8 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import logo from "../../assets/logo.png";
 import MenuOverlay from "./MenuOverlay"; // adjust path to match your project
-import HeroBackground from "../sections/HeroBackground"; // adjust path to match your folder structure
+// import HeroBackground from "../sections/HeroBackground"; // adjust path to match your folder structure
 import "./Navbar.css";
+import HeroBackground from "../sections/hero/HeroBackground";
 
 interface NavbarProps {
   docked: boolean;
