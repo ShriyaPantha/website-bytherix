@@ -1,393 +1,475 @@
-import { useRef, useMemo, useState } from "react";
-// import { Canvas, useFrame, ThreeEvent } from "@react-three/fiber";
-import { Environment, ContactShadows, RoundedBox, Html } from "@react-three/drei";
-import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
-import { motion } from "framer-motion";
+/**
+ * TechRobotLaptop3D
+ * ------------------------------------------------------------------
+ * A procedurally-built white/black robot holding a laptop, matching
+ * the "friendly assistant robot" reference photo: round head with a
+ * dark visor, two glowing cyan eyes + a small smile, chunky white
+ * body with a glowing logo badge on the chest, and one arm resting
+ * under the laptop's front edge.
+ *
+ * No external .glb, no HDRI fetch — everything is primitives + two
+ * canvas-drawn textures (face + keyboard), so it renders immediately.
+ *
+ * SETUP:
+ *
+ * This file expects to live at:
+ *   src/components/sections/hero/TechRobotLaptop3D.tsx
+ * next to your existing Hero.tsx and HeroBackground.tsx — the asset
+ * imports below are already relative to that location
+ * (src/assets/hero.png and src/assets/logo.png). If you put this
+ * file somewhere else, adjust the "../../../assets/" prefix.
+ *
+ * IMPORTANT: give this a parent container with NO fixed height and
+ * NO `overflow-hidden` (that's what was cropping the robot before).
+ * Use something like a plain `<div className="relative w-full">`
+ * sized by aspect-ratio instead — see the Hero.tsx snippet below.
+ *
+ * Install (if not already installed):
+ *   npm install three @react-three/fiber @react-three/drei
+ * ------------------------------------------------------------------
+ */
+
+import { Suspense, useMemo, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  ContactShadows,
+  OrbitControls,
+  RoundedBox,
+  useTexture,
+} from "@react-three/drei";
 import * as THREE from "three";
-import { Canvas, useFrame, type ThreeEvent } from "@react-three/fiber";
 
-/* ------------------------------------------------------------------ */
-/*  Tech logos                                                         */
-/* ------------------------------------------------------------------ */
+// Matches: src/components/sections/hero/TechRobotLaptop3D.tsx -> src/assets/
+import heroImg from "../../../assets/hero.png";
+import logoImg from "../../../assets/logo.png";
 
-const TECH = [
-  {
-    name: "React",
-    color: "#61DAFB",
-    icon: (
-      <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="2.6" fill="#61DAFB" />
-        <ellipse cx="12" cy="12" rx="10" ry="4.3" stroke="#61DAFB" strokeWidth="1.5" fill="none" />
-        <ellipse cx="12" cy="12" rx="10" ry="4.3" stroke="#61DAFB" strokeWidth="1.5" fill="none" transform="rotate(60 12 12)" />
-        <ellipse cx="12" cy="12" rx="10" ry="4.3" stroke="#61DAFB" strokeWidth="1.5" fill="none" transform="rotate(120 12 12)" />
-      </svg>
-    ),
-  },
-  {
-    name: "Next.js",
-    color: "#ffffff",
-    icon: (
-      <div style={{
-        width: "78%", height: "78%", borderRadius: "50%",
-        border: "3px solid #fff", display: "flex",
-        alignItems: "center", justifyContent: "center",
-        fontSize: 36, fontWeight: 800, color: "#fff"
-      }}>N</div>
-    ),
-  },
-  {
-    name: "Vercel",
-    color: "#ffffff",
-    icon: (
-      <svg width="75%" height="75%" viewBox="0 0 76 65" fill="#fff">
-        <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
-      </svg>
-    ),
-  },
-  {
-    name: "Vue",
-    color: "#42b883",
-    icon: (
-      <svg width="80%" height="80%" viewBox="0 0 256 221">
-        <path d="M204.8 0H256L128 220.8 0 0h97.92L128 51.2 157.44 0h47.36z" fill="#42b883"/>
-        <path d="M0 0l128 220.8L256 0h-51.2L128 132.48 50.56 0H0z" fill="#35495e"/>
-      </svg>
-    ),
-  },
-  {
-    name: "Angular",
-    color: "#dd0031",
-    icon: (
-      <svg width="78%" height="78%" viewBox="0 0 24 24" fill="#dd0031">
-        <path d="M12 2.5L3.5 5.5l1.4 12.5L12 21.5l7.1-3.5 1.4-12.5L12 2.5z"/>
-      </svg>
-    ),
-  },
-  {
-    name: "Svelte",
-    color: "#ff3e00",
-    icon: (
-      <svg width="78%" height="78%" viewBox="0 0 32 32" fill="#ff3e00">
-        <path d="M26.4 6.2c-2.6-3.7-7.7-4.8-11.5-2.5L9.2 7.2C7.5 8.2 6.4 9.8 6.1 11.7c-.3 1.5.1 3 .9 4.2-.6 1-1 2.1-.9 3.3.3 2.1 1.7 3.9 3.6 4.8l5.7 3.5c3.8 2.3 8.9 1.2 11.5-2.5 1.5-2.1 1.9-4.7 1.1-7.1.8-1.2 1.2-2.6 1-4.1-.3-1.9-1.4-3.5-3.1-4.5z"/>
-      </svg>
-    ),
-  },
-  {
-    name: "Tailwind",
-    color: "#38bdf8",
-    icon: (
-      <svg width="88%" height="55%" viewBox="0 0 54 33" fill="#38bdf8">
-        <path d="M27 0C19.8 0 15.3 3.6 13.5 10.8c2.7-3.6 5.85-4.95 9.45-4.05 2.05.51 3.52 2 5.14 3.64C31.2 13.6 34.5 17 41 17c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.05-.51-3.52-2-5.14-3.64C36.8 3.4 33.5 0 27 0zM13.5 17C6.3 17 1.8 20.6 0 27.8c2.7-3.6 5.85-4.95 9.45-4.05 2.05.51 3.52 2 5.14 3.64C17.7 30.6 21 34 27.5 34c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.05-.51-3.52-2-5.14-3.64C23.3 20.4 20 17 13.5 17z"/>
-      </svg>
-    ),
-  },
-  {
-    name: "Node",
-    color: "#68a063",
-    icon: (
-      <svg width="70%" height="80%" viewBox="0 0 256 289" fill="#68a063">
-        <path d="M128 0L0 72.5v144.1l128 72.4 128-72.4V72.5L128 0zm0 23.3l105.4 59.6v119.2L128 261.7 22.6 202.1V82.9L128 23.3z"/>
-      </svg>
-    ),
-  },
-  {
-    name: "TypeScript",
-    color: "#3178c6",
-    icon: (
-      <div style={{
-        width: "80%", height: "80%", background: "#3178c6",
-        borderRadius: 14, display: "flex", alignItems: "center",
-        justifyContent: "center", fontSize: 32, fontWeight: 800, color: "#fff"
-      }}>TS</div>
-    ),
-  },
-  {
-    name: "Astro",
-    color: "#ff5d01",
-    icon: (
-      <svg width="78%" height="78%" viewBox="0 0 24 24" fill="#ff5d01">
-        <path d="M12 1.5l1.4 6.1 5.9-2.4-2.4 5.9 6.1 1.4-6.1 1.4 2.4 5.9-5.9-2.4L12 22.5l-1.4-6.1-5.9 2.4 2.4-5.9-6.1-1.4 6.1-1.4-2.4-5.9 5.9 2.4L12 1.5z"/>
-      </svg>
-    ),
-  },
-  {
-    name: "Vite",
-    color: "#646cff",
-    icon: (
-      <svg width="78%" height="78%" viewBox="0 0 32 32">
-        <path d="M16 2L3 28h6l7-16 7 16h6L16 2z" fill="#646cff"/>
-        <path d="M16 12l-4 10h8l-4-10z" fill="#ffd62e"/>
-      </svg>
-    ),
-  },
-  {
-    name: "Docker",
-    color: "#2496ed",
-    icon: (
-      <svg width="85%" height="70%" viewBox="0 0 24 24" fill="#2496ed">
-        <path d="M4 15h2v2H4zm3 0h2v2H7zm3 0h2v2h-2zm3 0h2v2h-2zM4 12h2v2H4zm3 0h2v2H7zm3 0h2v2h-2zm3 0h2v2h-2zm3 0h2v2h-2zM7 9h2v2H7zm3 0h2v2h-2zm3 0h2v2h-2z"/>
-      </svg>
-    ),
-  },
-];
+/* ================= CONFIG ================= */
 
-const CUBE_COLORS = [
-  "#ef4444", "#3b82f6", "#22c55e",
-  "#f87171", "#60a5fa", "#4ade80",
-  "#dc2626", "#2563eb", "#16a34a",
-];
+// Laptop proportions (scene units).
+const SCREEN_WIDTH = 1.3;
+const SCREEN_HEIGHT = 0.82;
+const SCREEN_THICKNESS = 0.035;
+const BASE_DEPTH = 0.9;
+const BASE_THICKNESS = 0.05;
+const BEZEL = 0.075;
+const HINGE_TILT = -0.32;
 
-const CUBE_SIZE = 1.25;
+const KEY_ROWS = 5;
+const KEY_COLS = 14;
+const KEYBOARD_WIDTH = SCREEN_WIDTH - 0.22;
+const KEYBOARD_DEPTH = 0.42;
+const KEYBOARD_OFFSET_Z = -0.14;
+const TRACKPAD_WIDTH = 0.34;
+const TRACKPAD_DEPTH = 0.24;
 
-/* ------------------------------------------------------------------ */
-/*  Falling cube – slow + infinite + draggable                         */
-/* ------------------------------------------------------------------ */
+// Robot proportions.
+const HEAD_RADIUS = 0.46;
+const TORSO_WIDTH = 0.62;
+const TORSO_HEIGHT = 0.78;
+const TORSO_DEPTH = 0.5;
+const ROBOT_WHITE = "#f4f5f7";
+const ROBOT_DARK = "#1b1c1f";
+const EYE_CYAN = "#4fd8ff";
 
-function FallingCube({
-  tech,
-  color,
-  initial,
-}: {
-  tech: (typeof TECH)[0];
-  color: string;
-  initial: { x: number; y: number; z: number };
-}) {
-  const bodyRef = useRef<any>(null);
-  const [hovered, setHovered] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  const dragOffset = useRef(new THREE.Vector3());
+const CLOSED_ROT_X = Math.PI / 2.05;
+const OPEN_DURATION = 1.3;
+const easeInOutCubic = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-  // Slow continuous fall + respawn
-  useFrame((state) => {
-    if (!bodyRef.current || dragging) return;
+/* ================= TEXTURES ================= */
 
-    const pos = bodyRef.current.translation();
+// Black keyboard, keys drawn as a canvas texture (cheap vs. 70+ meshes).
+function useKeyboardTexture() {
+  return useMemo(() => {
+    const px = 1024;
+    const canvas = document.createElement("canvas");
+    canvas.width = px;
+    canvas.height = Math.round(px * (KEYBOARD_DEPTH / KEYBOARD_WIDTH));
+    const ctx = canvas.getContext("2d")!;
 
-    // Soft downward force (much slower than real gravity)
-    bodyRef.current.applyImpulse({ x: 0, y: -0.018, z: 0 }, true);
+    ctx.fillStyle = "#0b0b0c";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Very light horizontal sway
-    const sway = Math.sin(state.clock.elapsedTime * 0.45 + initial.x) * 0.012;
-    bodyRef.current.applyImpulse({ x: sway, y: 0, z: 0 }, true);
+    const margin = px * 0.02;
+    const gap = px * 0.008;
+    const usableW = canvas.width - margin * 2;
+    const usableH = canvas.height - margin * 2;
+    const keyW = (usableW - gap * (KEY_COLS - 1)) / KEY_COLS;
+    const keyH = (usableH - gap * (KEY_ROWS - 1)) / KEY_ROWS;
+    const radius = keyW * 0.16;
 
-    // Infinite loop – reset when too low
-    if (pos.y < -10) {
-      bodyRef.current.setTranslation(
-        {
-          x: (Math.random() - 0.5) * 9,
-          y: 11 + Math.random() * 4,
-          z: (Math.random() - 0.5) * 3,
-        },
-        true
-      );
-      bodyRef.current.setLinvel({ x: 0, y: -0.4, z: 0 }, true);
-      bodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    const drawRoundedRect = (x: number, y: number, w: number, h: number, r: number) => {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    };
+
+    for (let row = 0; row < KEY_ROWS; row++) {
+      for (let col = 0; col < KEY_COLS; col++) {
+        const x = margin + col * (keyW + gap);
+        const y = margin + row * (keyH + gap);
+        drawRoundedRect(x, y, keyW, keyH, radius);
+        ctx.fillStyle = "#1c1c1f";
+        ctx.fill();
+        drawRoundedRect(x, y, keyW, keyH * 0.4, radius);
+        ctx.fillStyle = "rgba(255,255,255,0.03)";
+        ctx.fill();
+      }
     }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  }, []);
+}
+
+// Dark visor with two glowing cyan eyes + a small smile, drawn once.
+function useFaceTexture() {
+  return useMemo(() => {
+    const px = 512;
+    const canvas = document.createElement("canvas");
+    canvas.width = px;
+    canvas.height = px;
+    const ctx = canvas.getContext("2d")!;
+
+    // transparent background — this plane sits on top of the head sphere
+    ctx.clearRect(0, 0, px, px);
+
+    // visor panel
+    ctx.fillStyle = "#101114";
+    const vx = px * 0.12,
+      vy = px * 0.22,
+      vw = px * 0.76,
+      vh = px * 0.5,
+      vr = px * 0.16;
+    ctx.beginPath();
+    ctx.moveTo(vx + vr, vy);
+    ctx.arcTo(vx + vw, vy, vx + vw, vy + vh, vr);
+    ctx.arcTo(vx + vw, vy + vh, vx, vy + vh, vr);
+    ctx.arcTo(vx, vy + vh, vx, vy, vr);
+    ctx.arcTo(vx, vy, vx + vw, vy, vr);
+    ctx.closePath();
+    ctx.fill();
+
+    // glowing eyes (soft radial glow + solid core)
+    const eyeY = vy + vh * 0.4;
+    const eyeXs = [vx + vw * 0.28, vx + vw * 0.72];
+    eyeXs.forEach((ex) => {
+      const glow = ctx.createRadialGradient(ex, eyeY, 2, ex, eyeY, px * 0.09);
+      glow.addColorStop(0, "rgba(79,216,255,0.9)");
+      glow.addColorStop(1, "rgba(79,216,255,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(ex, eyeY, px * 0.09, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = EYE_CYAN;
+      ctx.beginPath();
+      ctx.roundRect(ex - px * 0.045, eyeY - px * 0.055, px * 0.09, px * 0.11, px * 0.03);
+      ctx.fill();
+    });
+
+    // small smile
+    ctx.strokeStyle = "rgba(79,216,255,0.85)";
+    ctx.lineWidth = px * 0.012;
+    ctx.beginPath();
+    ctx.arc(px * 0.5, eyeY + px * 0.12, px * 0.09, Math.PI * 0.15, Math.PI * 0.85);
+    ctx.stroke();
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  }, []);
+}
+
+/* ================= LAPTOP ================= */
+
+function Laptop({ openProgress }: { openProgress: React.MutableRefObject<number> }) {
+  const heroTexture = useTexture(heroImg);
+  heroTexture.colorSpace = THREE.SRGBColorSpace;
+  const keyboardTexture = useKeyboardTexture();
+  const screenGroupRef = useRef<THREE.Group>(null);
+  const startTime = useRef<number | null>(null);
+
+  useFrame((state) => {
+    if (!screenGroupRef.current) return;
+    if (startTime.current === null) startTime.current = state.clock.elapsedTime;
+    const t = Math.min((state.clock.elapsedTime - startTime.current) / OPEN_DURATION, 1);
+    const eased = easeInOutCubic(t);
+    screenGroupRef.current.rotation.x = THREE.MathUtils.lerp(CLOSED_ROT_X, HINGE_TILT, eased);
+    openProgress.current = eased;
   });
 
-  // Drag handlers
-  const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation();
-    setDragging(true);
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-
-    const pos = bodyRef.current.translation();
-    dragOffset.current.set(
-      e.point.x - pos.x,
-      e.point.y - pos.y,
-      e.point.z - pos.z
-    );
-  };
-
-  const onPointerMove = (e: ThreeEvent<PointerEvent>) => {
-    if (!dragging || !bodyRef.current) return;
-    e.stopPropagation();
-
-    bodyRef.current.setNextKinematicTranslation({
-      x: e.point.x - dragOffset.current.x,
-      y: e.point.y - dragOffset.current.y,
-      z: e.point.z - dragOffset.current.z,
-    });
-  };
-
-  const onPointerUp = (e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation();
-    setDragging(false);
-    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-
-    // Give a small velocity when released so it feels natural
-    if (bodyRef.current) {
-      bodyRef.current.setLinvel({ x: 0, y: -0.6, z: 0 }, true);
-    }
-  };
-
   return (
-    <RigidBody
-      ref={bodyRef}
-      position={[initial.x, initial.y, initial.z]}
-      colliders={false}
-      type={dragging ? "kinematicPosition" : "dynamic"}
-      restitution={0.35}
-      friction={0.5}
-      linearDamping={1.8}        // slows them down a lot
-      angularDamping={2.5}
-      mass={1.2}
-    >
-      <CuboidCollider args={[CUBE_SIZE / 2, CUBE_SIZE / 2, CUBE_SIZE / 2]} />
-
-      <group
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          setHovered(true);
-          document.body.style.cursor = "grab";
-        }}
-        onPointerOut={() => {
-          setHovered(false);
-          if (!dragging) document.body.style.cursor = "auto";
-        }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerLeave={onPointerUp}
+    <group>
+      {/* Base / keyboard deck */}
+      <RoundedBox
+        args={[SCREEN_WIDTH + 0.08, BASE_THICKNESS, BASE_DEPTH]}
+        radius={0.025}
+        smoothness={4}
+        position={[0, -BASE_THICKNESS / 2, BASE_DEPTH / 2 - 0.08]}
+        castShadow
+        receiveShadow
       >
-        <RoundedBox args={[CUBE_SIZE, CUBE_SIZE, CUBE_SIZE]} radius={0.16} smoothness={4}>
-          <meshPhysicalMaterial
-            color={color}
-            transparent
-            opacity={hovered || dragging ? 0.65 : 0.32}
-            metalness={0.08}
-            roughness={0.28}
-            transmission={0.28}
-            thickness={0.5}
-            emissive={color}
-            emissiveIntensity={hovered || dragging ? 0.35 : 0.08}
-          />
+        <meshStandardMaterial color="#0a0a0a" metalness={0.35} roughness={0.55} />
+      </RoundedBox>
+
+      {/* Keyboard */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0.0011, BASE_DEPTH / 2 - 0.08 + KEYBOARD_OFFSET_Z]}
+      >
+        <planeGeometry args={[KEYBOARD_WIDTH, KEYBOARD_DEPTH]} />
+        <meshStandardMaterial map={keyboardTexture} roughness={0.7} metalness={0.1} />
+      </mesh>
+
+      {/* Trackpad */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[
+          0,
+          0.0011,
+          BASE_DEPTH / 2 - 0.08 + KEYBOARD_OFFSET_Z + KEYBOARD_DEPTH / 2 + TRACKPAD_DEPTH / 2 + 0.05,
+        ]}
+      >
+        <planeGeometry args={[TRACKPAD_WIDTH, TRACKPAD_DEPTH]} />
+        <meshStandardMaterial color="#141416" roughness={0.3} metalness={0.2} />
+      </mesh>
+
+      {/* Screen assembly */}
+      <group ref={screenGroupRef} position={[0, 0, -0.08]} rotation={[CLOSED_ROT_X, 0, 0]}>
+        <RoundedBox
+          args={[SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_THICKNESS]}
+          radius={0.025}
+          smoothness={4}
+          position={[0, SCREEN_HEIGHT / 2, 0]}
+          castShadow
+          receiveShadow
+        >
+          <meshStandardMaterial color="#0a0a0a" metalness={0.35} roughness={0.55} />
         </RoundedBox>
 
-        {/* Logo */}
-        <Html
-          transform
-          occlude
-          position={[0, 0, CUBE_SIZE / 2 + 0.03]}
-          distanceFactor={1.55}
-          style={{ pointerEvents: "none", userSelect: "none" }}
-        >
-          <motion.div
-            animate={{ scale: hovered || dragging ? 1.07 : 1 }}
-            transition={{ type: "spring", stiffness: 280, damping: 18 }}
-            style={{
-              width: 165,
-              height: 165,
-              borderRadius: 22,
-              background: "rgba(12, 8, 24, 0.92)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              border: `2px solid ${color}50`,
-              boxShadow: hovered || dragging
-                ? `0 0 28px ${color}60`
-                : `0 0 12px ${color}28`,
-              overflow: "hidden",
-            }}
-          >
-            <motion.div
-              animate={{ scale: [1, 1.06, 1] }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-              style={{
-                width: "78%",
-                height: "78%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {tech.icon}
-            </motion.div>
-          </motion.div>
-        </Html>
+        {/* Your hero.png, inset inside the frame */}
+        <mesh position={[0, SCREEN_HEIGHT / 2, SCREEN_THICKNESS / 2 + 0.001]}>
+          <planeGeometry args={[SCREEN_WIDTH - BEZEL * 2, SCREEN_HEIGHT - BEZEL * 2]} />
+          <meshBasicMaterial map={heroTexture} toneMapped={false} />
+        </mesh>
       </group>
-    </RigidBody>
+    </group>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Waterfall                                                          */
-/* ------------------------------------------------------------------ */
+/* ================= ROBOT ================= */
 
-function Waterfall() {
-  const cubes = useMemo(() => {
-    return Array.from({ length: 15 }).map((_, i) => ({
-      tech: TECH[i % TECH.length],
-      color: CUBE_COLORS[i % CUBE_COLORS.length],
-      initial: {
-        x: (Math.random() - 0.5) * 9,
-        y: Math.random() * 14 - 2,
-        z: (Math.random() - 0.5) * 3,
-      },
-    }));
-  }, []);
+function Robot() {
+  const faceTexture = useFaceTexture();
+  const logoTexture = useTexture(logoImg);
+  logoTexture.colorSpace = THREE.SRGBColorSpace;
 
-  return (
-    <>
-      {cubes.map((c, i) => (
-        <FallingCube key={i} {...c} />
-      ))}
-    </>
+  const bodyMat = (
+    <meshStandardMaterial color={ROBOT_WHITE} metalness={0.15} roughness={0.35} />
   );
-}
+  const jointMat = (
+    <meshStandardMaterial color={ROBOT_DARK} metalness={0.4} roughness={0.4} />
+  );
 
-/* ------------------------------------------------------------------ */
-/*  Main                                                               */
-/* ------------------------------------------------------------------ */
-
-const TechWaterfall = () => {
   return (
-    <div
-      style={{
-        width: "100%",
-        maxWidth: 920,
-        height: 480,
-        background: "transparent",
-        overflow: "hidden",
-      }}
-    >
-      <Canvas
-        dpr={[1, 1.6]}
-        gl={{
-          antialias: true,
-          powerPreference: "high-performance",
-          alpha: true,
-          premultipliedAlpha: false,
-        }}
-        camera={{ position: [0, 0, 13], fov: 42 }}
-        onCreated={({ camera, gl }) => {
-          camera.lookAt(0, 0, 0);
-          gl.setClearColor(0x000000, 0);
-        }}
-        style={{ background: "transparent" }}
+    <group position={[-0.95, 0, -0.05]}>
+      {/* ---- Head ---- */}
+      <group position={[0, 1.28, 0]}>
+        <mesh castShadow receiveShadow>
+          <sphereGeometry args={[HEAD_RADIUS, 48, 48]} />
+          {bodyMat}
+        </mesh>
+        {/* ears */}
+        {[-1, 1].map((side) => (
+          <mesh
+            key={side}
+            position={[side * (HEAD_RADIUS + 0.03), 0, 0]}
+            rotation={[0, 0, Math.PI / 2]}
+            castShadow
+          >
+            <cylinderGeometry args={[0.09, 0.09, 0.06, 24]} />
+            {jointMat}
+          </mesh>
+        ))}
+        {/* face plate (visor + glowing eyes + smile) */}
+        <mesh position={[0, 0.02, HEAD_RADIUS * 0.92]}>
+          <planeGeometry args={[HEAD_RADIUS * 1.5, HEAD_RADIUS * 1.5]} />
+          <meshBasicMaterial map={faceTexture} transparent toneMapped={false} />
+        </mesh>
+      </group>
+
+      {/* neck joint */}
+      <mesh position={[0, 0.98, 0]} castShadow>
+        <cylinderGeometry args={[0.12, 0.14, 0.12, 24]} />
+        {jointMat}
+      </mesh>
+
+      {/* ---- Torso ---- */}
+      <RoundedBox
+        args={[TORSO_WIDTH, TORSO_HEIGHT, TORSO_DEPTH]}
+        radius={0.14}
+        smoothness={4}
+        position={[0, 0.55, 0]}
+        castShadow
+        receiveShadow
       >
-        <ambientLight intensity={0.45} />
-        <directionalLight position={[5, 8, 5]} intensity={1.15} />
-        <directionalLight position={[-4, 3, -2]} intensity={0.35} />
-        <pointLight position={[0, -4, 4]} intensity={0.4} color="#a78bfa" />
+        {bodyMat}
+      </RoundedBox>
 
-        <Environment preset="city" />
+      {/* chest logo badge (your logo.png), glowing outline ring behind it */}
+      <mesh position={[0, 0.62, TORSO_DEPTH / 2 + 0.001]}>
+        <circleGeometry args={[0.16, 32]} />
+        <meshBasicMaterial color="#0d0d0f" />
+      </mesh>
+      <mesh position={[0, 0.62, TORSO_DEPTH / 2 + 0.003]}>
+        <planeGeometry args={[0.24, 0.24]} />
+        <meshBasicMaterial map={logoTexture} transparent toneMapped={false} />
+      </mesh>
 
-        {/* Very low gravity so falling feels gentle */}
-        <Physics gravity={[0, -1.8, 0]} colliders={false}>
-          <Waterfall />
-        </Physics>
+      {/* waist joint */}
+      <mesh position={[0, 0.16, 0]} castShadow>
+        <cylinderGeometry args={[0.24, 0.22, 0.1, 24]} />
+        {jointMat}
+      </mesh>
+      {/* base / feet stub */}
+      <RoundedBox
+        args={[0.4, 0.14, 0.3]}
+        radius={0.05}
+        position={[0, 0.03, 0]}
+        castShadow
+        receiveShadow
+      >
+        {jointMat}
+      </RoundedBox>
 
-        <ContactShadows
-          position={[0, -9.8, 0]}
-          opacity={0.35}
-          scale={22}
-          blur={2.8}
-          far={14}
+      {/* ---- Left arm: relaxed at the side ---- */}
+      <group position={[-TORSO_WIDTH / 2 - 0.05, 0.85, 0]}>
+        <mesh castShadow>
+          <sphereGeometry args={[0.11, 24, 24]} />
+          {jointMat}
+        </mesh>
+        <mesh position={[-0.03, -0.22, 0]} rotation={[0, 0, 0.15]} castShadow>
+          <capsuleGeometry args={[0.075, 0.32, 8, 16]} />
+          {bodyMat}
+        </mesh>
+        <mesh position={[-0.06, -0.44, 0.02]} castShadow>
+          <sphereGeometry args={[0.085, 24, 24]} />
+          {jointMat}
+        </mesh>
+        <mesh position={[-0.03, -0.65, 0.08]} rotation={[0.25, 0, 0.05]} castShadow>
+          <capsuleGeometry args={[0.07, 0.28, 8, 16]} />
+          {bodyMat}
+        </mesh>
+        <RoundedBox
+          args={[0.14, 0.14, 0.14]}
+          radius={0.03}
+          position={[-0.02, -0.85, 0.16]}
+          castShadow
+        >
+          {bodyMat}
+        </RoundedBox>
+      </group>
+
+      {/* ---- Right arm: reaches forward and down, cradling the laptop
+            from underneath at roughly hand/waist height, like it's
+            presenting the laptop to camera ---- */}
+      <group position={[TORSO_WIDTH / 2 + 0.05, 0.85, 0]}>
+        {/* shoulder */}
+        <mesh castShadow>
+          <sphereGeometry args={[0.11, 24, 24]} />
+          {jointMat}
+        </mesh>
+        {/* upper arm */}
+        <mesh position={[0.05, -0.18, 0.02]} rotation={[0.1, 0, -0.35]} castShadow>
+          <capsuleGeometry args={[0.075, 0.28, 8, 16]} />
+          {bodyMat}
+        </mesh>
+        {/* elbow */}
+        <mesh position={[0.13, -0.35, 0.05]} castShadow>
+          <sphereGeometry args={[0.085, 24, 24]} />
+          {jointMat}
+        </mesh>
+        {/* forearm, reaching further forward + down to meet the
+            laptop's lowered, tilted resting height */}
+        <mesh position={[0.3, -0.42, 0.35]} rotation={[1.05, 0, -0.55]} castShadow>
+          <capsuleGeometry args={[0.07, 0.44, 8, 16]} />
+          {bodyMat}
+        </mesh>
+        {/* hand, flat, cupping the laptop's underside */}
+        <RoundedBox
+          args={[0.18, 0.05, 0.22]}
+          radius={0.02}
+          position={[0.5, -0.62, 0.62]}
+          rotation={[0, -0.15, 0]}
+          castShadow
+        >
+          {bodyMat}
+        </RoundedBox>
+      </group>
+    </group>
+  );
+}
+
+/* ================= SCENE ================= */
+
+function IdleFloat({ children }: { children: React.ReactNode }) {
+  const groupRef = useRef<THREE.Group>(null);
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.015;
+  });
+  return <group ref={groupRef}>{children}</group>;
+}
+
+const TechRobotLaptop3D = () => {
+  const openProgress = useRef(0);
+
+  return (
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+      <Canvas
+        dpr={[1, 2]}
+        gl={{ antialias: true, powerPreference: "high-performance" }}
+        camera={{ position: [1.5, 1.05, 3.9], fov: 30 }}
+        shadows
+      >
+        <ambientLight intensity={0.75} />
+        <directionalLight
+          position={[3, 4, 2]}
+          intensity={1.5}
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+        />
+        <directionalLight position={[-3, 2, -2]} intensity={0.5} color="#a7c7ff" />
+        <directionalLight position={[0, -2, 3]} intensity={0.3} color="#ffffff" />
+
+        <Suspense fallback={null}>
+          <IdleFloat>
+            <group position={[0.78, 0.32, -0.05]} rotation={[-0.18, -0.12, 0]}>
+              <Laptop openProgress={openProgress} />
+            </group>
+            <Robot />
+          </IdleFloat>
+        </Suspense>
+
+        <ContactShadows position={[0, -0.02, 0]} opacity={0.5} scale={6} blur={2.2} far={2} />
+
+        <OrbitControls
+          target={[0.1, 0.75, 0]}
+          enablePan={false}
+          minDistance={3.2}
+          maxDistance={5.2}
+          minPolarAngle={Math.PI / 5}
+          maxPolarAngle={Math.PI / 1.9}
         />
       </Canvas>
     </div>
   );
 };
 
-export default TechWaterfall;
+export default TechRobotLaptop3D;

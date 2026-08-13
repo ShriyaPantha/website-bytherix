@@ -38,6 +38,7 @@ const ContactHero = () => {
           }}
           className="relative z-10 text-center"
         >
+        
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -47,6 +48,7 @@ const ContactHero = () => {
           >
             Let's get in touch!
           </motion.p>
+          
 
           <motion.h2
             id="contact-heading"
