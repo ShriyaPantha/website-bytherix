@@ -7,10 +7,13 @@ const Team = lazy(() => import("../components/sections/team/Team"));
 
 const Services = lazy(() => import("../components/sections/Services"));
 const Courses = lazy(() => import("../components/sections/courses/Courses"));
+const Testimonials = lazy(() => import("../components/sections/Testimonials"));
+
 
 const ContactHero = lazy(() => import("../components/sections/contact/ContactHero"));
-const ContactSection = lazy( () => import("../components/sections/contact/ContactSection"));
-const Footer = lazy( () => import("../components/layout/Footer"));
+const ContactSection = lazy(() => import("../components/sections/contact/ContactSection"));
+const Footer = lazy(() => import("../components/layout/Footer"));
+
 interface HomeProps {
   docked: boolean;
 }
@@ -23,9 +26,10 @@ function Home({ docked }: HomeProps) {
       <Team />
       <Services />
       <Courses />
+      <Testimonials />
       <ContactHero />
-<ContactSection />
-<Footer />
+      <ContactSection />
+      <Footer />
     </Suspense>
   );
 }

@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import logo from "../../assets/logo.png";
-import MenuOverlay from "./MenuOverlay"; // adjust path to match your project
-// import HeroBackground from "../sections/HeroBackground"; // adjust path to match your folder structure
+import MenuOverlay from "./MenuOverlay";
 import "./Navbar.css";
-import HeroBackground from "../sections/hero/HeroBackground";
 
 interface NavbarProps {
   docked: boolean;
@@ -42,26 +40,24 @@ const Navbar = ({ docked }: NavbarProps) => {
 
   return (
     <>
-      <header className="relative z-20 flex items-center justify-between px-6 py-5 overflow-hidden">
-        <HeroBackground />
-
+     <header className="relative z-30 flex items-center justify-between w-full bg-blue-950 px-6 py-4">
         <motion.div
           layout
           transition={DOCK_TRANSITION}
           className={
             docked
-              ? "relative z-10 static flex items-center gap-3"
-              : "fixed inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-zinc-900"
+              ? "relative z-10 static flex items-center gap-2.5"
+              : "fixed inset-0 z-40 flex flex-col items-center justify-center gap-4 bg-[#0b1329]"
           }
         >
-          {/* Logo — only appears once docked, fades in after text has settled in navbar */}
+          {/* Logo – smaller when docked */}
           <AnimatePresence>
             {docked && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-                className="h-14 w-14 overflow-hidden rounded-full ring-2 ring-white/10"
+                className="h-9 w-9 overflow-hidden rounded-full ring-1 ring-white/20 shrink-0"
               >
                 <img
                   src={logo}
@@ -82,8 +78,9 @@ const Navbar = ({ docked }: NavbarProps) => {
               transition={DOCK_TRANSITION}
               className="flex font-bold tracking-wide text-white"
               style={{
-                fontSize: docked ? "1.4rem" : "clamp(2.5rem, 7vw, 4.5rem)",
+                fontSize: docked ? "1.05rem" : "clamp(2.5rem, 7vw, 4.5rem)",
                 fontFamily: "'Chakra Petch', sans-serif",
+                lineHeight: 1.1,
               }}
             >
               {WORD_ONE.split("").map((char, i) => (
@@ -105,10 +102,11 @@ const Navbar = ({ docked }: NavbarProps) => {
             <motion.div
               layout
               transition={DOCK_TRANSITION}
-              className="flex font-medium tracking-[0.15em] text-gray-400 uppercase"
+              className="flex font-medium tracking-[0.12em] uppercase text-gray-400"
               style={{
-                fontSize: docked ? "0.65rem" : "clamp(0.9rem, 2vw, 1.4rem)",
+                fontSize: docked ? "0.55rem" : "clamp(0.9rem, 2vw, 1.4rem)",
                 fontFamily: "'Chakra Petch', sans-serif",
+                lineHeight: 1.1,
               }}
             >
               {WORD_TWO.split("").map((char, i) => (
@@ -161,14 +159,14 @@ const Navbar = ({ docked }: NavbarProps) => {
           initial={false}
           animate={{ opacity: docked ? 1 : 0 }}
           transition={{ duration: 0.2, delay: docked ? 0.1 : 0 }}
-          className="relative z-10 flex items-center gap-6"
+          className="relative z-10 flex items-center gap-4"
         >
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-5 md:flex">
             {LINKS.map((link) => (
               <a
                 key={link}
                 href={`#${link.toLowerCase()}`}
-                className="text-sm font-bold uppercase tracking-wide text-white transition-colors hover:text-logo-green"
+                className="text-xs font-bold uppercase tracking-wide text-white/80 transition-colors hover:text-logo-green"
               >
                 {link}
               </a>
@@ -177,7 +175,7 @@ const Navbar = ({ docked }: NavbarProps) => {
 
           <a
             href="#contact"
-            className="hidden rounded-full bg-logo-blue px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 md:inline-block"
+            className="hidden rounded-full bg-logo-blue px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-700 md:inline-block shadow-sm"
           >
             Get a Quote
           </a>
@@ -185,10 +183,14 @@ const Navbar = ({ docked }: NavbarProps) => {
           <button
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Open menu"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 md:hidden"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 md:hidden"
           >
-            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-              <path d="M0 1H14M0 5H14M0 9H14" stroke="white" strokeWidth="1.3" />
+            <svg width="13" height="9" viewBox="0 0 14 10" fill="none">
+              <path
+                d="M0 1H14M0 5H14M0 9H14"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
             </svg>
           </button>
         </motion.div>

@@ -12,12 +12,12 @@ const ContactSection = () => {
         className="
           mx-auto
           max-w-7xl
-          px-5
-          py-3
-          sm:px-8
-          sm:py-4
-          lg:px-10
-          lg:py-5
+          px-3
+          py-1
+          sm:px-5
+          sm:py-2
+          lg:px-8
+          lg:py-3
         "
       >
         <div
@@ -35,9 +35,9 @@ const ContactSection = () => {
           <div
             className="
               min-w-0
-              p-4
-              sm:p-5
-              lg:p-6
+              p-2
+              sm:p-3
+              lg:p-4
             "
           >
             <ContactForm />
