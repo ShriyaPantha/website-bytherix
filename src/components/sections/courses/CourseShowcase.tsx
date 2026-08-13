@@ -1157,12 +1157,11 @@ export default function CourseShowcase() {
           relative
           z-10
           mx-auto
-          max-w-[1400px]
+          max-w-7xl
           px-5
 
           sm:px-8
           lg:px-10
-          xl:px-12
         "
       >
         {/* =================================================

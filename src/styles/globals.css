@@ -183,6 +183,7 @@ body {
 
 .border-theme {
   border-color: var(--border);
+}
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
