@@ -1,6 +1,14 @@
+/* ================================
+   GLOBAL RESET & BASE
+================================ */
+
 html {
   scrollbar-width: none;      /* Firefox */
   -ms-overflow-style: none;   /* old Edge/IE */
+}
+
+html::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari, mobile */
 }
 
 body {
@@ -31,6 +39,78 @@ body {
 }
 
 /* ================================
+   THEME VARIABLES
+================================ */
+
+:root {
+  /* Default = Dark (matches your Hero) */
+  --bg-primary: #070b14;
+  --bg-secondary: #0c1220;
+  --bg-panel: #10182b;
+  --bg-elevated: #151f38;
+
+  --text-primary: #e8ecf5;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --border: rgba(232, 236, 245, 0.08);
+  --border-strong: rgba(232, 236, 245, 0.14);
+
+  /* Brand accents (from your Hero) */
+  --color-blue: #3b82f6;
+  --color-blue-light: #60a5fa;
+  --color-red: #ef4444;
+  --color-red-light: #f87171;
+  --color-green: #22c55e;          /* used in selection */
+
+  /* About section aliases (so the component works out of the box) */
+  --about-bg: var(--bg-primary);
+  --about-text: var(--text-primary);
+  --about-muted: var(--text-secondary);
+
+  /* Gradients */
+  --gradient-brand: linear-gradient(to right, #ef4444, #3b82f6);
+}
+
+/* Light mode */
+.light,
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-panel: #ffffff;
+  --bg-elevated: #ffffff;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.14);
+
+  --about-bg: var(--bg-primary);
+  --about-text: var(--text-primary);
+  --about-muted: var(--text-secondary);
+}
+
+/* Optional: follow system preference when no class is set */
+@media (prefers-color-scheme: light) {
+  :root:not(.dark):not([data-theme="dark"]) {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --bg-panel: #ffffff;
+    --bg-elevated: #ffffff;
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+
+    --about-bg: var(--bg-primary);
+    --about-text: var(--text-primary);
+    --about-muted: var(--text-secondary);
+  }
+}
+
+/* ================================
    THEME TRANSITION
 ================================ */
 
@@ -43,10 +123,13 @@ body {
 
 /*
  * Don't animate transforms and opacity globally.
- * Framer Motion needs full control over them.
+ * Framer Motion (and GSAP) need full control over them.
  */
-[class*="motion"] {
-  transition: none;
+[class*="motion"],
+[data-framer-component],
+.gsap-marker-start,
+.gsap-marker-end {
+  transition: none !important;
 }
 
 /* ================================
@@ -56,14 +139,6 @@ body {
 ::selection {
   background: var(--color-green);
   color: white;
-}
-
-/* ================================
-   SCROLLBAR (hidden)
-================================ */
-
-html::-webkit-scrollbar {
-  display: none;              /* Chrome, Safari, mobile browsers */
 }
 
 /* ================================
@@ -87,10 +162,27 @@ html::-webkit-scrollbar {
   }
 }
 
+
 .animate-float {
   animation: float linear infinite;
 }
 
+/* ================================
+   OPTIONAL UTILITIES
+
+.text-gradient-brand {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-panel {
+  background-color: var(--bg-panel);
+}
+
+.border-theme {
+  border-color: var(--border);
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
