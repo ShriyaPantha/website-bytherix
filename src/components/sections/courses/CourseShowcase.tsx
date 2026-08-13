@@ -1,66 +1,1060 @@
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
   Clock3,
   Signal,
+  Star,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 
-import { courses } from "../../../data/courses";
+import {
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 
-const accentStyles = {
+import {
+  courses,
+  type Course,
+} from "../../../data/courses";
+
+/* =========================================================
+   ACCENT CONFIG
+========================================================= */
+
+const accentStyles: Record<
+  Course["accent"],
+  {
+    color: string;
+    background: string;
+    border: string;
+  }
+> = {
   navy: {
-    color: "var(--accent-blue)",
-    soft: "var(--brand-blue-soft)",
-    border: "var(--brand-blue-border)",
+    color: "var(--course-navy)",
+    background: "var(--course-navy-soft)",
+    border: "var(--course-navy-border)",
   },
+
   green: {
-    color: "var(--accent-green)",
-    soft: "var(--brand-green-soft)",
-    border: "var(--brand-green-border)",
+    color: "var(--course-green)",
+    background: "var(--course-green-soft)",
+    border: "var(--course-green-border)",
   },
+
   red: {
-    color: "var(--accent-red)",
-    soft: "var(--brand-red-soft)",
-    border: "var(--brand-red-border)",
+    color: "var(--course-red)",
+    background: "var(--course-red-soft)",
+    border: "var(--course-red-border)",
   },
 };
 
-export default function CourseShowcase() {
-  const [activeIndex, setActiveIndex] = useState(0);
+/* =========================================================
+   COURSE CARD
+========================================================= */
 
-  const activeCourse = courses[activeIndex];
-  const accent =
-    accentStyles[activeCourse.accent] ?? accentStyles.navy;
+function CourseCard({
+  course,
+  featured = false,
+}: {
+  course: Course;
+  featured?: boolean;
+}) {
+  const accent = accentStyles[course.accent];
 
-  const Icon = activeCourse.icon;
+  const [hovered, setHovered] =
+    useState(false);
 
-  const nextCourse = () => {
-    setActiveIndex((current) =>
-      current === courses.length - 1 ? 0 : current + 1
-    );
+  /* -------------------------------------------------------
+     3D TILT
+  ------------------------------------------------------- */
+
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+
+  const smoothRotateX = useSpring(
+    rotateX,
+    {
+      stiffness: 180,
+      damping: 22,
+    },
+  );
+
+  const smoothRotateY = useSpring(
+    rotateY,
+    {
+      stiffness: 180,
+      damping: 22,
+    },
+  );
+
+  /* -------------------------------------------------------
+     CURSOR GLOW POSITION
+  ------------------------------------------------------- */
+
+  const mouseX = useMotionValue(50);
+  const mouseY = useMotionValue(50);
+
+  const smoothMouseX = useSpring(
+    mouseX,
+    {
+      stiffness: 180,
+      damping: 25,
+    },
+  );
+
+  const smoothMouseY = useSpring(
+    mouseY,
+    {
+      stiffness: 180,
+      damping: 25,
+    },
+  );
+
+  const glowLeft = useTransform(
+    smoothMouseX,
+    (value) => `${value}%`,
+  );
+
+  const glowTop = useTransform(
+    smoothMouseY,
+    (value) => `${value}%`,
+  );
+
+  /* -------------------------------------------------------
+     MOUSE MOVE
+  ------------------------------------------------------- */
+
+  const handleMouseMove = (
+    event: MouseEvent<HTMLElement>,
+  ) => {
+    const rect =
+      event.currentTarget.getBoundingClientRect();
+
+    const x =
+      ((event.clientX - rect.left) /
+        rect.width) *
+      100;
+
+    const y =
+      ((event.clientY - rect.top) /
+        rect.height) *
+      100;
+
+    mouseX.set(x);
+    mouseY.set(y);
+
+    const normalizedX =
+      (event.clientX - rect.left) /
+        rect.width -
+      0.5;
+
+    const normalizedY =
+      (event.clientY - rect.top) /
+        rect.height -
+      0.5;
+
+    rotateY.set(normalizedX * 5);
+    rotateX.set(-normalizedY * 5);
   };
 
-  const previousCourse = () => {
-    setActiveIndex((current) =>
-      current === 0 ? courses.length - 1 : current - 1
-    );
+  /* -------------------------------------------------------
+     MOUSE LEAVE
+  ------------------------------------------------------- */
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+
+    rotateX.set(0);
+    rotateY.set(0);
+
+    mouseX.set(50);
+    mouseY.set(50);
   };
 
-  /*
-   * Automatic course transition
-   */
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((current) =>
-        current === courses.length - 1 ? 0 : current + 1
+  return (
+    <motion.article
+      data-course-card
+      onMouseEnter={() =>
+        setHovered(true)
+      }
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX: smoothRotateX,
+        rotateY: smoothRotateY,
+        transformPerspective: 1000,
+
+        borderColor: hovered
+          ? accent.border
+          : "var(--course-border)",
+
+        boxShadow: hovered
+          ? `0 22px 55px rgba(0, 0, 0, 0.16)`
+          : "0 10px 30px rgba(0, 0, 0, 0.07)",
+      }}
+      whileTap={{
+        scale: 0.985,
+      }}
+      className={[
+        "group",
+        "relative",
+        "flex-none",
+        "overflow-hidden",
+        "rounded-[20px]",
+        "border",
+        "bg-[var(--course-card-bg)]",
+        "snap-start",
+        "transition-all",
+        "duration-300",
+
+        /*
+          FEATURED:
+          Desktop = small enough for 3 cards
+
+          TOP:
+          Mobile = 2 cards
+        */
+
+        featured
+          ? "w-[calc(100vw-70px)] sm:w-[330px] lg:w-[calc((100vw-160px)/3)] lg:max-w-[380px]"
+          : "w-[calc((100vw-60px)/2)] sm:w-[255px] lg:w-[285px]",
+      ].join(" ")}
+    >
+      {/* ===================================================
+          CURSOR GLOW
+      =================================================== */}
+
+      <motion.div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          z-20
+          h-32
+          w-32
+          -translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          blur-3xl
+        "
+        style={{
+          left: glowLeft,
+          top: glowTop,
+          backgroundColor: accent.color,
+          opacity: hovered ? 0.1 : 0,
+        }}
+      />
+
+      {/* ===================================================
+          IMAGE
+      =================================================== */}
+
+      <div
+        className={[
+          "relative",
+          "overflow-hidden",
+          "bg-black/10",
+
+          featured
+            ? "h-[175px] sm:h-[195px] lg:h-[185px]"
+            : "h-[125px] sm:h-[155px] lg:h-[165px]",
+        ].join(" ")}
+      >
+        <motion.img
+          src={course.image}
+          alt={course.title}
+          draggable={false}
+          animate={{
+            scale: hovered ? 1.05 : 1,
+          }}
+          transition={{
+            duration: 0.55,
+            ease: [
+              0.22,
+              1,
+              0.36,
+              1,
+            ],
+          }}
+          className="
+            h-full
+            w-full
+            select-none
+            object-cover
+          "
+        />
+
+        {/* Image overlay */}
+
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            bg-gradient-to-t
+            from-black/60
+            via-black/5
+            to-transparent
+          "
+        />
+
+        {/* Accent line */}
+
+        <motion.div
+          className="
+            absolute
+            bottom-0
+            left-0
+            h-[3px]
+          "
+          animate={{
+            width: hovered
+              ? "100%"
+              : "0%",
+          }}
+          transition={{
+            duration: 0.4,
+          }}
+          style={{
+            backgroundColor:
+              accent.color,
+          }}
+        />
+
+        {/* =================================================
+            RED BADGE
+        ================================================= */}
+
+        {course.badge && (
+          <motion.div
+            animate={{
+              y: hovered ? -2 : 0,
+            }}
+            transition={{
+              duration: 0.25,
+            }}
+            className="
+              absolute
+              left-3
+              top-3
+              rounded-md
+              px-2.5
+              py-1.5
+              text-[8px]
+              font-extrabold
+              uppercase
+              tracking-[0.1em]
+              shadow-lg
+            "
+            style={{
+              backgroundColor:
+                "var(--course-badge-bg)",
+
+              color:
+                "var(--course-badge-text)",
+            }}
+          >
+            {course.badge}
+          </motion.div>
+        )}
+
+        {/* Category */}
+
+        <div
+          className="
+            absolute
+            bottom-3
+            left-3
+            max-w-[85%]
+            truncate
+            rounded-full
+            border
+            border-white/20
+            bg-black/30
+            px-2.5
+            py-1
+            text-[7px]
+            font-semibold
+            uppercase
+            tracking-[0.1em]
+            text-white
+            backdrop-blur-md
+          "
+        >
+          {course.category}
+        </div>
+      </div>
+
+      {/* ===================================================
+          CONTENT
+      =================================================== */}
+
+      <div
+        className="
+          relative
+          z-10
+          p-3
+          sm:p-4
+          lg:p-5
+        "
+      >
+        {/* Category */}
+
+        <p
+          className="
+            mb-1.5
+            truncate
+            text-[7px]
+            font-bold
+            uppercase
+            tracking-[0.14em]
+            sm:text-[8px]
+          "
+          style={{
+            color: accent.color,
+          }}
+        >
+          {course.category}
+        </p>
+
+        {/* Title */}
+
+        <h3
+          className={[
+            "font-bold",
+            "leading-tight",
+            "tracking-[-0.025em]",
+            "text-[var(--course-card-text)]",
+
+            featured
+              ? "text-base sm:text-lg lg:text-xl"
+              : "text-xs sm:text-base lg:text-lg",
+          ].join(" ")}
+        >
+          {course.title}
+        </h3>
+
+        {/* Instructor */}
+
+        <p
+          className="
+            mt-1.5
+            truncate
+            text-[8px]
+            text-[var(--course-card-muted)]
+            sm:text-[10px]
+          "
+        >
+          {course.instructor}
+        </p>
+
+        {/* =================================================
+            RATING
+        ================================================= */}
+
+        <div
+          className="
+            mt-2.5
+            flex
+            items-center
+            gap-1
+            sm:gap-1.5
+          "
+        >
+          <span
+            className="
+              text-[9px]
+              font-bold
+              text-amber-500
+              sm:text-xs
+            "
+          >
+            {course.rating.toFixed(1)}
+          </span>
+
+          <div className="flex items-center gap-0.5">
+            {[1, 2, 3, 4, 5].map(
+              (star) => (
+                <Star
+                  key={star}
+                  size={10}
+                  fill="#f59e0b"
+                  strokeWidth={0}
+                  className="sm:h-3 sm:w-3"
+                />
+              ),
+            )}
+          </div>
+
+          <span
+            className="
+              text-[7px]
+              text-[var(--course-card-muted)]
+              sm:text-[10px]
+            "
+          >
+            (
+            {course.reviews.toLocaleString()}
+            )
+          </span>
+        </div>
+
+        {/* =================================================
+            META
+        ================================================= */}
+
+        <div
+          className="
+            mt-2.5
+            flex
+            flex-wrap
+            gap-x-3
+            gap-y-1.5
+          "
+        >
+          <span
+            className="
+              flex
+              items-center
+              gap-1
+              text-[7px]
+              text-[var(--course-card-muted)]
+              sm:text-[9px]
+            "
+          >
+            <Clock3
+              size={10}
+            />
+
+            {course.duration}
+          </span>
+
+          <span
+            className="
+              flex
+              items-center
+              gap-1
+              text-[7px]
+              text-[var(--course-card-muted)]
+              sm:text-[9px]
+            "
+          >
+            <Signal
+              size={10}
+            />
+
+            {course.level}
+          </span>
+        </div>
+
+        {/* =================================================
+            PRICE + CTA
+        ================================================= */}
+
+        <div
+          className="
+            mt-3
+            flex
+            items-end
+            justify-between
+            gap-2
+          "
+        >
+          <div className="min-w-0">
+            <p
+              className="
+                text-[6px]
+                font-semibold
+                uppercase
+                tracking-[0.12em]
+                text-[var(--course-card-muted)]
+                sm:text-[7px]
+              "
+            >
+              Course Fee
+            </p>
+
+            <p
+              className={[
+                "mt-0.5",
+                "font-bold",
+                "text-[var(--course-card-text)]",
+
+                featured
+                  ? "text-base sm:text-xl"
+                  : "text-sm sm:text-lg",
+              ].join(" ")}
+            >
+              {course.price}
+            </p>
+          </div>
+
+          {/* CTA */}
+
+          <motion.button
+            type="button"
+            whileHover={{
+              scale: 1.04,
+            }}
+            whileTap={{
+              scale: 0.95,
+            }}
+            className="
+              flex
+              shrink-0
+              items-center
+              gap-1
+              rounded-full
+              border
+              px-2.5
+              py-1.5
+              text-[7px]
+              font-bold
+              transition-all
+              sm:gap-1.5
+              sm:px-3
+              sm:py-2
+              sm:text-[8px]
+            "
+            style={{
+              borderColor:
+                accent.border,
+
+              backgroundColor:
+                accent.background,
+
+              color: accent.color,
+            }}
+          >
+            View
+            <ArrowRight
+              size={10}
+            />
+          </motion.button>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+function SectionHeading({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 15,
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+      }}
+      viewport={{
+        once: true,
+        amount: 0.2,
+      }}
+      transition={{
+        duration: 0.55,
+      }}
+      className="mb-6 sm:mb-7"
+    >
+      <h2
+        className="
+          text-2xl
+          font-bold
+          leading-tight
+          tracking-[-0.04em]
+          text-[var(--course-card-text)]
+          sm:text-3xl
+          lg:text-[38px]
+        "
+      >
+        {children}
+      </h2>
+    </motion.div>
+  );
+}
+
+/* =========================================================
+   CAROUSEL
+========================================================= */
+
+function CourseCarousel({
+  coursesToShow,
+  featured = false,
+}: {
+  coursesToShow: Course[];
+  featured?: boolean;
+}) {
+  const carouselRef =
+    useRef<HTMLDivElement>(null);
+
+  const [isDragging, setIsDragging] =
+    useState(false);
+
+  const [dragStartX, setDragStartX] =
+    useState<number | null>(null);
+
+  const [initialScrollLeft, setInitialScrollLeft] =
+    useState(0);
+
+  /* -------------------------------------------------------
+     GET CARD SCROLL WIDTH
+  ------------------------------------------------------- */
+
+  const getScrollAmount = () => {
+    const container =
+      carouselRef.current;
+
+    if (!container) return 0;
+
+    const firstCard =
+      container.querySelector<HTMLElement>(
+        "[data-course-card]",
       );
-    }, 5000);
 
-    return () => clearInterval(interval);
-  }, []);
+    if (!firstCard) return 0;
+
+    /*
+      Card width + gap
+    */
+
+    const styles =
+      window.getComputedStyle(
+        container,
+      );
+
+    const gap =
+      parseFloat(styles.columnGap) ||
+      20;
+
+    return (
+      firstCard.offsetWidth + gap
+    );
+  };
+
+  /* -------------------------------------------------------
+     NEXT / PREVIOUS
+  ------------------------------------------------------- */
+
+  const scroll = (
+    direction: "left" | "right",
+  ) => {
+    const container =
+      carouselRef.current;
+
+    if (!container) return;
+
+    const amount =
+      getScrollAmount();
+
+    container.scrollBy({
+      left:
+        direction === "left"
+          ? -amount
+          : amount,
+
+      behavior: "smooth",
+    });
+  };
+
+  /* -------------------------------------------------------
+     DRAG START
+  ------------------------------------------------------- */
+
+  const handleMouseDown = (
+    event: MouseEvent<HTMLDivElement>,
+  ) => {
+    if (!carouselRef.current)
+      return;
+
+    /*
+      Don't start drag from buttons.
+    */
+
+    const target =
+      event.target as HTMLElement;
+
+    if (
+      target.closest("button")
+    ) {
+      return;
+    }
+
+    setIsDragging(true);
+
+    setDragStartX(
+      event.clientX,
+    );
+
+    setInitialScrollLeft(
+      carouselRef.current.scrollLeft,
+    );
+  };
+
+  /* -------------------------------------------------------
+     DRAG MOVE
+  ------------------------------------------------------- */
+
+  const handleMouseMove = (
+    event: MouseEvent<HTMLDivElement>,
+  ) => {
+    if (
+      !isDragging ||
+      dragStartX === null ||
+      !carouselRef.current
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const distance =
+      event.clientX -
+      dragStartX;
+
+    carouselRef.current.scrollLeft =
+      initialScrollLeft -
+      distance;
+  };
+
+  /* -------------------------------------------------------
+     DRAG END
+  ------------------------------------------------------- */
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setDragStartX(null);
+  };
+
+  return (
+    <div className="relative">
+      {/* =================================================
+          LEFT ARROW
+      ================================================= */}
+
+      <motion.button
+        type="button"
+        aria-label="Previous courses"
+        onClick={() =>
+          scroll("left")
+        }
+        whileHover={{
+          scale: 1.08,
+        }}
+        whileTap={{
+          scale: 0.92,
+        }}
+        className="
+          absolute
+          left-1
+          top-1/2
+          z-40
+          flex
+          h-8
+          w-8
+          -translate-y-1/2
+          items-center
+          justify-center
+          rounded-full
+          border
+          shadow-lg
+          backdrop-blur-md
+
+          sm:left-3
+          sm:h-10
+          sm:w-10
+
+          lg:-left-5
+          lg:h-11
+          lg:w-11
+        "
+        style={{
+          backgroundColor:
+            "var(--course-arrow-bg)",
+
+          color:
+            "var(--course-arrow-text)",
+
+          borderColor:
+            "var(--course-arrow-border)",
+        }}
+      >
+        <ArrowLeft
+          size={13}
+          strokeWidth={2.5}
+        />
+      </motion.button>
+
+      {/* =================================================
+          CARDS
+      ================================================= */}
+
+      <div
+        ref={carouselRef}
+        onMouseDown={
+          handleMouseDown
+        }
+        onMouseMove={
+          handleMouseMove
+        }
+        onMouseUp={
+          handleMouseUp
+        }
+        onMouseLeave={
+          handleMouseUp
+        }
+        className={[
+          "flex",
+          "gap-5",
+          "overflow-x-auto",
+          "pb-5",
+          "snap-x",
+          "snap-mandatory",
+          "scrollbar-hide",
+          "select-none",
+          "px-5",
+          "sm:px-2",
+          "lg:px-0",
+
+          isDragging
+            ? "cursor-grabbing"
+            : "cursor-grab",
+        ].join(" ")}
+        style={{
+          WebkitOverflowScrolling:
+            "touch",
+
+          scrollBehavior:
+            "smooth",
+
+          /*
+            Prevent browser from
+            interpreting horizontal
+            swipe badly on mobile.
+          */
+
+          touchAction:
+            "pan-x",
+        }}
+      >
+        {coursesToShow.map(
+          (course, index) => (
+            <motion.div
+              key={course.id}
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+                amount: 0.1,
+              }}
+              transition={{
+                duration: 0.45,
+                delay: Math.min(
+                  index * 0.05,
+                  0.25,
+                ),
+              }}
+            >
+              <CourseCard
+                course={course}
+                featured={featured}
+              />
+            </motion.div>
+          ),
+        )}
+      </div>
+
+      {/* =================================================
+          RIGHT ARROW
+      ================================================= */}
+
+      <motion.button
+        type="button"
+        aria-label="Next courses"
+        onClick={() =>
+          scroll("right")
+        }
+        whileHover={{
+          scale: 1.08,
+        }}
+        whileTap={{
+          scale: 0.92,
+        }}
+        className="
+          absolute
+          right-1
+          top-1/2
+          z-40
+          flex
+          h-8
+          w-8
+          -translate-y-1/2
+          items-center
+          justify-center
+          rounded-full
+          border
+          shadow-lg
+          backdrop-blur-md
+
+          sm:right-3
+          sm:h-10
+          sm:w-10
+
+          lg:-right-5
+          lg:h-11
+          lg:w-11
+        "
+        style={{
+          backgroundColor:
+            "var(--course-arrow-bg)",
+
+          color:
+            "var(--course-arrow-text)",
+
+          borderColor:
+            "var(--course-arrow-border)",
+        }}
+      >
+        <ArrowRight
+          size={13}
+          strokeWidth={2.5}
+        />
+      </motion.button>
+    </div>
+  );
+}
+
+/* =========================================================
+   MAIN COURSE SHOWCASE
+========================================================= */
+
+export default function CourseShowcase() {
+  const featuredCourses =
+    courses.filter(
+      (course) =>
+        course.featured === true,
+    );
 
   return (
     <section
@@ -70,37 +1064,55 @@ export default function CourseShowcase() {
         isolate
         overflow-hidden
         bg-[var(--bg-primary)]
-        py-20
-        text-[var(--text-primary)]
+        py-16
         transition-colors
         duration-500
 
-        sm:py-24
-        lg:py-28
-        xl:py-32
+        sm:py-20
+        lg:py-24
       "
     >
-      {/* Background glow */}
+      {/* =================================================
+          BACKGROUND GLOW
+      ================================================= */}
 
-      <div
+      <motion.div
         aria-hidden="true"
         className="
           pointer-events-none
           absolute
           -left-40
           top-20
-          h-[360px]
-          w-[360px]
+          h-[350px]
+          w-[350px]
           rounded-full
-          blur-[130px]
+          blur-[140px]
         "
+        animate={{
+          scale: [
+            1,
+            1.08,
+            1,
+          ],
+
+          opacity: [
+            0.02,
+            0.045,
+            0.02,
+          ],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
         style={{
-          backgroundColor: "var(--accent-blue)",
-          opacity: 0.045,
+          backgroundColor:
+            "var(--course-navy)",
         }}
       />
 
-      <div
+      <motion.div
         aria-hidden="true"
         className="
           pointer-events-none
@@ -112,18 +1124,40 @@ export default function CourseShowcase() {
           rounded-full
           blur-[140px]
         "
+        animate={{
+          scale: [
+            1,
+            1.08,
+            1,
+          ],
+
+          opacity: [
+            0.015,
+            0.035,
+            0.015,
+          ],
+        }}
+        transition={{
+          duration: 9,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
         style={{
-          backgroundColor: "var(--accent-green)",
-          opacity: 0.04,
+          backgroundColor:
+            "var(--course-green)",
         }}
       />
+
+      {/* =================================================
+          MAIN CONTAINER
+      ================================================= */}
 
       <div
         className="
           relative
           z-10
           mx-auto
-          max-w-[1320px]
+          max-w-[1400px]
           px-5
 
           sm:px-8
@@ -132,13 +1166,13 @@ export default function CourseShowcase() {
         "
       >
         {/* =================================================
-            HEADER
+            INTRO
         ================================================= */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 24,
+            y: 20,
           }}
           whileInView={{
             opacity: 1,
@@ -146,38 +1180,53 @@ export default function CourseShowcase() {
           }}
           viewport={{
             once: true,
-            amount: 0.25,
           }}
           transition={{
-            duration: 0.7,
-            ease: [0.22, 1, 0.36, 1],
+            duration: 0.65,
           }}
           className="
-            mb-10
+            mb-12
             max-w-3xl
 
-            sm:mb-12
-            lg:mb-14
+            sm:mb-14
           "
         >
-          <div className="mb-4 flex items-center gap-2.5">
+          {/* Eyebrow */}
+
+          <div
+            className="
+              mb-3
+              flex
+              items-center
+              gap-2
+            "
+          >
             <motion.span
+              animate={{
+                scale: [
+                  1,
+                  1.3,
+                  1,
+                ],
+
+                opacity: [
+                  0.5,
+                  1,
+                  0.5,
+                ],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
               className="
                 h-1.5
                 w-1.5
                 rounded-full
               "
               style={{
-                backgroundColor: "var(--accent-green)",
-              }}
-              animate={{
-                scale: [1, 1.35, 1],
-                opacity: [0.6, 1, 0.6],
-              }}
-              transition={{
-                duration: 2.2,
-                repeat: Infinity,
-                ease: "easeInOut",
+                backgroundColor:
+                  "var(--course-green)",
               }}
             />
 
@@ -186,26 +1235,29 @@ export default function CourseShowcase() {
                 text-[9px]
                 font-bold
                 uppercase
-                tracking-[0.22em]
-                text-[var(--accent-green)]
-
-                sm:text-[10px]
+                tracking-[0.2em]
               "
+              style={{
+                color:
+                  "var(--course-green)",
+              }}
             >
               Learn With Bytherix
             </span>
           </div>
 
-          <h2
+          {/* Main heading */}
+
+          <h1
             className="
-              text-[36px]
+              text-4xl
               font-bold
-              leading-[1.05]
-              tracking-[-0.045em]
+              leading-[1.03]
+              tracking-[-0.05em]
+              text-[var(--course-card-text)]
 
               sm:text-5xl
-              lg:text-[54px]
-              xl:text-[60px]
+              lg:text-6xl
             "
           >
             Build skills.
@@ -213,696 +1265,74 @@ export default function CourseShowcase() {
 
             <span
               style={{
-                color: "var(--accent-blue)",
+                color:
+                  "var(--course-navy)",
               }}
             >
               Build the future.
             </span>
-          </h2>
+          </h1>
+
+          {/* Description */}
 
           <p
             className="
-              mt-5
+              mt-4
               max-w-2xl
-              text-[14px]
+              text-sm
               leading-6
-              text-[var(--text-secondary)]
+              text-[var(--course-card-muted)]
 
               sm:text-base
               sm:leading-7
-              lg:text-lg
             "
           >
-            Learn practical, in-demand technology skills through
-            hands-on courses designed for real-world development.
+            Learn practical,
+            in-demand technology
+            skills through
+            hands-on courses
+            designed for
+            real-world development.
           </p>
         </motion.div>
 
         {/* =================================================
-            SHOWCASE
+            FEATURED COURSES
         ================================================= */}
 
-        <div
-          className="
-            relative
-            overflow-hidden
-            rounded-[28px]
-            bg-[var(--course-showcase-bg)]
-            shadow-[var(--course-showcase-shadow)]
+        <div className="mb-16 sm:mb-20">
+          <SectionHeading>
+            Featured Courses
+          </SectionHeading>
 
-            sm:rounded-[32px]
-            lg:min-h-[580px]
-          "
-        >
-          {/* Grid */}
-
-          <div
-            aria-hidden="true"
-            className="
-              pointer-events-none
-              absolute
-              inset-0
-              opacity-[0.07]
-            "
-            style={{
-              backgroundImage: `
-                linear-gradient(
-                  to right,
-                  rgba(255,255,255,0.15) 1px,
-                  transparent 1px
-                ),
-                linear-gradient(
-                  to bottom,
-                  rgba(255,255,255,0.15) 1px,
-                  transparent 1px
-                )
-              `,
-              backgroundSize: "64px 64px",
-            }}
+          <CourseCarousel
+            coursesToShow={
+              featuredCourses
+            }
+            featured
           />
+        </div>
 
-          {/* Accent glow */}
+        {/* =================================================
+            TOP COURSES
+        ================================================= */}
 
-          <motion.div
-            key={`glow-${activeCourse.id}`}
-            className="
-              pointer-events-none
-              absolute
-              left-1/2
-              top-1/2
-              h-[300px]
-              w-[300px]
-              -translate-x-1/2
-              -translate-y-1/2
-              rounded-full
-              blur-[110px]
+        <div>
+          <SectionHeading>
+            Top Courses in{" "}
+            <span
+              style={{
+                color:
+                  "var(--course-navy)",
+              }}
+            >
+              IT & Software
+            </span>
+          </SectionHeading>
 
-              sm:h-[420px]
-              sm:w-[420px]
-            "
-            style={{
-              backgroundColor: accent.color,
-              opacity: 0.13,
-            }}
-            initial={{
-              scale: 0.7,
-              opacity: 0,
-            }}
-            animate={{
-              scale: 1,
-              opacity: 0.13,
-            }}
-            transition={{
-              duration: 0.8,
-            }}
+          <CourseCarousel
+            coursesToShow={courses}
           />
-
-          <div
-            className="
-              relative
-              z-10
-              grid
-              min-h-[560px]
-              grid-cols-1
-
-              lg:grid-cols-[0.85fr_1.15fr]
-            "
-          >
-            {/* =================================================
-                LEFT CONTENT
-            ================================================= */}
-
-            <div
-              className="
-                flex
-                flex-col
-                justify-center
-                p-7
-
-                sm:p-10
-                lg:p-14
-                xl:p-16
-              "
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeCourse.id}
-                  initial={{
-                    opacity: 0,
-                    x: -25,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    x: 25,
-                  }}
-                  transition={{
-                    duration: 0.45,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                >
-                  {/* Number */}
-
-                  <span
-                    className="
-                      text-[10px]
-                      font-semibold
-                      uppercase
-                      tracking-[0.2em]
-                    "
-                    style={{
-                      color: accent.color,
-                    }}
-                  >
-                    Course {String(activeIndex + 1).padStart(2, "0")}
-                  </span>
-
-                  {/* Title */}
-
-                  <h3
-                    className="
-                      mt-4
-                      max-w-xl
-                      text-[36px]
-                      font-bold
-                      leading-[1.02]
-                      tracking-[-0.045em]
-                      text-white
-
-                      sm:text-5xl
-                      lg:text-[52px]
-                      xl:text-[60px]
-                    "
-                  >
-                    {activeCourse.title}
-                  </h3>
-
-                  {/* Description */}
-
-                  <p
-                    className="
-                      mt-5
-                      max-w-lg
-                      text-[13px]
-                      leading-6
-                      text-white/65
-
-                      sm:text-sm
-                      sm:leading-7
-                      lg:text-base
-                    "
-                  >
-                    {activeCourse.description}
-                  </p>
-
-                  {/* Meta */}
-
-                  <div
-                    className="
-                      mt-7
-                      flex
-                      flex-wrap
-                      gap-3
-                    "
-                  >
-                    <span
-                      className="
-                        inline-flex
-                        items-center
-                        gap-2
-                        rounded-full
-                        border
-                        px-3.5
-                        py-2
-                        text-[10px]
-                        font-medium
-                        text-white/80
-                      "
-                      style={{
-                        borderColor:
-                          "rgba(255,255,255,0.12)",
-                        backgroundColor:
-                          "rgba(255,255,255,0.04)",
-                      }}
-                    >
-                      <Clock3 size={13} />
-                      {activeCourse.duration}
-                    </span>
-
-                    <span
-                      className="
-                        inline-flex
-                        items-center
-                        gap-2
-                        rounded-full
-                        border
-                        px-3.5
-                        py-2
-                        text-[10px]
-                        font-medium
-                        text-white/80
-                      "
-                      style={{
-                        borderColor:
-                          "rgba(255,255,255,0.12)",
-                        backgroundColor:
-                          "rgba(255,255,255,0.04)",
-                      }}
-                    >
-                      <Signal size={13} />
-                      {activeCourse.level}
-                    </span>
-                  </div>
-
-                  {/* Price */}
-
-                  <div className="mt-7">
-                    <span
-                      className="
-                        text-[9px]
-                        font-medium
-                        uppercase
-                        tracking-[0.16em]
-                        text-white/45
-                      "
-                    >
-                      Course Fee
-                    </span>
-
-                    <div
-                      className="
-                        mt-1
-                        text-2xl
-                        font-bold
-                        text-white
-                      "
-                    >
-                      {activeCourse.price}
-                    </div>
-                  </div>
-
-                  {/* CTA */}
-
-                  <motion.button
-                    type="button"
-                    whileHover={{
-                      scale: 1.03,
-                    }}
-                    whileTap={{
-                      scale: 0.97,
-                    }}
-                    className="
-                      mt-7
-                      inline-flex
-                      w-fit
-                      items-center
-                      gap-2
-                      rounded-full
-                      px-5
-                      py-3
-                      text-[11px]
-                      font-semibold
-                    "
-                    style={{
-                      backgroundColor: accent.color,
-                      color: "#ffffff",
-                    }}
-                  >
-                    View Course
-                    <ArrowUpRight size={15} />
-                  </motion.button>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* =================================================
-                RIGHT VISUAL
-            ================================================= */}
-
-            <div
-              className="
-                relative
-                flex
-                min-h-[330px]
-                items-center
-                justify-center
-                overflow-hidden
-                px-5
-                pb-10
-
-                sm:min-h-[400px]
-                sm:px-10
-
-                lg:min-h-0
-                lg:px-12
-                lg:pb-0
-              "
-            >
-              {/* Decorative circle */}
-
-              <motion.div
-                className="
-                  absolute
-                  h-[220px]
-                  w-[220px]
-                  rounded-full
-                  border
-
-                  sm:h-[300px]
-                  sm:w-[300px]
-                "
-                style={{
-                  borderColor: accent.border,
-                }}
-                animate={{
-                  rotate: 360,
-                }}
-                transition={{
-                  duration: 25,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-
-              {/* Outer ring */}
-
-              <motion.div
-                className="
-                  absolute
-                  h-[290px]
-                  w-[290px]
-                  rounded-full
-                  border
-
-                  sm:h-[390px]
-                  sm:w-[390px]
-                "
-                style={{
-                  borderColor:
-                    "rgba(255,255,255,0.07)",
-                }}
-                animate={{
-                  rotate: -360,
-                }}
-                transition={{
-                  duration: 35,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-
-              {/* Main Course Card */}
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeCourse.id}
-                  initial={{
-                    opacity: 0,
-                    scale: 0.8,
-                    rotate: -7,
-                    y: 30,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                    rotate: 0,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0.85,
-                    rotate: 7,
-                    y: -20,
-                  }}
-                  transition={{
-                    duration: 0.6,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="
-                    relative
-                    z-20
-                    flex
-                    h-[220px]
-                    w-[250px]
-                    flex-col
-                    items-center
-                    justify-center
-                    rounded-[28px]
-                    border
-                    backdrop-blur-xl
-
-                    sm:h-[270px]
-                    sm:w-[310px]
-                  "
-                  style={{
-                    backgroundColor:
-                      "rgba(255,255,255,0.07)",
-                    borderColor:
-                      "rgba(255,255,255,0.14)",
-                    boxShadow:
-                      "0 30px 80px rgba(0,0,0,0.28)",
-                  }}
-                >
-                  {/* Icon */}
-
-                  <motion.div
-                    animate={{
-                      y: [0, -7, 0],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="
-                      flex
-                      h-20
-                      w-20
-                      items-center
-                      justify-center
-                      rounded-[22px]
-                      border
-
-                      sm:h-24
-                      sm:w-24
-                    "
-                    style={{
-                      backgroundColor: accent.soft,
-                      borderColor: accent.border,
-                    }}
-                  >
-                    <Icon
-                      className="
-                        h-10
-                        w-10
-
-                        sm:h-12
-                        sm:w-12
-                      "
-                      strokeWidth={1.5}
-                      style={{
-                        color: accent.color,
-                      }}
-                    />
-                  </motion.div>
-
-                  {/* Category */}
-
-                  <span
-                    className="
-                      mt-5
-                      text-[9px]
-                      font-semibold
-                      uppercase
-                      tracking-[0.16em]
-                    "
-                    style={{
-                      color: accent.color,
-                    }}
-                  >
-                    {activeCourse.category}
-                  </span>
-
-                  {/* Title */}
-
-                  <span
-                    className="
-                      mt-2
-                      text-center
-                      text-base
-                      font-semibold
-                      text-white
-
-                      sm:text-lg
-                    "
-                  >
-                    {activeCourse.title}
-                  </span>
-
-                  {/* Floating shapes */}
-
-                  <motion.span
-                    className="
-                      absolute
-                      -left-4
-                      top-10
-                      h-8
-                      w-8
-                      rounded-xl
-                      border
-                    "
-                    style={{
-                      borderColor: accent.border,
-                      backgroundColor:
-                        "rgba(255,255,255,0.06)",
-                    }}
-                    animate={{
-                      y: [0, -8, 0],
-                      rotate: [0, 8, 0],
-                    }}
-                    transition={{
-                      duration: 3.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-
-                  <motion.span
-                    className="
-                      absolute
-                      -right-4
-                      bottom-10
-                      h-10
-                      w-10
-                      rounded-xl
-                      border
-                    "
-                    style={{
-                      borderColor: accent.border,
-                      backgroundColor:
-                        "rgba(255,255,255,0.06)",
-                    }}
-                    animate={{
-                      y: [0, 8, 0],
-                      rotate: [0, -8, 0],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* =================================================
-              BOTTOM NAVIGATION
-          ================================================= */}
-
-          <div
-            className="
-              absolute
-              bottom-5
-              left-6
-              right-6
-              z-30
-              flex
-              items-center
-              justify-between
-
-              sm:bottom-7
-              sm:left-8
-              sm:right-8
-            "
-          >
-            {/* Progress */}
-
-            <div className="flex items-center gap-2">
-              {courses.map((course, index) => (
-                <button
-                  key={course.id}
-                  type="button"
-                  aria-label={`Go to ${course.title}`}
-                  onClick={() => setActiveIndex(index)}
-                  className="
-                    h-1.5
-                    rounded-full
-                    transition-all
-                    duration-300
-                  "
-                  style={{
-                    width:
-                      index === activeIndex
-                        ? "28px"
-                        : "7px",
-                    backgroundColor:
-                      index === activeIndex
-                        ? accent.color
-                        : "rgba(255,255,255,0.25)",
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Controls */}
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={previousCourse}
-                aria-label="Previous course"
-                className="
-                  flex
-                  h-9
-                  w-9
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  text-white/70
-                  transition-all
-                  hover:bg-white/10
-                  hover:text-white
-                "
-                style={{
-                  borderColor:
-                    "rgba(255,255,255,0.14)",
-                }}
-              >
-                <ArrowLeft size={15} />
-              </button>
-
-              <button
-                type="button"
-                onClick={nextCourse}
-                aria-label="Next course"
-                className="
-                  flex
-                  h-9
-                  w-9
-                  items-center
-                  justify-center
-                  rounded-full
-                  border
-                  text-white/70
-                  transition-all
-                  hover:bg-white/10
-                  hover:text-white
-                "
-                style={{
-                  borderColor:
-                    "rgba(255,255,255,0.14)",
-                }}
-              >
-                <ArrowRight size={15} />
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </section>

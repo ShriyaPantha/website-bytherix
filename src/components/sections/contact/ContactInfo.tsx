@@ -86,7 +86,7 @@ const getContactIcon = (type: ContactIconType) => {
     case "phone":
       return (
         <Phone
-          size={27}
+          size={22}
           strokeWidth={2}
           aria-hidden="true"
         />
@@ -95,7 +95,7 @@ const getContactIcon = (type: ContactIconType) => {
     case "location":
       return (
         <MapPin
-          size={27}
+          size={22}
           strokeWidth={2}
           aria-hidden="true"
         />
@@ -104,7 +104,7 @@ const getContactIcon = (type: ContactIconType) => {
     case "email":
       return (
         <Mail
-          size={27}
+          size={22}
           strokeWidth={2}
           aria-hidden="true"
         />
@@ -120,13 +120,17 @@ const getSocialIcon = (icon: SocialIconType) => {
     case "youtube":
       return (
         <FaYoutube
-          size={19}
+          size={17}
           aria-hidden="true"
           className="
-            transition-colors
+            text-[#FF0000]
+            transition-all
             duration-300
+            group-hover:scale-110
             group-hover:text-[#FF0000]
+            group-focus-visible:scale-110
             group-focus-visible:text-[#FF0000]
+            group-active:text-[#FF0000]
           "
         />
       );
@@ -134,34 +138,56 @@ const getSocialIcon = (icon: SocialIconType) => {
     case "facebook":
       return (
         <FaFacebookF
-          size={19}
+          size={17}
           aria-hidden="true"
           className="
-            transition-colors
+            text-[#1877F2]
+            transition-all
             duration-300
+            group-hover:scale-110
             group-hover:text-[#1877F2]
+            group-focus-visible:scale-110
             group-focus-visible:text-[#1877F2]
+            group-active:text-[#1877F2]
           "
         />
       );
 
     case "instagram":
-  return (
-    <FaInstagram
-      size={21}
-      aria-hidden="true"
-      className="transition-all duration-300 group-hover:text-[#E1306C]"
-    />
-  );
+      return (
+        <FaInstagram
+          size={19}
+          aria-hidden="true"
+          className="
+            text-[#E1306C]
+            transition-all
+            duration-300
+            group-hover:scale-110
+            group-hover:text-[#E1306C]
+            group-focus-visible:scale-110
+            group-focus-visible:text-[#E1306C]
+            group-active:text-[#E1306C]
+          "
+        />
+      );
 
     case "tiktok":
-  return (
-    <FaTiktok
-      size={20}
-      aria-hidden="true"
-      className="transition-all duration-300 group-hover:text-black"
-    />
-  );
+      return (
+        <FaTiktok
+          size={18}
+          aria-hidden="true"
+          className="
+            text-[#111111]
+            transition-all
+            duration-300
+            group-hover:scale-110
+            group-hover:text-[#111111]
+            group-focus-visible:scale-110
+            group-focus-visible:text-[#111111]
+            group-active:text-[#111111]
+          "
+        />
+      );
 
     default:
       return null;
@@ -190,21 +216,20 @@ const ContactInfo = () => {
       aria-label="Contact information"
       className="
         relative
-        min-h-full
         overflow-hidden
         bg-blue-950
-        px-7
-        py-10
+        px-5
+        py-6
         text-white
 
-        sm:px-10
-        sm:py-12
+        sm:px-7
+        sm:py-7
 
-        lg:px-8
-        lg:py-14
-        lg:pl-16
+        lg:px-6
+        lg:py-8
+        lg:pl-12
 
-        lg:[clip-path:polygon(14%_0,100%_0,100%_100%,14%_100%,0_50%)]
+        lg:[clip-path:polygon(12%_0,100%_0,100%_100%,12%_100%,0_50%)]
       "
     >
       <div
@@ -215,8 +240,6 @@ const ContactInfo = () => {
           h-full
           flex-col
           justify-center
-
-          lg:min-h-[430px]
         "
       >
         {/* Contact Details */}
@@ -224,14 +247,14 @@ const ContactInfo = () => {
           className="
             mx-auto
             w-full
-            max-w-[300px]
-            space-y-7
+            max-w-[270px]
+            space-y-4
 
-            sm:max-w-[340px]
-            sm:space-y-8
+            sm:max-w-[300px]
+            sm:space-y-5
 
-            lg:max-w-[310px]
-            lg:space-y-8
+            lg:max-w-[290px]
+            lg:space-y-5
           "
         >
           {contactInfo.map((item) => {
@@ -245,14 +268,14 @@ const ContactInfo = () => {
                   group
                   flex
                   items-center
-                  gap-5
+                  gap-3
                   outline-none
                   transition-transform
                   duration-300
                   hover:translate-x-1
                   focus-visible:ring-2
                   focus-visible:ring-[var(--color-green)]
-                  focus-visible:ring-offset-4
+                  focus-visible:ring-offset-2
                   focus-visible:ring-offset-[var(--color-navy)]
                 "
               >
@@ -261,8 +284,8 @@ const ContactInfo = () => {
                   aria-hidden="true"
                   className="
                     flex
-                    h-11
-                    w-11
+                    h-9
+                    w-9
                     shrink-0
                     items-center
                     justify-center
@@ -272,8 +295,8 @@ const ContactInfo = () => {
                     group-hover:text-white
                     group-focus-visible:text-white
 
-                    sm:h-12
-                    sm:w-12
+                    sm:h-10
+                    sm:w-10
                   "
                 >
                   {getContactIcon(item.type)}
@@ -291,11 +314,11 @@ const ContactInfo = () => {
                     <span
                       className="
                         block
-                        space-y-1
-                        text-xs
-                        leading-5
+                        space-y-0.5
+                        text-[11px]
+                        leading-4
 
-                        sm:text-[13px]
+                        sm:text-xs
                       "
                     >
                       <span
@@ -329,16 +352,16 @@ const ContactInfo = () => {
                     <span
                       className="
                         block
-                        text-sm
+                        text-xs
                         font-medium
-                        leading-6
+                        leading-5
                         text-[var(--color-green)]
                         transition-colors
                         duration-300
                         group-hover:text-white
                         group-focus-visible:text-white
 
-                        sm:text-[15px]
+                        sm:text-sm
                       "
                     >
                       {item.value}
@@ -353,13 +376,13 @@ const ContactInfo = () => {
         {/* Social Links */}
         <div
           className="
-            mt-10
+            mt-6
             flex
             justify-center
-            gap-4
+            gap-3
 
-            sm:mt-12
-            sm:gap-5
+            sm:mt-7
+            sm:gap-4
           "
         >
           {socialLinks.map((social) => (
@@ -373,8 +396,8 @@ const ContactInfo = () => {
               className="
                 group
                 flex
-                h-11
-                w-11
+                h-9
+                w-9
                 items-center
                 justify-center
                 rounded-md
@@ -388,15 +411,15 @@ const ContactInfo = () => {
                 transition-all
                 duration-300
 
-                hover:-translate-y-1
+                hover:-translate-y-0.5
 
                 focus-visible:ring-2
                 focus-visible:ring-[var(--color-green)]
                 focus-visible:ring-offset-2
                 focus-visible:ring-offset-[var(--color-navy)]
 
-                sm:h-12
-                sm:w-12
+                sm:h-10
+                sm:w-10
               "
             >
               {getSocialIcon(social.icon)}
