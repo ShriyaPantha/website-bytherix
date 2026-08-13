@@ -1,9 +1,7 @@
 import { lazy, Suspense } from "react";
-
-
-const Hero = lazy(() => import("../components/sections/Hero"));
-const AboutSection = lazy( () => import("../components/sections/about/AboutSection")
-);
+import Hero from "../components/sections/hero/Hero";
+import About from "../components/sections/about/About";
+import HeroBackground from "../components/sections/hero/HeroBackground"; // adjust path if needed
 
 const Services = lazy(() => import("../components/sections/Services"));
 const Courses = lazy(() => import("../components/sections/courses/Courses"));
@@ -11,8 +9,9 @@ const Testimonials = lazy(() => import("../components/sections/Testimonials"));
 
 
 const ContactHero = lazy(() => import("../components/sections/contact/ContactHero"));
-const ContactSection = lazy( () => import("../components/sections/contact/ContactSection"));
-const Footer = lazy( () => import("../components/layout/Footer"));
+const ContactSection = lazy(() => import("../components/sections/contact/ContactSection"));
+const Footer = lazy(() => import("../components/layout/Footer"));
+
 interface HomeProps {
   docked: boolean;
 }
@@ -20,14 +19,20 @@ interface HomeProps {
 function Home({ docked }: HomeProps) {
   return (
     <Suspense fallback={null}>
-      <Hero docked={docked} />
-      <AboutSection />
+      {/* Only this wrapper gets the space background */}
+      <div className="relative">
+        <HeroBackground />
+        <Hero docked={docked} />
+      </div>
+
+      {/* Everything below stays completely normal */}
+      <About />
       <Services />
       <Courses />
       <Testimonials />
       <ContactHero />
-<ContactSection />
-<Footer />
+      <ContactSection />
+      <Footer />
     </Suspense>
   );
 }

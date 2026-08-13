@@ -214,6 +214,7 @@ const ContactHero = () => {
           >
             Let's get in touch!
           </motion.p>
+          
 
           {/* Main Heading */}
           <motion.h2
