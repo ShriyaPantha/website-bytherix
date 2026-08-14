@@ -12,6 +12,46 @@
   --color-red: #c81e2c;
   --color-cyan: #38bdf8;
 
+  /* =======================================================
+   HERO — THREE.JS TORNADO
+   Hero-only variables
+======================================================= */
+
+--hero-bg: #050814;
+
+--hero-text: #ffffff;
+
+--hero-text-muted:
+  rgba(255, 255, 255, 0.68);
+
+--hero-text-subtle:
+  rgba(255, 255, 255, 0.42);
+
+
+/* Tornado colors */
+
+--hero-particle-blue: #38bdf8;
+
+--hero-particle-green: #17b6a7;
+
+--hero-particle-red: #c81e2c;
+
+
+/* Hero title */
+
+--hero-title-gradient:
+  linear-gradient(
+    100deg,
+    #ffffff 10%,
+    #38bdf8 48%,
+    #17b6a7 80%
+  );
+
+
+/* Hero layout */
+
+--hero-max-width: 1280px;
+
 
   /* =======================================================
      LIGHT THEME
@@ -176,6 +216,7 @@
   --transition-slow: 500ms;
 }
 
+  
 
 /* =========================================================
    DARK THEME
@@ -439,3 +480,4 @@
   --color-border-primary: var(--border-primary);
   --color-border-secondary: var(--border-secondary);
 }
+
