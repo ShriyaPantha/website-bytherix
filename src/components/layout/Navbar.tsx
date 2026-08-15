@@ -200,7 +200,7 @@ const Navbar = ({ docked }: NavbarProps) => {
           transition-all duration-300
         "
       >
-        <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between  border border-white/20 rounded-full py-2 px-4">
+        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between  border border-white/20 rounded-full py-2 px-4">
           {/* ================= LOGO ================= */}
           <div className="w-9">
             <motion.div

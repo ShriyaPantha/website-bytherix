@@ -11,7 +11,7 @@ html::-webkit-scrollbar {
   display: none;              /* Chrome, Safari, mobile */
 }
 
-body {
+/* body {
   margin: 0;
   min-width: 320px;
 
@@ -30,7 +30,7 @@ body {
   transition:
     background-color 0.5s ease,
     color 0.5s ease;
-}
+} */
 
 /* Prevent ugly horizontal overflow */
 html,

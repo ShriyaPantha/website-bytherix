@@ -14,241 +14,348 @@ const Hero = ({ docked }: HeroProps) => {
         relative
         isolate
         z-10
-        flex
-        flex-col
-        min-h-screen
+        w-full
         overflow-hidden
+
+        min-h-[100svh]
         py-8
 
-        lg:h-[calc(100vh-6rem)]
+        sm:py-10
+
+        md:min-h-[calc(100svh-4rem)]
+        md:py-12
+
+        lg:flex
         lg:min-h-[640px]
+        lg:h-[calc(100vh-6rem)]
+        lg:items-center
         lg:py-0
-        lg:justify-center
       "
     >
       <HeroBackground />
 
-      <div className="mx-auto w-full flex flex-col justify-center items-center">
-        <div
-          className="
+      {/* ============================================================
+          HERO CANVAS
+      ============================================================ */}
+
+      <div
+        className="
           relative
-          z-10
+          z-20
           mx-auto
+          flex
           w-full
-          max-w-7xl
-          flex-1
+          max-w-[1600px]
+          flex-col
+
           px-4
           sm:px-6
-          lg:px-8
-
-          flex
-          flex-col
-          justify-center
-          items-center
-
-          lg:grid
-          lg:grid-cols-[1fr_0.85fr]
-          lg:items-center
-          lg:gap-4
+          md:px-8
+          lg:px-10
+          xl:px-12
+          2xl:px-0
         "
-        >
-          <div className="relative z-20 flex flex-col items-center lg:items-start text-center lg:text-left w-full">
-            <HeroContent docked={docked} />
-          </div>
+      >
+        {/* ==========================================================
+            MAIN HERO
+        ========================================================== */}
 
-          {/* ----------------------------------------------------------
-            RIGHT — ROBOT
-            ---------------------------------------------------------- */}
+        <div
+          className="
+            relative
+            grid
+            w-full
+            items-center
+
+            grid-cols-1
+
+            md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]
+            md:gap-4
+
+            lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)]
+            lg:gap-0
+
+            xl:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)]
+          "
+        >
+          {/* --------------------------------------------------------
+              LEFT — CONTENT
+          -------------------------------------------------------- */}
 
           <div
             className="
-            relative
-            z-10
+              relative
+              z-30
+              flex
+              w-full
+              justify-center
 
-            mt-8
-            flex
-            w-full
-            justify-center
-
-            sm:mt-10
-
-            lg:mt-0
-            lg:flex
-            lg:justify-end
-
-            lg:translate-y-2
-          "
+              md:justify-start
+              lg:justify-start
+            "
           >
             <div
               className="
+                w-full
+                max-w-[680px]
+
+                md:max-w-[620px]
+                lg:max-w-[680px]
+                xl:max-w-[720px]
+              "
+            >
+              <HeroContent docked={docked} />
+            </div>
+          </div>
+
+          {/* --------------------------------------------------------
+              RIGHT — ROBOT
+          -------------------------------------------------------- */}
+
+          <div
+            className="
               relative
-              mt-29
-
+              z-20
+              flex
               w-full
-              max-w-[400px]
+              items-center
+              justify-center
 
-              sm:max-w-[500px]
+              mt-8
+              sm:mt-10
 
-              md:max-w-[430px]
+              md:mt-0
+              md:min-w-0
 
-              lg:max-w-[440px]
-              xl:max-w-[730px]
+              lg:justify-end
+              lg:translate-x-[2%]
+              lg:translate-y-8
 
-              lg:scale-[1.08]
-              lg:origin-center
+              xl:translate-x-[3%]
+              xl:translate-y-10
             "
+          >
+            <div
+              className="
+                relative
+                flex
+                w-full
+                items-center
+                justify-center
+
+                max-w-[360px]
+
+                sm:max-w-[440px]
+
+                md:max-w-[480px]
+
+                lg:max-w-[600px]
+                lg:scale-[1.05]
+
+                xl:max-w-[740px]
+                xl:scale-[1.1]
+
+                2xl:scale-[1.12]
+
+                origin-center
+              "
             >
               <RobotLaptopHero />
             </div>
           </div>
         </div>
 
+        {/* ==========================================================
+            STATS
+        ========================================================== */}
+
         <div
           className="
-          relative
-          z-30
-          mx-auto
-          w-full
-          max-w-6xl
-          px-4
-          sm:px-6
-          lg:px-8
+            relative
+            z-40
+            w-full
 
-          -mt-6
-          sm:-mt-8
-          lg:-mt-5
-          pb-6
+            mt-8
 
-          lg:pb-7
-        "
+            sm:mt-10
+
+            md:mt-8
+
+            lg:mt-5
+
+            xl:mt-3
+
+            pb-2
+            sm:pb-4
+            lg:pb-4
+          "
         >
           <div
             className="
-            relative
-            overflow-hidden
-            rounded-2xl
+              relative
+              overflow-hidden
+              rounded-xl
+              sm:rounded-2xl
 
-            border
-            border-white/[0.12]
+              border
+              border-white/[0.10]
 
-            bg-black/[0.25]
+              bg-black/[0.20]
 
-            backdrop-blur-xl
-            shadow-[0_20px_50px_rgba(0,0,0,0.5)]
+              backdrop-blur-xl
 
-            py-5
-            sm:py-6
-            lg:py-5
-            px-4
-            sm:px-6
+              shadow-[0_20px_50px_rgba(0,0,0,0.35)]
 
-            before:pointer-events-none
-            before:absolute
-            before:inset-0
-            before:bg-[linear-gradient(90deg,transparent,rgba(56,189,248,0.06),transparent)]
-          "
+              px-3
+              py-3
+
+              sm:px-4
+              sm:py-4
+
+              md:px-5
+              md:py-4
+
+              lg:px-6
+              lg:py-4
+
+              before:pointer-events-none
+              before:absolute
+              before:inset-0
+              before:bg-[linear-gradient(90deg,transparent,rgba(56,189,248,0.045),transparent)]
+            "
           >
             <div
               className="
-              grid
-              grid-cols-2
-              sm:grid-cols-4
+                grid
+                grid-cols-2
+                items-stretch
 
-              gap-y-6
-              sm:gap-y-0
-              divide-y
-              sm:divide-y-0
-              sm:divide-x
-              divide-white/[0.08]
+                sm:grid-cols-4
 
-              items-center
-              justify-center
-            "
+                gap-y-0
+
+                divide-x
+                divide-white/[0.07]
+              "
             >
-              {STATS.map(stat => (
+              {STATS.map((stat) => (
                 <div
                   key={stat.label}
                   className="
-                  group
-                  relative
-                  min-w-0
+                    group
+                    relative
+                    min-w-0
 
-                  flex
-                  flex-col
-                  items-center
-                  text-center
-                  sm:items-start
-                  sm:text-left
+                    flex
+                    flex-col
+                    justify-center
 
-                  px-2
-                  sm:px-4
-                  lg:px-6
+                    px-3
+                    py-2
 
-                  py-2
-                  sm:py-0
+                    sm:px-3
+                    sm:py-1
 
-                  transition-colors
-                  duration-300
-                "
+                    md:px-4
+
+                    lg:px-6
+
+                    transition-colors
+                    duration-300
+                  "
                 >
-                  {/* Subtle hover accent */}
+                  {/* Hover accent */}
                   <div
                     className="
-                    pointer-events-none
-                    absolute
-                    inset-x-4
-                    bottom-0
-                    h-px
-                    origin-center
-                    sm:origin-left
-                    scale-x-0
-                    bg-gradient-to-r
-                    from-cyan-400/50
-                    to-transparent
-                    transition-transform
-                    duration-500
-                    group-hover:scale-x-100
-                  "
+                      pointer-events-none
+                      absolute
+                      inset-x-2
+                      bottom-0
+                      h-px
+                      origin-center
+                      scale-x-0
+
+                      bg-gradient-to-r
+                      from-cyan-400/50
+                      via-cyan-400/20
+                      to-transparent
+
+                      transition-transform
+                      duration-500
+
+                      group-hover:scale-x-100
+
+                      sm:origin-left
+                    "
                   />
 
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 w-full">
-                    {/* Minimal icon */}
+                  <div
+                    className="
+                      flex
+                      min-w-0
+                      items-center
+                      gap-2.5
+
+                      sm:gap-3
+
+                      md:gap-3.5
+                    "
+                  >
+                    {/* Icon */}
                     <span
                       className={`
-                      flex
-                      h-9
-                      w-9
-                      shrink-0
-                      items-center
-                      justify-center
-                      rounded-xl
-                      border
-                      border-white/[0.1]
-                      ${stat.bg}
-                      text-white/90
-                      shadow-inner
+                        flex
+                        h-8
+                        w-8
+                        shrink-0
+                        items-center
+                        justify-center
 
-                      sm:h-8
-                      sm:w-8
-                    `}
+                        rounded-lg
+                        border
+                        border-white/[0.09]
+
+                        ${stat.bg}
+
+                        text-white/90
+                        shadow-inner
+
+                        sm:h-8
+                        sm:w-8
+
+                        md:h-9
+                        md:w-9
+                      `}
                     >
                       {stat.icon}
                     </span>
 
-                    <div className="min-w-0 flex flex-col items-center sm:items-start">
+                    {/* Text */}
+                    <div
+                      className="
+                        min-w-0
+                        flex
+                        flex-1
+                        flex-col
+                      "
+                    >
                       {/* Value */}
                       <p
                         className="
-                        text-xl
-                        sm:text-2xl
-                        lg:text-[1.5rem]
+                          truncate
 
-                        font-bold
-                        leading-none
-                        tracking-[-0.025em]
+                          text-lg
+                          font-bold
+                          leading-none
+                          tracking-[-0.025em]
+                          text-white
 
-                        text-white
-                      "
+                          sm:text-xl
+
+                          md:text-2xl
+
+                          lg:text-[1.5rem]
+                        "
                       >
                         {stat.value}
                       </p>
@@ -256,19 +363,22 @@ const Hero = ({ docked }: HeroProps) => {
                       {/* Label */}
                       <p
                         className="
-                        mt-1.5
-                        truncate
+                          mt-1
+                          truncate
 
-                        text-[11px]
-                        sm:text-[11px]
-                        lg:text-xs
+                          text-[8px]
+                          font-semibold
+                          uppercase
+                          tracking-[0.08em]
+                          text-white/60
 
-                        font-semibold
-                        uppercase
-                        tracking-[0.1em]
+                          sm:text-[9px]
 
-                        text-white/60
-                      "
+                          md:text-[10px]
+
+                          lg:text-xs
+                          lg:tracking-[0.1em]
+                        "
                       >
                         {stat.label}
                       </p>
@@ -276,17 +386,17 @@ const Hero = ({ docked }: HeroProps) => {
                       {/* Description */}
                       <p
                         className="
-                        mt-1
-                        hidden
-                        sm:block
+                          mt-1
+                          hidden
 
-                        text-[10px]
-                        lg:text-[11px]
+                          text-[10px]
+                          leading-relaxed
+                          text-white/35
 
-                        leading-relaxed
+                          md:block
 
-                        text-white/35
-                      "
+                          lg:text-[11px]
+                        "
                       >
                         {stat.desc}
                       </p>
@@ -296,18 +406,19 @@ const Hero = ({ docked }: HeroProps) => {
               ))}
             </div>
 
+            {/* Top glow */}
             <div
               className="
-              pointer-events-none
-              absolute
-              inset-x-0
-              top-0
-              h-px
-              bg-gradient-to-r
-              from-transparent
-              via-cyan-400/30
-              to-transparent
-            "
+                pointer-events-none
+                absolute
+                inset-x-0
+                top-0
+                h-px
+                bg-gradient-to-r
+                from-transparent
+                via-cyan-400/30
+                to-transparent
+              "
             />
           </div>
         </div>

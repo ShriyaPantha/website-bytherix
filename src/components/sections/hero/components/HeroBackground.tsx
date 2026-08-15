@@ -12,38 +12,39 @@ const HeroBackground = () => {
         h-full
         w-full
         overflow-hidden
-        bg-[#020305]
+        bg-[#05080d]
       "
     >
+      {/* Base atmosphere */}
       <div
         className="absolute inset-0 z-0 h-full w-full"
         style={{
           background: `
             radial-gradient(
-              ellipse 72% 78% at 50% 48%,
-              color-mix(in srgb, var(--color-blue) 7%, transparent) 0%,
-              color-mix(in srgb, var(--color-blue) 2%, transparent) 40%,
-              transparent 72%
+              ellipse 75% 82% at 50% 48%,
+              color-mix(in srgb, var(--color-blue) 9%, transparent) 0%,
+              color-mix(in srgb, var(--color-blue) 3%, transparent) 42%,
+              transparent 78%
             ),
 
             radial-gradient(
               ellipse 55% 45% at 8% 82%,
-              color-mix(in srgb, var(--color-green) 1.5%, transparent),
+              color-mix(in srgb, var(--color-green) 2.5%, transparent),
               transparent 72%
             ),
 
             linear-gradient(
               135deg,
-              #020305 0%,
-              #05070b 36%,
-              #080b11 64%,
-              #030508 100%
+              #05080d 0%,
+              #080c13 38%,
+              #0a0f17 65%,
+              #060a10 100%
             )
           `,
         }}
       />
 
-
+      {/* Main blue atmosphere */}
       <div
         className="
           absolute
@@ -54,14 +55,15 @@ const HeroBackground = () => {
           w-[55%]
           rounded-full
           blur-[160px]
-          opacity-40
+          opacity-50
         "
         style={{
           background:
-            "color-mix(in srgb, var(--color-blue) 4%, transparent)",
+            "color-mix(in srgb, var(--color-blue) 5%, transparent)",
         }}
       />
 
+      {/* Center blue glow */}
       <div
         className="
           absolute
@@ -72,11 +74,11 @@ const HeroBackground = () => {
           w-[28%]
           rounded-full
           blur-[120px]
-          opacity-35
+          opacity-40
         "
         style={{
           background:
-            "color-mix(in srgb, var(--color-blue) 3%, transparent)",
+            "color-mix(in srgb, var(--color-blue) 4%, transparent)",
         }}
       />
 
@@ -91,11 +93,11 @@ const HeroBackground = () => {
           w-[22%]
           rounded-full
           blur-[150px]
-          opacity-45
+          opacity-50
         "
         style={{
           background:
-            "color-mix(in srgb, var(--color-green) 1.5%, transparent)",
+            "color-mix(in srgb, var(--color-green) 2%, transparent)",
         }}
       />
 
@@ -110,11 +112,11 @@ const HeroBackground = () => {
           w-[14%]
           rounded-full
           blur-[140px]
-          opacity-40
+          opacity-45
         "
         style={{
           background:
-            "color-mix(in srgb, var(--color-red) 1.5%, transparent)",
+            "color-mix(in srgb, var(--color-red) 2%, transparent)",
         }}
       />
 
@@ -124,14 +126,15 @@ const HeroBackground = () => {
         style={{
           background: `
             radial-gradient(
-              ellipse 60% 42% at 50% 0%,
-              color-mix(in srgb, var(--color-blue) 3%, transparent),
-              transparent 70%
+              ellipse 65% 45% at 50% 0%,
+              color-mix(in srgb, var(--color-blue) 5%, transparent),
+              transparent 72%
             )
           `,
         }}
       />
 
+      {/* Center blue glow */}
       <div
         className="
           absolute
@@ -144,20 +147,20 @@ const HeroBackground = () => {
           -translate-y-1/2
           rounded-full
           blur-[120px]
-          opacity-70
+          opacity-80
         "
         style={{
           background: `
             radial-gradient(
               ellipse,
-              color-mix(in srgb, var(--color-blue) 3.5%, transparent),
-              transparent 70%
+              color-mix(in srgb, var(--color-blue) 4%, transparent),
+              transparent 72%
             )
           `,
         }}
       />
 
-
+      {/* Main Twister */}
       <div
         className="
           absolute
@@ -174,19 +177,19 @@ const HeroBackground = () => {
         style={{
           maskImage: `
             radial-gradient(
-              ellipse 72% 70% at center,
+              ellipse 78% 76% at center,
               black 0%,
-              black 55%,
-              rgba(0,0,0,0.55) 72%,
+              black 62%,
+              rgba(0,0,0,0.35) 78%,
               transparent 100%
             )
           `,
           WebkitMaskImage: `
             radial-gradient(
-              ellipse 72% 70% at center,
+              ellipse 78% 76% at center,
               black 0%,
-              black 55%,
-              rgba(0,0,0,0.55) 72%,
+              black 62%,
+              rgba(0,0,0,0.35) 78%,
               transparent 100%
             )
           `,
@@ -195,6 +198,7 @@ const HeroBackground = () => {
         <HeroTwister />
       </div>
 
+      {/* Soft left-side readability overlay */}
       <div
         className="
           absolute
@@ -202,21 +206,22 @@ const HeroBackground = () => {
           left-0
           z-[15]
           h-full
-          w-[42%]
+          w-[38%]
         "
         style={{
           background: `
             linear-gradient(
               90deg,
-              rgba(2,3,6,0.58) 0%,
-              rgba(2,3,6,0.34) 42%,
-              rgba(2,3,6,0.10) 76%,
+              rgba(3,6,10,0.28) 0%,
+              rgba(3,6,10,0.16) 42%,
+              rgba(3,6,10,0.04) 76%,
               transparent 100%
             )
           `,
         }}
       />
 
+      {/* Very subtle center-left transition */}
       <div
         className="
           absolute
@@ -230,50 +235,29 @@ const HeroBackground = () => {
           background: `
             linear-gradient(
               90deg,
-              rgba(2,3,6,0.08),
+              rgba(3,6,10,0.04),
               transparent
             )
           `,
         }}
       />
 
-
-      <div
-        className="
-          absolute
-          inset-0
-          z-[30]
-          h-full
-          w-full
-        "
-        style={{
-          background: `
-            radial-gradient(
-              ellipse at center,
-              transparent 35%,
-              rgba(0,0,0,0.025) 68%,
-              rgba(0,0,0,0.14) 100%
-            )
-          `,
-        }}
-      />
-
-
+      {/* Soft bottom atmosphere */}
       <div
         className="
           absolute
           inset-x-0
           bottom-0
           z-[31]
-          h-[18%]
+          h-[12%]
         "
         style={{
           background: `
             linear-gradient(
               to top,
-              rgba(2,3,5,0.88) 0%,
-              rgba(2,3,5,0.42) 30%,
-              rgba(2,3,5,0.10) 68%,
+              rgba(3,6,10,0.38) 0%,
+              rgba(3,6,10,0.16) 35%,
+              rgba(3,6,10,0.04) 70%,
               transparent 100%
             )
           `,
@@ -369,7 +353,7 @@ const HeroBackground = () => {
         delay={1.8}
       />
 
-
+      {/* Subtle horizontal blue light */}
       <div
         className="
           absolute
