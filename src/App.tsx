@@ -1,8 +1,8 @@
-import { useEffect, useState, lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Navbar, { INTRO_TOTAL_MS } from "./components/layout/Navbar";
-import { ThemeProvider } from "./context/ThemeContext";
-import ThemeToggle from "./components/ui/ThemeToggle";
 import TeamProfile from "./components/sections/team/TeamProfile";
+import ThemeToggle from "./components/ui/ThemeToggle";
+import { ThemeProvider } from "./context/ThemeContext";
 
 const Home = lazy(() => import("./pages/Home"));
 

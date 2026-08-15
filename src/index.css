@@ -3,3 +3,9 @@
 
 @import "./styles/globals.css";
 @import "./styles/variables.css";
+
+@theme {
+    --color-blue: #00258d;
+    --color-green: #029947;
+    --color-red: #920202;
+}
