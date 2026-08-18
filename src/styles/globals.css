@@ -1,194 +1,609 @@
-/* ================================
-   GLOBAL RESET & BASE
-================================ */
+/* =========================================================
+   BYTHERIX HERO
+   THREE.JS + GSAP VISUAL SYSTEM
+   ========================================================= */
 
-html {
-  scrollbar-width: none;      /* Firefox */
-  -ms-overflow-style: none;   /* old Edge/IE */
-}
 
-html::-webkit-scrollbar {
-  display: none;              /* Chrome, Safari, mobile */
-}
-
-body {
+html,
+body,
+#root {
   margin: 0;
   min-width: 320px;
+  min-height: 100%;
+}
 
-  background: var(--bg-primary);
-  color: var(--text-primary);
+html {
+  background: #050814;
+}
 
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+body {
+  background: #050814;
+  font-family: "Inter", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+  background: #050814;
+}
+
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
+
+.hero-section {
+  position: relative;
+
+  width: 100%;
+  min-height: 100svh;
+
+  overflow: hidden;
+
+  isolation: isolate;
+
+  background:
+    var(--hero-background-gradient),
+    var(--hero-bg);
+}
+
+/* =========================================================
+   THREE.JS CANVAS
+   ========================================================= */
+
+.hero-canvas {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HERO BACKGROUND DEPTH OVERLAY
+   ========================================================= */
+
+.hero-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      90deg,
+
+      rgba(5, 8, 20, 0.96) 0%,
+
+      rgba(5, 8, 20, 0.78) 25%,
+
+      rgba(5, 8, 20, 0.28) 55%,
+
+      rgba(5, 8, 20, 0.58) 100%
+    );
+}
+
+
+/* =========================================================
+   SUBTLE VIGNETTE
+   ========================================================= */
+
+.hero-section::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(0, 0, 0, 0.18) 70%,
+      rgba(0, 0, 0, 0.55) 100%
+    );
+}
+
+
+/* =========================================================
+   HERO CONTENT
+   ========================================================= */
+
+.hero-content {
+  position: relative;
+
+  z-index: 5;
+
+  width:
+    min(
+      calc(100% - 48px),
+      var(--hero-max-width)
+    );
+
+  min-height: 100svh;
+
+  margin: 0 auto;
+
+  padding:
+    120px 0 100px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: flex-start;
+
+  opacity: 0;
+}
+
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.hero-eyebrow {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 24px;
+
+  color:
+    var(--hero-particle-blue);
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  line-height: 1;
+
+  letter-spacing: 0.2em;
+
+  text-transform: uppercase;
+
+  opacity: 0;
+}
+
+
+.hero-eyebrow-dot {
+  width: 7px;
+
+  height: 7px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background:
+    var(--hero-particle-green);
+
+  box-shadow:
+    0 0 8px
+    rgba(23, 182, 167, 0.8),
+
+    0 0 18px
+    rgba(23, 182, 167, 0.35);
+}
+
+
+/* =========================================================
+   HERO HEADING
+   ========================================================= */
+
+.hero-heading {
+  max-width: 900px;
+
+  margin: 0;
+
+  color:
+    var(--hero-text);
+
+  font-size:
+    clamp(
+      3.5rem,
+      7vw,
+      7.5rem
+    );
+
+  font-weight: 700;
+
+  line-height: 0.94;
+
+  letter-spacing: -0.055em;
+
+  opacity: 0;
+}
+
+
+.hero-heading span {
+  display: inline-block;
+
+  background:
+    var(--hero-title-gradient);
+
+  -webkit-background-clip: text;
+
+  background-clip: text;
+
+  color: transparent;
+}
+
+
+/* =========================================================
+   HERO DESCRIPTION
+   ========================================================= */
+
+.hero-description {
+  max-width: 580px;
+
+  margin:
+    30px 0 0;
+
+  color:
+    var(--hero-text-muted);
+
+  font-size: 17px;
+
+  font-weight: 400;
+
+  line-height: 1.75;
+
+  opacity: 0;
+}
+
+
+/* =========================================================
+   HERO BUTTONS
+   ========================================================= */
+
+.hero-buttons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  margin-top: 38px;
+
+  opacity: 0;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.hero-primary-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 14px;
+
+  min-height: 54px;
+
+  padding:
+    0 24px;
+
+  border-radius: 999px;
+
+  color:
+    var(--hero-bg);
+
+  background:
+    var(--hero-text);
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 600;
 
   transition:
-    background-color 0.5s ease,
-    color 0.5s ease;
+    transform var(--hero-button-transition),
+    box-shadow var(--hero-button-transition);
 }
 
-/* Prevent ugly horizontal overflow */
-html,
-body {
-  overflow-x: hidden;
+
+.hero-primary-button span {
+  font-size: 18px;
+
+  line-height: 1;
+
+  transition:
+    transform var(--hero-button-transition);
 }
 
-/* ================================
-   THEME VARIABLES
-================================ */
 
-:root {
-  /* Default = Dark (matches your Hero) */
-  --bg-primary: #070b14;
-  --bg-secondary: #0c1220;
-  --bg-panel: #10182b;
-  --bg-elevated: #151f38;
+.hero-primary-button:hover {
+  transform:
+    translateY(-3px);
 
-  --text-primary: #e8ecf5;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-
-  --border: rgba(232, 236, 245, 0.08);
-  --border-strong: rgba(232, 236, 245, 0.14);
-
-  /* Brand accents (from your Hero) */
-  --color-blue: #3b82f6;
-  --color-blue-light: #60a5fa;
-  --color-red: #ef4444;
-  --color-red-light: #f87171;
-  --color-green: #22c55e;          /* used in selection */
-
-  /* About section aliases (so the component works out of the box) */
-  --about-bg: var(--bg-primary);
-  --about-text: var(--text-primary);
-  --about-muted: var(--text-secondary);
-
-  /* Gradients */
-  --gradient-brand: linear-gradient(to right, #ef4444, #3b82f6);
+  box-shadow:
+    0 15px 45px
+    rgba(56, 189, 248, 0.24);
 }
 
-/* Light mode */
-.light,
-[data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-panel: #ffffff;
-  --bg-elevated: #ffffff;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-
-  --border: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.14);
-
-  --about-bg: var(--bg-primary);
-  --about-text: var(--text-primary);
-  --about-muted: var(--text-secondary);
+.hero-primary-button:hover span {
+  transform:
+    translate(3px, -3px);
 }
 
-/* Optional: follow system preference when no class is set */
-@media (prefers-color-scheme: light) {
-  :root:not(.dark):not([data-theme="dark"]) {
-    --bg-primary: #f8fafc;
-    --bg-secondary: #f1f5f9;
-    --bg-panel: #ffffff;
-    --bg-elevated: #ffffff;
 
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
 
-    --about-bg: var(--bg-primary);
-    --about-text: var(--text-primary);
-    --about-muted: var(--text-secondary);
+.hero-secondary-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 54px;
+
+  padding:
+    0 24px;
+
+  border:
+    1px solid
+    var(--hero-border);
+
+  border-radius: 999px;
+
+  color:
+    var(--hero-text);
+
+  background:
+    rgba(255, 255, 255, 0.04);
+
+  /* backdrop-filter:
+    blur(12px); */
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition:
+    transform var(--hero-button-transition),
+    border-color var(--hero-button-transition),
+    background var(--hero-button-transition);
+}
+
+
+.hero-secondary-button:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(56, 189, 248, 0.55);
+
+  background:
+    rgba(56, 189, 248, 0.08);
+}
+
+
+/* =========================================================
+   HERO SCROLL INDICATOR
+   ========================================================= */
+
+.hero-scroll {
+  position: absolute;
+
+  right: 42px;
+
+  bottom: 38px;
+
+  z-index: 6;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 12px;
+
+  color:
+    var(--hero-text-subtle);
+
+  font-size: 9px;
+
+  font-weight: 500;
+
+  line-height: 1;
+
+  letter-spacing: 0.2em;
+
+  pointer-events: none;
+}
+
+
+.hero-scroll-line {
+  width: 70px;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--hero-particle-blue)
+    );
+}
+
+
+/* =========================================================
+   HERO RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 1024px) {
+
+  .hero-content {
+    width:
+      calc(100% - 56px);
+  }
+
+
+  .hero-heading {
+    max-width: 780px;
   }
 }
 
-/* ================================
-   THEME TRANSITION
-================================ */
+
+/* =========================================================
+   HERO RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .hero-content {
+    width:
+      calc(100% - 36px);
+
+    padding:
+      110px 0 80px;
+  }
+
+
+  .hero-overlay {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(5, 8, 20, 0.95),
+        rgba(5, 8, 20, 0.62)
+      );
+  }
+
+
+  .hero-heading {
+    max-width: 100%;
+
+    font-size:
+      clamp(
+        3rem,
+        13vw,
+        5rem
+      );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+  }
+
+
+  .hero-description {
+    max-width: 100%;
+
+    margin-top: 24px;
+
+    font-size: 15px;
+
+    line-height: 1.65;
+  }
+
+
+  .hero-buttons {
+    width: 100%;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 10px;
+
+    margin-top: 30px;
+  }
+
+
+  .hero-primary-button,
+  .hero-secondary-button {
+    width: 100%;
+  }
+
+
+  .hero-scroll {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   HERO RESPONSIVE — SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .hero-content {
+    width:
+      calc(100% - 28px);
+
+    padding-top: 105px;
+  }
+
+
+  .hero-eyebrow {
+    font-size: 9px;
+
+    letter-spacing: 0.16em;
+  }
+
+
+  .hero-heading {
+    font-size:
+      clamp(
+        2.8rem,
+        14vw,
+        4rem
+      );
+  }
+
+
+  .hero-description {
+    font-size: 14px;
+  }
+}
+
+
+/* =========================================================
+   HERO REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hero-primary-button,
+  .hero-secondary-button,
+  .hero-primary-button span {
+    transition: none;
+  }
+}
 
 * {
   transition:
     background-color 0.45s ease,
     border-color 0.45s ease,
     color 0.35s ease;
-}
-
-/*
- * Don't animate transforms and opacity globally.
- * Framer Motion (and GSAP) need full control over them.
- */
-[class*="motion"],
-[data-framer-component],
-.gsap-marker-start,
-.gsap-marker-end {
-  transition: none !important;
-}
-
-/* ================================
-   SELECTION
-================================ */
-
-::selection {
-  background: var(--color-green);
-  color: white;
-}
-
-/* ================================
-   FLOATING PARTICLES
-================================ */
-
-@keyframes float {
-  0% {
-    transform: translate(0, 0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.8;
-  }
-  90% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(var(--tx), var(--ty));
-    opacity: 0;
-  }
-}
-
-
-.animate-float {
-  animation: float linear infinite;
-}
-
-/* ================================
-   OPTIONAL UTILITIES
-
-.text-gradient-brand {
-  background: var(--gradient-brand);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.bg-panel {
-  background-color: var(--bg-panel);
-}
-
-.border-theme {
-  border-color: var(--border);
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
 }

@@ -1,13 +1,25 @@
-import { useEffect, useState, lazy, Suspense } from "react";
-import Navbar, { INTRO_TOTAL_MS } from "./components/layout/Navbar";
+import {
+  useEffect,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
+
+import Navbar, {
+  INTRO_TOTAL_MS,
+} from "./components/layout/Navbar";
+
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "./components/ui/ThemeToggle";
 import TeamProfile from "./components/sections/team/TeamProfile";
 
-const Home = lazy(() => import("./pages/Home"));
+const Home = lazy(
+  () => import("./pages/Home"),
+);
 
 function App() {
-  const [docked, setDocked] = useState(false);
+  const [docked, setDocked] =
+    useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -19,34 +31,24 @@ function App() {
     };
   }, []);
 
-  /*
-   * Detect team profile URLs.
-   *
-   * Example:
-   * /team/anish-parajuli
-   */
-  const pathname = window.location.pathname;
+  const pathname =
+    window.location.pathname;
 
-  const teamProfileMatch = pathname.match(
-    /^\/team\/([^/]+)\/?$/
-  );
+  const teamProfileMatch =
+    pathname.match(
+      /^\/team\/([^/]+)\/?$/,
+    );
 
-  /*
-   * Render individual team member profile.
-   */
   if (teamProfileMatch) {
-    const slug = teamProfileMatch[1];
-
     return (
       <ThemeProvider>
-        <TeamProfile slug={slug} />
+        <TeamProfile
+          slug={teamProfileMatch[1]}
+        />
       </ThemeProvider>
     );
   }
 
-  /*
-   * Render normal homepage.
-   */
   return (
     <ThemeProvider>
       <main
@@ -55,8 +57,6 @@ function App() {
           min-h-screen
           bg-[var(--bg-primary)]
           text-[var(--text-primary)]
-          transition-colors
-          duration-500
         "
       >
         <div className="relative">
@@ -66,7 +66,12 @@ function App() {
 
           <Suspense
             fallback={
-              <div className="min-h-screen bg-[var(--bg-primary)]" />
+              <div
+                className="
+                  min-h-screen
+                  bg-[#050814]
+                "
+              />
             }
           >
             <Home docked={docked} />
