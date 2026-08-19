@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   AnimatePresence,
   motion,
@@ -9,7 +9,8 @@ import {
   ChevronRight,
   Quote,
 } from "lucide-react";
-
+import Wavebackground from "./Wavebackground";
+ 
 interface Testimonial {
   id: number;
   name: string;
@@ -17,7 +18,7 @@ interface Testimonial {
   image: string;
   message: string;
 }
-
+ 
 const testimonials: Testimonial[] = [
   {
     id: 1,
@@ -60,7 +61,7 @@ const testimonials: Testimonial[] = [
       "The team was incredibly supportive throughout the project. We received a solution that was easy to use, scalable, and aligned perfectly with our goals.",
   },
 ];
-
+ 
 const cardVariants = {
   initial: {
     opacity: 0,
@@ -78,7 +79,7 @@ const cardVariants = {
     scale: 0.96,
   },
 };
-
+ 
 const contentVariants = {
   initial: {
     opacity: 0,
@@ -93,53 +94,70 @@ const contentVariants = {
     x: -20,
   },
 };
-
+ 
+/**
+ * Splits a testimonial message and wraps every "Bytherix" occurrence in the
+ * electric-cyan brand styling requested for the design.
+ */
+const highlightBrand = (message: string) => {
+  const parts = message.split(/(Bytherix)/g);
+  return parts.map((part, index) =>
+    part === "Bytherix" ? (
+      <span key={index} className="text-[#00f0ff] font-bold">
+        {part}
+      </span>
+    ) : (
+      <Fragment key={index}>{part}</Fragment>
+    )
+  );
+};
+ 
 const Testimonials = () => {
   const [activeIndex, setActiveIndex] = useState<number>(1);
   const [isPaused, setIsPaused] = useState<boolean>(false);
-
+ 
   const prefersReducedMotion = useReducedMotion();
-
+ 
   const activeTestimonial = testimonials[activeIndex];
-
+ 
   const previousIndex =
     (activeIndex - 1 + testimonials.length) % testimonials.length;
-
+ 
   const nextIndex = (activeIndex + 1) % testimonials.length;
-
+ 
   const goNext = (): void => {
     setActiveIndex((current) =>
       current === testimonials.length - 1 ? 0 : current + 1
     );
   };
-
+ 
   const goPrevious = (): void => {
     setActiveIndex((current) =>
       current === 0 ? testimonials.length - 1 : current - 1
     );
   };
-
+ 
   useEffect(() => {
     testimonials.forEach((testimonial) => {
       const image = new Image();
       image.src = testimonial.image;
     });
   }, []);
-
+ 
   useEffect(() => {
     if (isPaused) return;
-
+ 
     const interval = window.setInterval(() => {
       setActiveIndex((current) =>
         current === testimonials.length - 1 ? 0 : current + 1
       );
     }, 2800);
-
+ 
     return () => {
       window.clearInterval(interval);
     };
   }, [isPaused]);
-
+ 
   return (
     <section
       id="testimonials"
@@ -148,24 +166,12 @@ const Testimonials = () => {
         w-full
         overflow-hidden
         bg-[#f6f8f7]
-        px-5
-        pt-4
-        pb-4
         text-[#111827]
         transition-colors
         duration-300
         dark:bg-[#071426]
         dark:text-white
-        sm:px-8
-        sm:pt-5
-        sm:pb-5
-        md:px-10
-        md:pt-6
-        md:pb-6
-        lg:px-12
-        xl:px-16
-        xl:pt-8
-        xl:pb-8
+        px-4 sm:px-6 md:px-8 lg:px-0 py-8 sm:py-10 md:py-12
       "
     >
       {/* Background Decoration */}
@@ -188,7 +194,7 @@ const Testimonials = () => {
           sm:w-80
         "
       />
-
+ 
       <div
         aria-hidden="true"
         className="
@@ -208,7 +214,7 @@ const Testimonials = () => {
           sm:w-80
         "
       />
-
+ 
       <div
         aria-hidden="true"
         className="
@@ -228,7 +234,7 @@ const Testimonials = () => {
           dark:bg-[#0d604f]/[0.06]
         "
       />
-
+ 
       {/* Main Section */}
       <motion.div
         initial={
@@ -259,7 +265,7 @@ const Testimonials = () => {
           relative
           mx-auto
           w-full
-          max-w-[1200px]
+          max-w-[1400px]
           xl:-translate-x-1
         "
       >
@@ -268,6 +274,7 @@ const Testimonials = () => {
           className="
             relative
             w-full
+            overflow-hidden
             rounded-xl
             border
             border-black/[0.06]
@@ -278,9 +285,9 @@ const Testimonials = () => {
             backdrop-blur-sm
             transition-colors
             duration-300
-            dark:border-white/[0.07]
-            dark:bg-[#0d1c2d]/80
-            dark:shadow-[0_18px_55px_rgba(0,0,0,0.20)]
+            dark:border-teal-500/20
+            dark:bg-[#050e1a]/95
+            dark:shadow-[0_18px_55px_rgba(0,0,0,0.35)]
             sm:px-7
             sm:py-7
             md:px-9
@@ -291,6 +298,11 @@ const Testimonials = () => {
             xl:py-10
           "
         >
+          {/* Animated silk-ribbon wave field, dark-mode only, fades in from the right */}
+          <div className="pointer-events-none absolute inset-0 block">
+            <Wavebackground paused={Boolean(prefersReducedMotion)} />
+          </div>
+ 
           {/* Heading */}
           <motion.div
             initial={
@@ -318,6 +330,8 @@ const Testimonials = () => {
               ease: [0.22, 1, 0.36, 1],
             }}
             className="
+              relative
+              z-10
               mb-8
               sm:mb-9
               md:mb-10
@@ -357,13 +371,13 @@ const Testimonials = () => {
                 sm:text-[11px]
               "
             >
-              Client Stories
+             
             </motion.p>
-
+ 
             <h2
               className="
                 max-w-[700px]
-                font-serif
+                font-inter
                 text-[28px]
                 font-semibold
                 leading-tight
@@ -377,13 +391,18 @@ const Testimonials = () => {
                 xl:text-[42px]
               "
             >
-              What Our Clients Say About Us
+              What Our Clients Say{" "}
+              <span className="dark:text-[#00f0ff] dark:font-bold">
+                About Us
+              </span>
             </h2>
           </motion.div>
-
+ 
           {/* Main Content */}
           <div
             className="
+              relative
+              z-10
               grid
               grid-cols-1
               items-center
@@ -454,8 +473,8 @@ const Testimonials = () => {
                     backdrop-blur-sm
                     transition-all
                     duration-300
-                    dark:border-[#49a994]/20
-                    dark:bg-[#172b3d]/90
+                    dark:border-teal-500/20
+                    dark:bg-[#09182a]/90
                     dark:shadow-[0_8px_24px_rgba(0,0,0,0.20)]
                     sm:translate-x-6
                     sm:w-[calc(100%-16px)]
@@ -481,7 +500,7 @@ const Testimonials = () => {
                       sm:w-10
                     "
                   />
-
+ 
                   <div className="min-w-0">
                     <p
                       className="
@@ -495,7 +514,7 @@ const Testimonials = () => {
                     >
                       {testimonials[previousIndex].name}
                     </p>
-
+ 
                     <p
                       className="
                         mt-0.5
@@ -510,7 +529,7 @@ const Testimonials = () => {
                     </p>
                   </div>
                 </motion.button>
-
+ 
                 {/* Mobile Active */}
                 <AnimatePresence mode="wait">
                   <motion.button
@@ -552,9 +571,9 @@ const Testimonials = () => {
                       shadow-[0_15px_38px_rgba(16,60,50,0.09)]
                       transition-colors
                       duration-300
-                      dark:border-white/[0.08]
-                      dark:bg-[#102235]
-                      dark:shadow-[0_15px_38px_rgba(0,0,0,0.22)]
+                      dark:border-[#00f0ff]/40
+                      dark:bg-[#09182a]
+                      dark:shadow-[0_0_0_1px_rgba(0,240,255,0.15),0_15px_38px_rgba(0,0,0,0.35)]
                       sm:max-w-[376px]
                       sm:gap-3
                       sm:px-3.5
@@ -571,11 +590,13 @@ const Testimonials = () => {
                         -translate-y-1/2
                         rounded-full
                         bg-[#0d604f]
-                        dark:bg-[#49a994]
+                        dark:bg-gradient-to-b
+                        dark:from-[#00f0ff]
+                        dark:to-[#0d604f]
                         sm:h-8
                       "
                     />
-
+ 
                     <div className="relative shrink-0">
                       <img
                         src={activeTestimonial.image}
@@ -589,7 +610,7 @@ const Testimonials = () => {
                           sm:w-12
                         "
                       />
-
+ 
                       <span
                         className="
                           absolute
@@ -601,12 +622,12 @@ const Testimonials = () => {
                           border-2
                           border-white
                           bg-[#0d604f]
-                          dark:border-[#102235]
-                          dark:bg-[#49a994]
+                          dark:border-[#09182a]
+                          dark:bg-[#00f0ff]
                         "
                       />
                     </div>
-
+ 
                     <div className="min-w-0 flex-1">
                       <p
                         className="
@@ -620,7 +641,7 @@ const Testimonials = () => {
                       >
                         {activeTestimonial.name}
                       </p>
-
+ 
                       <p
                         className="
                           mt-0.5
@@ -635,9 +656,27 @@ const Testimonials = () => {
                         {activeTestimonial.role}
                       </p>
                     </div>
+ 
+                    {/* Quote accent badge */}
+                    <span
+                      className="
+                        hidden
+                        dark:flex
+                        h-5
+                        w-5
+                        shrink-0
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-[#00f0ff]/10
+                        text-[#00f0ff]
+                      "
+                    >
+                      <Quote size={10} strokeWidth={2} />
+                    </span>
                   </motion.button>
                 </AnimatePresence>
-
+ 
                 {/* Mobile Next */}
                 <motion.button
                   type="button"
@@ -668,8 +707,8 @@ const Testimonials = () => {
                     backdrop-blur-sm
                     transition-all
                     duration-300
-                    dark:border-[#49a994]/20
-                    dark:bg-[#172b3d]/90
+                    dark:border-teal-500/20
+                    dark:bg-[#09182a]/90
                     dark:shadow-[0_8px_24px_rgba(0,0,0,0.20)]
                     sm:translate-x-6
                     sm:w-[calc(100%-16px)]
@@ -695,7 +734,7 @@ const Testimonials = () => {
                       sm:w-10
                     "
                   />
-
+ 
                   <div className="min-w-0">
                     <p
                       className="
@@ -709,7 +748,7 @@ const Testimonials = () => {
                     >
                       {testimonials[nextIndex].name}
                     </p>
-
+ 
                     <p
                       className="
                         mt-0.5
@@ -725,7 +764,7 @@ const Testimonials = () => {
                   </div>
                 </motion.button>
               </div>
-
+ 
               {/* DESKTOP PREVIOUS */}
               <motion.button
                 type="button"
@@ -762,8 +801,8 @@ const Testimonials = () => {
                   backdrop-blur-sm
                   transition-all
                   duration-300
-                  dark:border-[#49a994]/20
-                  dark:bg-[#172b3d]/92
+                  dark:border-teal-500/20
+                  dark:bg-[#09182a]/92
                   dark:shadow-[0_10px_30px_rgba(0,0,0,0.20)]
                   xl:flex
                 "
@@ -782,7 +821,7 @@ const Testimonials = () => {
                     opacity-75
                   "
                 />
-
+ 
                 <div className="min-w-0">
                   <p
                     className="
@@ -795,7 +834,7 @@ const Testimonials = () => {
                   >
                     {testimonials[previousIndex].name}
                   </p>
-
+ 
                   <p
                     className="
                       mt-1
@@ -809,7 +848,7 @@ const Testimonials = () => {
                   </p>
                 </div>
               </motion.button>
-
+ 
               {/* DESKTOP ACTIVE */}
               <div
                 className="
@@ -869,9 +908,9 @@ const Testimonials = () => {
                       shadow-[0_18px_45px_rgba(16,60,50,0.09)]
                       transition-colors
                       duration-300
-                      dark:border-white/[0.08]
-                      dark:bg-[#102235]
-                      dark:shadow-[0_18px_45px_rgba(0,0,0,0.22)]
+                      dark:border-[#00f0ff]/40
+                      dark:bg-[#09182a]
+                      dark:shadow-[0_0_0_1px_rgba(0,240,255,0.15),0_18px_45px_rgba(0,0,0,0.4)]
                     "
                   >
                     <span
@@ -884,10 +923,12 @@ const Testimonials = () => {
                         -translate-y-1/2
                         rounded-full
                         bg-[#0d604f]
-                        dark:bg-[#49a994]
+                        dark:bg-gradient-to-b
+                        dark:from-[#00f0ff]
+                        dark:to-[#0d604f]
                       "
                     />
-
+ 
                     <div className="relative shrink-0">
                       <img
                         src={activeTestimonial.image}
@@ -899,7 +940,7 @@ const Testimonials = () => {
                           object-cover
                         "
                       />
-
+ 
                       <span
                         className="
                           absolute
@@ -911,12 +952,12 @@ const Testimonials = () => {
                           border-2
                           border-white
                           bg-[#0d604f]
-                          dark:border-[#102235]
-                          dark:bg-[#49a994]
+                          dark:border-[#09182a]
+                          dark:bg-[#00f0ff]
                         "
                       />
                     </div>
-
+ 
                     <div className="min-w-0 flex-1">
                       <p
                         className="
@@ -929,7 +970,7 @@ const Testimonials = () => {
                       >
                         {activeTestimonial.name}
                       </p>
-
+ 
                       <p
                         className="
                           mt-1
@@ -943,10 +984,28 @@ const Testimonials = () => {
                         {activeTestimonial.role}
                       </p>
                     </div>
+ 
+                    {/* Quote accent badge on the right edge */}
+                    <span
+                      className="
+                        hidden
+                        dark:flex
+                        h-6
+                        w-6
+                        shrink-0
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-[#00f0ff]/10
+                        text-[#00f0ff]
+                      "
+                    >
+                      <Quote size={12} strokeWidth={2} />
+                    </span>
                   </motion.button>
                 </AnimatePresence>
               </div>
-
+ 
               {/* DESKTOP NEXT */}
               <motion.button
                 type="button"
@@ -983,8 +1042,8 @@ const Testimonials = () => {
                   backdrop-blur-sm
                   transition-all
                   duration-300
-                  dark:border-[#49a994]/20
-                  dark:bg-[#172b3d]/92
+                  dark:border-teal-500/20
+                  dark:bg-[#09182a]/92
                   dark:shadow-[0_10px_30px_rgba(0,0,0,0.20)]
                   xl:flex
                 "
@@ -1003,7 +1062,7 @@ const Testimonials = () => {
                     opacity-75
                   "
                 />
-
+ 
                 <div className="min-w-0">
                   <p
                     className="
@@ -1016,7 +1075,7 @@ const Testimonials = () => {
                   >
                     {testimonials[nextIndex].name}
                   </p>
-
+ 
                   <p
                     className="
                       mt-1
@@ -1030,7 +1089,7 @@ const Testimonials = () => {
                   </p>
                 </div>
               </motion.button>
-
+ 
               {/* Mobile Indicators */}
               <div
                 className="
@@ -1060,7 +1119,7 @@ const Testimonials = () => {
                       duration-200
                       ${
                         index === activeIndex
-                          ? "w-6 bg-[#0d604f] dark:bg-[#49a994]"
+                          ? "w-6 bg-[#0d604f] dark:bg-[#00f0ff]"
                           : "w-1.5 bg-[#0d604f]/20 dark:bg-[#49a994]/25"
                       }
                     `}
@@ -1068,7 +1127,7 @@ const Testimonials = () => {
                 ))}
               </div>
             </div>
-
+ 
             {/* Testimonial Content */}
             <div
               className="
@@ -1144,13 +1203,13 @@ const Testimonials = () => {
                           text-[#0d604f]/25
                           transition-colors
                           duration-300
-                          dark:text-[#49a994]/35
+                          dark:text-[#00f0ff]/45
                           sm:h-8
                           sm:w-8
                         "
                       />
                     </motion.div>
-
+ 
                     {/* Message */}
                     <p
                       className="
@@ -1170,9 +1229,9 @@ const Testimonials = () => {
                         xl:leading-8
                       "
                     >
-                      {activeTestimonial.message}
+                      {highlightBrand(activeTestimonial.message)}
                     </p>
-
+ 
                     {/* Client Information */}
                     <motion.div
                       initial={
@@ -1214,7 +1273,7 @@ const Testimonials = () => {
                       >
                         {activeTestimonial.name}
                       </p>
-
+ 
                       <p
                         className="
                           mt-0.5
@@ -1232,7 +1291,7 @@ const Testimonials = () => {
                   </motion.div>
                 </AnimatePresence>
               </div>
-
+ 
               {/* Controls */}
               <div
                 className="
@@ -1274,11 +1333,11 @@ const Testimonials = () => {
                     duration-300
                     hover:border-[#0d604f]/30
                     hover:text-[#0d604f]
-                    dark:border-[#49a994]/20
-                    dark:bg-[#102235]
+                    dark:border-[#00f0ff]/20
+                    dark:bg-[#09182a]
                     dark:text-[#49a994]/70
-                    dark:hover:border-[#49a994]/40
-                    dark:hover:text-[#49a994]
+                    dark:hover:border-[#00f0ff]/40
+                    dark:hover:text-[#00f0ff]
                     sm:h-9
                     sm:w-9
                   "
@@ -1286,7 +1345,7 @@ const Testimonials = () => {
                 >
                   <ChevronLeft size={16} />
                 </motion.button>
-
+ 
                 <motion.button
                   type="button"
                   onClick={goNext}
@@ -1313,9 +1372,9 @@ const Testimonials = () => {
                     shadow-[0_7px_18px_rgba(13,96,79,0.20)]
                     transition-colors
                     duration-300
-                    dark:bg-[#49a994]
+                    dark:bg-[#00f0ff]
                     dark:text-[#071426]
-                    dark:shadow-[0_7px_18px_rgba(73,169,148,0.18)]
+                    dark:shadow-[0_7px_18px_rgba(0,240,255,0.25)]
                     sm:h-9
                     sm:w-9
                   "
@@ -1323,7 +1382,7 @@ const Testimonials = () => {
                 >
                   <ChevronRight size={16} />
                 </motion.button>
-
+ 
                 <div
                   className="
                     ml-1
@@ -1349,5 +1408,5 @@ const Testimonials = () => {
     </section>
   );
 };
-
+ 
 export default Testimonials;
