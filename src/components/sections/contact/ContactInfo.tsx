@@ -402,7 +402,7 @@ const ContactInfo = () => {
                 justify-center
                 rounded-md
                 bg-white
-                font-['Chakra_Petch']
+                font-['Inter']
                 text-sm
                 font-bold
                 uppercase

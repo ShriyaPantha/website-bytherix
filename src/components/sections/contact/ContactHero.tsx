@@ -206,7 +206,7 @@ const ContactHero = () => {
               duration: 0.45,
             }}
             className="
-              font-['Chakra_Petch']
+              font-['Inter']
               text-[21px]
               font-bold
               leading-[0.88]
