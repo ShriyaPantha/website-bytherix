@@ -15,10 +15,6 @@ export default function Services() {
 
   const [activeIndex, setActiveIndex] = useState(0);
 
-  /*
-   * Hover is mainly for desktop.
-   * Selection works for both desktop and mobile.
-   */
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -27,6 +23,7 @@ export default function Services() {
   /* -------------------------------------------------
      Responsive card count
   ------------------------------------------------- */
+
   useEffect(() => {
     const updateLayout = () => {
       if (window.innerWidth < 640) {
@@ -50,6 +47,7 @@ export default function Services() {
   /* -------------------------------------------------
      Measure carousel width
   ------------------------------------------------- */
+
   useEffect(() => {
     const element = containerRef.current;
 
@@ -68,6 +66,7 @@ export default function Services() {
   /* -------------------------------------------------
      Carousel calculations
   ------------------------------------------------- */
+
   const maxIndex = Math.max(
     services.length - visibleCards,
     0,
@@ -82,6 +81,7 @@ export default function Services() {
   /* -------------------------------------------------
      Keep active index valid after resize
   ------------------------------------------------- */
+
   useEffect(() => {
     setActiveIndex((current) =>
       Math.min(current, maxIndex),
@@ -91,6 +91,7 @@ export default function Services() {
   /* -------------------------------------------------
      Auto carousel
   ------------------------------------------------- */
+
   useEffect(() => {
     if (isPaused || maxIndex === 0) return;
 
@@ -108,6 +109,7 @@ export default function Services() {
   /* -------------------------------------------------
      Navigation
   ------------------------------------------------- */
+
   const goNext = () => {
     setActiveIndex((current) =>
       current >= maxIndex ? 0 : current + 1,
@@ -127,6 +129,7 @@ export default function Services() {
   /* -------------------------------------------------
      Card interaction
   ------------------------------------------------- */
+
   const handleCardSelect = (index: number) => {
     setSelectedIndex(index);
     setHoveredIndex(index);
@@ -135,10 +138,6 @@ export default function Services() {
   const handleCardHover = (index: number | null) => {
     setHoveredIndex(index);
 
-    /*
-     * On desktop, hovering changes the active
-     * visual state.
-     */
     if (index !== null) {
       setSelectedIndex(index);
     }
@@ -149,154 +148,53 @@ export default function Services() {
   };
 
   return (
-    <section
-      id="services"
-      className="
-        relative overflow-hidden
-        bg-[var(--bg-primary)]
-        py-20
-        transition-colors duration-500
-        sm:py-24
-        lg:py-28
-      "
-    >
+    <section id="services" className="relative overflow-hidden bg-[var(--bg-primary)] py-20 transition-colors duration-500 sm:py-24 lg:py-28">
       {/* -------------------------------------------------
           Subtle brand background
       ------------------------------------------------- */}
 
-      <div
-        className="
-          pointer-events-none
-          absolute
-          -left-40
-          top-20
-          h-80
-          w-80
-          rounded-full
-          bg-[var(--brand-blue-soft)]
-          blur-[110px]
-          opacity-70
-        "
-      />
+      <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-[var(--brand-blue-soft)] blur-[110px] opacity-70" />
 
-      <div
-        className="
-          pointer-events-none
-          absolute
-          -right-40
-          top-[35%]
-          h-80
-          w-80
-          rounded-full
-          bg-[var(--brand-green-soft)]
-          blur-[110px]
-          opacity-70
-        "
-      />
+      <div className="pointer-events-none absolute -right-40 top-[35%] h-80 w-80 rounded-full bg-[var(--brand-green-soft)] blur-[110px] opacity-70" />
 
-      <div
-        className="
-          pointer-events-none
-          absolute
-          bottom-[-160px]
-          left-[35%]
-          h-80
-          w-80
-          rounded-full
-          bg-[var(--brand-red-soft)]
-          blur-[110px]
-          opacity-60
-        "
-      />
+      <div className="pointer-events-none absolute bottom-[-160px] left-[35%] h-80 w-80 rounded-full bg-[var(--brand-red-soft)] blur-[110px] opacity-60" />
 
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+      {/* -------------------------------------------------
+          MAIN CONTAINER
+          
+          Same horizontal alignment as Hero
+          and CourseShowcase
+      ------------------------------------------------- */}
+
+      <div className="relative z-10 w-full px-6 sm:px-12 lg:px-20">
         {/* -------------------------------------------------
             Heading
         ------------------------------------------------- */}
+
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 25,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            amount: 0.25,
-          }}
-          transition={{
-            duration: 0.65,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12 max-w-2xl lg:mb-14"
         >
-          <div className="mb-4 flex items-center gap-2">
-            <span
-              className="
-                h-1.5
-                w-1.5
-                rounded-full
-                bg-[var(--color-green)]
-              "
-            />
-
-            <p
-              className="
-                text-[11px]
-                font-bold
-                uppercase
-                tracking-[0.24em]
-                text-[var(--color-green)]
-              "
-            >
-              What We Provide
-            </p>
-          </div>
-
-          <h2
-            className="
-              text-4xl
-              font-semibold
-              tracking-[-0.04em]
-              text-[var(--text-primary)]
-              transition-colors duration-500
-              sm:text-5xl
-            "
-          >
-            Technology that moves
+          <h2 className="text-4xl font-semibold tracking-[-0.04em] text-[var(--text-primary)] transition-colors duration-500 sm:text-5xl">
+            Technology that moves{" "}
             <span className="text-[var(--color-navy)] dark:text-cyan-400">
-              {" "}
               business forward.
             </span>
           </h2>
 
-          <p
-            className="
-              mt-5
-              max-w-xl
-              text-[15px]
-              leading-7
-              text-[var(--text-secondary)]
-              transition-colors duration-500
-            "
-          >
-            From digital products and cloud infrastructure
-            to AI, security and creative solutions, we build
-            technology that helps businesses grow.
+          <p className="mt-5 max-w-xl text-[15px] leading-7 text-[var(--text-secondary)] transition-colors duration-500">
+            From digital products and cloud infrastructure to AI, security and creative solutions, we build technology that helps businesses grow.
           </p>
         </motion.div>
 
         {/* -------------------------------------------------
             Carousel
         ------------------------------------------------- */}
-        <div
-          ref={containerRef}
-          className="relative"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
+
+        <div ref={containerRef} className="relative" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
           <div className="overflow-hidden">
             <motion.div
               drag="x"
@@ -311,30 +209,13 @@ export default function Services() {
                   goPrevious();
                 }
               }}
-              animate={{
-                x: -activeIndex * (cardWidth + GAP),
-              }}
-              transition={{
-                duration: 0.75,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="
-                flex
-                cursor-grab
-                active:cursor-grabbing
-              "
-              style={{
-                gap: GAP,
-              }}
+              animate={{ x: -activeIndex * (cardWidth + GAP) }}
+              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              className="flex cursor-grab active:cursor-grabbing"
+              style={{ gap: GAP }}
             >
               {services.map((service, index) => (
-                <div
-                  key={service.id}
-                  className="shrink-0"
-                  style={{
-                    width: cardWidth || "100%",
-                  }}
-                >
+                <div key={service.id} className="shrink-0" style={{ width: cardWidth || "100%" }}>
                   <ServiceCard
                     service={service}
                     index={index}
@@ -353,65 +234,30 @@ export default function Services() {
         {/* -------------------------------------------------
             Bottom navigation
         ------------------------------------------------- */}
-        <div
-          className="
-            mt-9
-            flex
-            items-center
-            justify-between
-            border-t
-            border-[var(--border-secondary)]
-            pt-5
-            transition-colors duration-500
-          "
-        >
+
+        <div className="mt-9 flex items-center justify-between border-t border-[var(--border-secondary)] pt-5 transition-colors duration-500">
           {/* Progress */}
+
           <div className="flex items-center gap-1.5">
-            {Array.from({
-              length: maxIndex + 1,
-            }).map((_, index) => (
+            {Array.from({ length: maxIndex + 1 }).map((_, index) => (
               <button
                 key={index}
                 type="button"
                 aria-label={`Go to service ${index + 1}`}
                 onClick={() => goTo(index)}
-                className={`
-                  h-1
-                  rounded-full
-                  transition-all
-                  duration-500
-                  ${
-                    activeIndex === index
-                      ? "w-8 bg-[var(--color-green)]"
-                      : "w-2 bg-[var(--border-primary)]"
-                  }
-                `}
+                className={`h-1 rounded-full transition-all duration-500 ${activeIndex === index ? "w-8 bg-[var(--color-green)]" : "w-2 bg-[var(--border-primary)]"}`}
               />
             ))}
           </div>
 
           {/* Navigation */}
+
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={goPrevious}
               aria-label="Previous services"
-              className="
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-[var(--border-primary)]
-                bg-[var(--surface-primary)]
-                text-[var(--text-secondary)]
-                transition-all
-                duration-300
-                hover:border-[var(--color-green)]
-                hover:text-[var(--color-green)]
-              "
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-primary)] bg-[var(--surface-primary)] text-[var(--text-secondary)] transition-all duration-300 hover:border-[var(--color-green)] hover:text-[var(--color-green)]"
             >
               <ArrowLeft size={15} />
             </button>
@@ -420,19 +266,7 @@ export default function Services() {
               type="button"
               onClick={goNext}
               aria-label="Next services"
-              className="
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-full
-                bg-[var(--color-navy)]
-                text-white
-                transition-all
-                duration-300
-                hover:bg-[var(--color-green)]
-              "
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-navy)] text-white transition-all duration-300 hover:bg-[var(--color-green)]"
             >
               <ArrowRight size={15} />
             </button>

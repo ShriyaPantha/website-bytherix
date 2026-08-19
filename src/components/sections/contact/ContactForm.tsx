@@ -182,24 +182,11 @@ const ContactForm = () => {
     >
       {/* Header */}
       <div className="mb-3">
-        <p
-          className="
-            mb-0.5
-            text-[9px]
-            font-semibold
-            tracking-[0.18em]
-            text-[var(--color-green)]
-            uppercase
-            sm:text-[10px]
-          "
-        >
-          Get in touch
-        </p>
-
+      
         <h2
           id="contact-form-heading"
           className="
-            font-['Chakra_Petch']
+            font-['Inter']
             text-xl
             font-bold
             leading-none
