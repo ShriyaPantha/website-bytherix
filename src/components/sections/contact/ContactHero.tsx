@@ -189,33 +189,6 @@ const ContactHero = () => {
           }}
           className="text-center"
         >
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 6 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              delay: 0.08,
-              duration: 0.35,
-            }}
-            className="
-              mb-1
-              text-[7px]
-              font-medium
-              uppercase
-              tracking-[0.12em]
-              text-[var(--color-green)]
-
-              sm:text-[8px]
-              md:text-[9px]
-              lg:text-[10px]
-              xl:text-[11px]
-            "
-          >
-            Let's get in touch!
-          </motion.p>
-          
-
           {/* Main Heading */}
           <motion.h2
             id="contact-heading"
