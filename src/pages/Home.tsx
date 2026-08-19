@@ -3,7 +3,6 @@ import { lazy, Suspense } from "react";
 
 const Hero = lazy(() => import("../components/sections/hero/Hero"));
 const About = lazy( () => import("../components/sections/about/About"));
-const Team = lazy(() => import("../components/sections/team/Team"));
 
 const Services = lazy(() => import("../components/sections/Services"));
 const Courses = lazy(() => import("../components/sections/courses/Courses"));
@@ -23,7 +22,6 @@ function Home({ docked }: HomeProps) {
     <Suspense fallback={null}>
       <Hero docked={docked} />
       <About />
-      <Team />
       <Services />
       <Courses />
       <Testimonials />
