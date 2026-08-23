@@ -221,7 +221,7 @@ const ContactHero = () => {
           >
             CONTACT
 
-            <span className="block text-[var(--color-green)]">
+            <span className="block text-[var(--color-navy)]">
               US
             </span>
           </motion.h2>
