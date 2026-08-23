@@ -1,10 +1,5 @@
 import { useRef, useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  type Variants,
-} from "framer-motion";
-
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   Search,
   Heart,
@@ -13,7 +8,6 @@ import {
   ChevronDown,
   Menu,
 } from "lucide-react";
-
 import logo from "../../assets/logo.png";
 import MenuOverlay from "./MenuOverlay";
 
@@ -34,7 +28,6 @@ const introLetterVariants: Variants = {
     y: 24,
     filter: "blur(5px)",
   },
-
   visible: (index: number) => ({
     opacity: 1,
     y: 0,
@@ -47,21 +40,11 @@ const introLetterVariants: Variants = {
   }),
 };
 
-const INTRO_LETTERS =
-  BRAND.length + TECHNOLOGY.length;
-
+const INTRO_LETTERS = BRAND.length + TECHNOLOGY.length;
 const INTRO_DURATION = 0.28;
+const INTRO_STAGGER = (INTRO_LETTERS - 1) * 0.035;
+const INTRO_FINISH = INTRO_STAGGER + INTRO_DURATION;
 
-const INTRO_STAGGER =
-  (INTRO_LETTERS - 1) * 0.035;
-
-const INTRO_FINISH =
-  INTRO_STAGGER + INTRO_DURATION;
-
-/*
- * App.tsx uses this value to dock the navbar
- * after the intro animation.
- */
 export const INTRO_TOTAL_MS = Math.ceil(
   (INTRO_FINISH + 0.45) * 1000,
 );
@@ -111,19 +94,11 @@ const DROPDOWN_CONTENT: Record<
   Company: [
     {
       heading: "Company",
-      items: [
-        "About Us",
-        "Our Team",
-        "Our Story",
-      ],
+      items: ["About Us", "Our Team", "Our Story"],
     },
     {
       heading: "Explore",
-      items: [
-        "Why Bytherix",
-        "Testimonials",
-        "Contact Us",
-      ],
+      items: ["Why Bytherix", "Testimonials", "Contact Us"],
     },
   ],
 
@@ -254,74 +229,34 @@ const getBrandColor = (index: number) => {
 ========================================================= */
 
 const Navbar = ({ docked }: NavbarProps) => {
-  /*
-   * IMPORTANT
-   *
-   * This ref belongs to the Navbar instance.
-   *
-   * App.tsx keeps Navbar mounted while navigating:
-   *
-   * /
-   * /our-team
-   * /team/anish-parajuli
-   *
-   * Because Navbar is NOT unmounted,
-   * this ref does not reset.
-   *
-   * Therefore the intro animation plays only once.
-   */
   const introPlayedRef = useRef(false);
 
-  const [mobileMenuOpen, setMobileMenuOpen] =
-    useState(false);
-
-  const [activeDropdown, setActiveDropdown] =
-    useState<string | null>(null);
-
-  const [hoveredNavItem, setHoveredNavItem] =
-    useState<string | null>(null);
-
-  const [mobileSearchOpen, setMobileSearchOpen] =
-    useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(
+    null,
+  );
+  const [hoveredNavItem, setHoveredNavItem] = useState<string | null>(
+    null,
+  );
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   /* =======================================================
      INTERNAL SPA NAVIGATION
   ======================================================= */
 
   const navigateTo = (path: string) => {
-    /*
-     * If we are already on the same route,
-     * do not create another history entry.
-     */
-    if (window.location.pathname === path) {
+    if (window.location.pathname + window.location.hash === path) {
       setActiveDropdown(null);
       setHoveredNavItem(null);
       setMobileMenuOpen(false);
       setMobileSearchOpen(false);
-
       return;
     }
 
-    /*
-     * IMPORTANT:
-     *
-     * pushState changes the URL without reloading
-     * the entire website.
-     *
-     * This means Navbar remains mounted.
-     */
     window.history.pushState({}, "", path);
 
-    /*
-     * Tell App.tsx that the route changed.
-     */
-    window.dispatchEvent(
-      new PopStateEvent("popstate"),
-    );
+    window.dispatchEvent(new PopStateEvent("popstate"));
 
-    /*
-     * Close all navbar overlays.
-     */
     setActiveDropdown(null);
     setHoveredNavItem(null);
     setMobileMenuOpen(false);
@@ -332,9 +267,7 @@ const Navbar = ({ docked }: NavbarProps) => {
      DROPDOWN ITEM NAVIGATION
   ======================================================= */
 
-  const handleDropdownItemClick = (
-    item: string,
-  ) => {
+  const handleDropdownItemClick = (item: string) => {
     switch (item) {
       case "Our Team":
         navigateTo("/our-team");
@@ -344,11 +277,9 @@ const Navbar = ({ docked }: NavbarProps) => {
         navigateTo("/");
 
         window.setTimeout(() => {
-          document
-            .getElementById("about")
-            ?.scrollIntoView({
-              behavior: "smooth",
-            });
+          document.getElementById("about")?.scrollIntoView({
+            behavior: "smooth",
+          });
         }, 0);
 
         break;
@@ -357,11 +288,9 @@ const Navbar = ({ docked }: NavbarProps) => {
         navigateTo("/");
 
         window.setTimeout(() => {
-          document
-            .getElementById("story")
-            ?.scrollIntoView({
-              behavior: "smooth",
-            });
+          document.getElementById("story")?.scrollIntoView({
+            behavior: "smooth",
+          });
         }, 0);
 
         break;
@@ -370,11 +299,9 @@ const Navbar = ({ docked }: NavbarProps) => {
         navigateTo("/");
 
         window.setTimeout(() => {
-          document
-            .getElementById("contact")
-            ?.scrollIntoView({
-              behavior: "smooth",
-            });
+          document.getElementById("contact")?.scrollIntoView({
+            behavior: "smooth",
+          });
         }, 0);
 
         break;
@@ -423,60 +350,14 @@ const Navbar = ({ docked }: NavbarProps) => {
       ====================================================== */}
 
       <header
-        className="
-          relative
-          z-[100]
-          w-full
-          bg-[#050814]
-          px-3
-          py-3
-          sm:px-4
-          sm:py-3
-          lg:px-5
-          lg:py-4
-          xl:px-6
-        "
+        className="relative z-[100] w-full bg-[#050814] px-3 py-3 sm:px-4 sm:py-3 lg:px-5 lg:py-4 xl:px-6"
         onMouseLeave={() => {
           setActiveDropdown(null);
           setHoveredNavItem(null);
         }}
       >
-        <div
-          className="
-            relative
-            mx-auto
-            flex
-            min-h-[62px]
-            w-full
-            max-w-[1600px]
-            items-center
-            rounded-[20px]
-            border
-            border-white/[0.16]
-            bg-[#080F29]
-            px-4
-            shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_25px_rgba(0,0,0,0.35)]
-            sm:min-h-[66px]
-            sm:px-5
-            lg:min-h-[68px]
-            lg:rounded-[22px]
-            lg:px-6
-            xl:min-h-[70px]
-            xl:px-7
-          "
-        >
-          <div
-            className="
-              pointer-events-none
-              absolute
-              inset-[1px]
-              rounded-[19px]
-              border
-              border-white/[0.035]
-              sm:rounded-[21px]
-              lg:rounded-[21px]
-            "
-          />
+        <div className="relative mx-auto flex min-h-[62px] w-full max-w-[1600px] items-center rounded-[20px] border border-white/[0.16] bg-[#080F29] px-4 shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_25px_rgba(0,0,0,0.35)] sm:min-h-[66px] sm:px-5 lg:min-h-[68px] lg:rounded-[22px] lg:px-6 xl:min-h-[70px] xl:px-7">
+          <div className="pointer-events-none absolute inset-[1px] rounded-[19px] border border-white/[0.035] sm:rounded-[21px] lg:rounded-[21px]" />
 
           {/* =================================================
               BRAND / LOGO AREA
@@ -491,8 +372,6 @@ const Navbar = ({ docked }: NavbarProps) => {
                 : "fixed inset-0 z-[300] flex flex-col items-center justify-center bg-[#050814]"
             }
           >
-            {/* LOGO IMAGE */}
-
             <AnimatePresence>
               {docked && (
                 <motion.a
@@ -507,31 +386,12 @@ const Navbar = ({ docked }: NavbarProps) => {
                     duration: 0.42,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  className="
-                    h-9
-                    w-9
-                    shrink-0
-                    overflow-hidden
-                    rounded-full
-                    border
-                    border-white/20
-                    bg-white
-                    shadow-[0_0_7px_rgba(255,255,255,0.045)]
-                    sm:h-10
-                    sm:w-10
-                    lg:h-11
-                    lg:w-11
-                  "
+                  className="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-white/20 bg-white shadow-[0_0_7px_rgba(255,255,255,0.045)] sm:h-10 sm:w-10 lg:h-11 lg:w-11"
                 >
                   <img
                     src={logo}
                     alt="Bytherix Technology"
-                    className="
-                      h-full
-                      w-full
-                      scale-125
-                      object-cover
-                    "
+                    className="h-full w-full scale-125 object-cover"
                   />
                 </motion.a>
               )}
@@ -553,68 +413,38 @@ const Navbar = ({ docked }: NavbarProps) => {
               <motion.div
                 layout
                 transition={dockTransition}
-                className="
-                  flex
-                  font-['Inter']
-                  font-bold
-                  leading-none
-                  tracking-wide
-                "
+                className="flex font-['Inter'] font-bold leading-none tracking-wide"
                 style={{
                   fontSize: docked
                     ? "1.08rem"
                     : "clamp(2.8rem, 8vw, 5rem)",
                 }}
               >
-                {BRAND.split("").map(
-                  (char, index) => (
-                    <motion.span
-                      key={`brand-${index}`}
-                      custom={index}
-                      variants={introLetterVariants}
-                      /*
-                       * FIRST LOAD:
-                       * hidden -> visible
-                       *
-                       * AFTER INTRO:
-                       * initial = false
-                       *
-                       * Since Navbar stays mounted,
-                       * route changes cannot restart it.
-                       */
-                      initial={
-                        introPlayedRef.current
-                          ? false
-                          : "hidden"
-                      }
-                      animate="visible"
-                      onAnimationComplete={
-                        index ===
-                        BRAND.length - 1
-                          ? () => {
-                              /*
-                               * Mark the intro as
-                               * completed only after
-                               * the final BYTHERIX
-                               * letter finishes.
-                               */
-                              if (
-                                !introPlayedRef.current
-                              ) {
-                                introPlayedRef.current =
-                                  true;
-                              }
+                {BRAND.split("").map((char, index) => (
+                  <motion.span
+                    key={`brand-${index}`}
+                    custom={index}
+                    variants={introLetterVariants}
+                    initial={
+                      introPlayedRef.current
+                        ? false
+                        : "hidden"
+                    }
+                    animate="visible"
+                    onAnimationComplete={
+                      index === BRAND.length - 1
+                        ? () => {
+                            if (!introPlayedRef.current) {
+                              introPlayedRef.current = true;
                             }
-                          : undefined
-                      }
-                      className={getBrandColor(
-                        index,
-                      )}
-                    >
-                      {char}
-                    </motion.span>
-                  ),
-                )}
+                          }
+                        : undefined
+                    }
+                    className={getBrandColor(index)}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
               </motion.div>
 
               {/* TECHNOLOGY */}
@@ -622,34 +452,20 @@ const Navbar = ({ docked }: NavbarProps) => {
               <motion.div
                 layout
                 transition={dockTransition}
-                className="
-                  font-['Inter']
-                  font-medium
-                  uppercase
-                  leading-none
-                  tracking-[0.14em]
-                  text-white
-                "
+                className="relative flex flex-col items-center font-['Inter'] font-medium uppercase leading-none tracking-[0.14em] text-white"
                 style={{
-                  marginTop: docked
-                    ? "3px"
-                    : "10px",
-
+                  marginTop: docked ? "3px" : "10px",
                   fontSize: docked
                     ? "0.46rem"
                     : "clamp(0.85rem, 2vw, 1.3rem)",
                 }}
               >
-                {TECHNOLOGY.split("").map(
-                  (char, index) => (
+                <div className="flex">
+                  {TECHNOLOGY.split("").map((char, index) => (
                     <motion.span
                       key={`technology-${index}`}
-                      custom={
-                        BRAND.length + index
-                      }
-                      variants={
-                        introLetterVariants
-                      }
+                      custom={BRAND.length + index}
+                      variants={introLetterVariants}
                       initial={
                         introPlayedRef.current
                           ? false
@@ -659,8 +475,35 @@ const Navbar = ({ docked }: NavbarProps) => {
                     >
                       {char}
                     </motion.span>
-                  ),
-                )}
+                  ))}
+                </div>
+
+                {/* RED INTRO LINE */}
+
+                <AnimatePresence>
+                  {!docked && (
+                    <motion.span
+                      initial={{
+                        width: 0,
+                        opacity: 0,
+                      }}
+                      animate={{
+                        width: "100%",
+                        opacity: 1,
+                      }}
+                      exit={{
+                        width: 0,
+                        opacity: 0,
+                      }}
+                      transition={{
+                        delay: INTRO_FINISH + 0.05,
+                        duration: 0.45,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className="mt-3 h-[2px] self-stretch rounded-full bg-[#FF3B30] shadow-[0_0_10px_rgba(255,59,48,0.45)]"
+                    />
+                  )}
+                </AnimatePresence>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -679,39 +522,15 @@ const Navbar = ({ docked }: NavbarProps) => {
               duration: 0.35,
               delay: docked ? 0.1 : 0,
             }}
-            className="
-              relative
-              z-20
-              ml-auto
-              hidden
-              items-center
-              gap-3.5
-              lg:flex
-              xl:gap-4
-              2xl:gap-5
-            "
+            className="relative z-20 ml-auto hidden items-center gap-4 lg:flex xl:gap-5 2xl:gap-6"
           >
-            <nav
-              className="
-                flex
-                items-center
-                gap-3.5
-                xl:gap-4
-                2xl:gap-5
-              "
-            >
+            <nav className="flex items-center gap-4 xl:gap-5 2xl:gap-6">
               {NAV_ITEMS.map((item) => {
                 const isHovered =
-                  hoveredNavItem ===
-                  item.label;
+                  hoveredNavItem === item.label;
 
                 const isDropdownOpen =
-                  activeDropdown ===
-                  item.label;
-
-                /* -------------------------------
-                   NON DROPDOWN ITEM
-                -------------------------------- */
+                  activeDropdown === item.label;
 
                 if (!item.hasDropdown) {
                   return (
@@ -719,75 +538,29 @@ const Navbar = ({ docked }: NavbarProps) => {
                       key={item.label}
                       href={`#${item.label.toLowerCase()}`}
                       onMouseEnter={() =>
-                        setHoveredNavItem(
-                          item.label,
-                        )
+                        setHoveredNavItem(item.label)
                       }
                       onMouseLeave={() =>
                         setHoveredNavItem(null)
                       }
-                      className={`
-                        group
-                        relative
-                        flex
-                        items-center
-                        whitespace-nowrap
-                        py-2
-                        font-['Inter']
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        tracking-wide
-                        transition-all
-                        duration-200
-                        ${
-                          isHovered
-                            ? "text-[#00AEEF]"
-                            : "text-white/80"
-                        }
-                      `}
+                      className={`group relative flex items-center whitespace-nowrap py-2 font-['Inter'] text-[12px] font-bold uppercase tracking-[0.035em] transition-all duration-200 ${isHovered ? "text-[#00AEEF]" : "text-white/85"}`}
                     >
                       {item.label}
 
                       <span
-                        className={`
-                          absolute
-                          bottom-0
-                          left-0
-                          h-px
-                          bg-[#00AEEF]
-                          transition-all
-                          duration-300
-                          ${
-                            isHovered
-                              ? "w-full"
-                              : "w-0"
-                          }
-                        `}
+                        className={`absolute bottom-0 left-0 h-px bg-[#00AEEF] transition-all duration-300 ${isHovered ? "w-full" : "w-0"}`}
                       />
                     </a>
                   );
                 }
 
-                /* -------------------------------
-                   DROPDOWN ITEM
-                -------------------------------- */
-
                 return (
                   <div
                     key={item.label}
-                    className="
-                      relative
-                      py-2
-                    "
+                    className="relative py-2"
                     onMouseEnter={() => {
-                      setHoveredNavItem(
-                        item.label,
-                      );
-
-                      setActiveDropdown(
-                        item.label,
-                      );
+                      setHoveredNavItem(item.label);
+                      setActiveDropdown(item.label);
                     }}
                     onMouseLeave={() =>
                       setHoveredNavItem(null)
@@ -802,58 +575,18 @@ const Navbar = ({ docked }: NavbarProps) => {
                             : item.label,
                         )
                       }
-                      className={`
-                        group
-                        relative
-                        flex
-                        items-center
-                        gap-1.5
-                        whitespace-nowrap
-                        font-['Inter']
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        tracking-wide
-                        transition-all
-                        duration-200
-                        ${
-                          isHovered
-                            ? "text-[#00AEEF]"
-                            : "text-white/80"
-                        }
-                      `}
+                      className={`group relative flex items-center gap-1.5 whitespace-nowrap font-['Inter'] text-[12px] font-bold uppercase tracking-[0.035em] transition-all duration-200 ${isHovered ? "text-[#00AEEF]" : "text-white/85"}`}
                     >
                       {item.label}
 
                       <ChevronDown
-                        size={11}
+                        size={12}
                         strokeWidth={2}
-                        className={`
-                          transition-all
-                          duration-200
-                          ${
-                            isHovered
-                              ? "rotate-180 text-[#00AEEF]"
-                              : "text-white/65"
-                          }
-                        `}
+                        className={`transition-all duration-200 ${isHovered ? "rotate-180 text-[#00AEEF]" : "text-white/65"}`}
                       />
 
                       <span
-                        className={`
-                          absolute
-                          -bottom-2
-                          left-0
-                          h-px
-                          bg-[#00AEEF]
-                          transition-all
-                          duration-300
-                          ${
-                            isHovered
-                              ? "w-full"
-                              : "w-0"
-                          }
-                        `}
+                        className={`absolute -bottom-2 left-0 h-px bg-[#00AEEF] transition-all duration-300 ${isHovered ? "w-full" : "w-0"}`}
                       />
                     </button>
                   </div>
@@ -862,73 +595,27 @@ const Navbar = ({ docked }: NavbarProps) => {
             </nav>
 
             {/* =================================================
-                DESKTOP SEARCH
+                SEARCH
             ================================================== */}
 
-            <div
-              className="
-                flex
-                h-9
-                w-[180px]
-                items-center
-                rounded-full
-                border
-                border-white/25
-                bg-white/[0.035]
-                pl-3
-                pr-1
-                transition-all
-                duration-300
-                hover:border-white/40
-                hover:bg-white/[0.055]
-                xl:h-10
-                xl:w-[205px]
-              "
-            >
+            <div className="flex h-9 w-[180px] items-center rounded-full border border-white/25 bg-white/[0.035] pl-3 pr-1 transition-all duration-300 hover:border-white/40 hover:bg-white/[0.055] xl:h-10 xl:w-[205px]">
               <Search
                 size={16}
                 strokeWidth={1.8}
-                className="
-                  shrink-0
-                  text-white/55
-                "
+                className="shrink-0 text-white/55"
               />
 
               <input
                 type="text"
                 placeholder="Search"
                 aria-label="Search"
-                className="
-                  min-w-0
-                  flex-1
-                  bg-transparent
-                  px-2
-                  font-['Inter']
-                  text-xs
-                  text-white
-                  outline-none
-                  placeholder:text-white/40
-                "
+                className="min-w-0 flex-1 bg-transparent px-2 font-['Inter'] text-xs text-white outline-none placeholder:text-white/40"
               />
 
               <button
                 type="button"
                 aria-label="Search"
-                className="
-                  flex
-                  h-8
-                  w-8
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-white
-                  text-[#080F29]
-                  transition-transform
-                  duration-200
-                  hover:scale-105
-                  active:scale-95
-                "
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#080F29] transition-transform duration-200 hover:scale-105 active:scale-95"
               >
                 <Search
                   size={14}
@@ -937,29 +624,16 @@ const Navbar = ({ docked }: NavbarProps) => {
               </button>
             </div>
 
-            <div
-              className="
-                h-9
-                w-px
-                bg-white/20
-                xl:h-10
-              "
-            />
+            {/* =================================================
+                NO VERTICAL DIVIDER HERE
+            ================================================== */}
 
             {/* WISHLIST */}
 
             <button
               type="button"
               aria-label="Wishlist"
-              className="
-                text-white/80
-                transition-all
-                duration-200
-                hover:scale-105
-                hover:text-[#00AEEF]
-                focus-visible:text-[#00AEEF]
-                focus-visible:outline-none
-              "
+              className="text-white/80 transition-all duration-200 hover:scale-105 hover:text-[#00AEEF] focus-visible:text-[#00AEEF] focus-visible:outline-none"
             >
               <Heart
                 size={22}
@@ -967,40 +641,19 @@ const Navbar = ({ docked }: NavbarProps) => {
               />
             </button>
 
-            {/* NOTIFICATIONS */}
+            {/* NOTIFICATION */}
 
             <button
               type="button"
               aria-label="Notifications"
-              className="
-                relative
-                text-white/80
-                transition-all
-                duration-200
-                hover:scale-105
-                hover:text-[#00AEEF]
-                focus-visible:text-[#00AEEF]
-                focus-visible:outline-none
-              "
+              className="relative text-white/80 transition-all duration-200 hover:scale-105 hover:text-[#00AEEF] focus-visible:text-[#00AEEF] focus-visible:outline-none"
             >
               <Bell
                 size={22}
                 strokeWidth={1.7}
               />
 
-              <span
-                className="
-                  absolute
-                  -right-1
-                  -top-1
-                  h-2
-                  w-2
-                  rounded-full
-                  bg-[#FF6575]
-                  ring-2
-                  ring-[#080F29]
-                "
-              />
+              <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#FF6575] ring-2 ring-[#080F29]" />
             </button>
 
             {/* DEMON HUNTER */}
@@ -1008,38 +661,12 @@ const Navbar = ({ docked }: NavbarProps) => {
             <button
               type="button"
               aria-label="Demon Hunter"
-              className="
-                group
-                flex
-                h-9
-                w-9
-                shrink-0
-                items-center
-                justify-center
-                overflow-hidden
-                rounded-full
-                border
-                border-white/20
-                bg-black
-                transition-all
-                duration-200
-                hover:scale-105
-                hover:border-[#00AEEF]
-                focus-visible:border-[#00AEEF]
-                focus-visible:outline-none
-              "
+              className="group flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-black transition-all duration-200 hover:scale-105 hover:border-[#00AEEF] focus-visible:border-[#00AEEF] focus-visible:outline-none"
             >
               <img
                 src="/demon hunter.png"
                 alt="Demon Hunter"
-                className="
-                  h-full
-                  w-full
-                  object-cover
-                  transition-all
-                  duration-200
-                  group-hover:scale-105
-                "
+                className="h-full w-full object-cover transition-all duration-200 group-hover:scale-105"
               />
             </button>
 
@@ -1048,25 +675,7 @@ const Navbar = ({ docked }: NavbarProps) => {
             <button
               type="button"
               aria-label="Profile"
-              className="
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-white/25
-                text-white/80
-                transition-all
-                duration-200
-                hover:scale-105
-                hover:border-[#00AEEF]
-                hover:text-[#00AEEF]
-                focus-visible:border-[#00AEEF]
-                focus-visible:text-[#00AEEF]
-                focus-visible:outline-none
-              "
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-white/80 transition-all duration-200 hover:scale-105 hover:border-[#00AEEF] hover:text-[#00AEEF] focus-visible:border-[#00AEEF] focus-visible:text-[#00AEEF] focus-visible:outline-none"
             >
               <UserRound
                 size={18}
@@ -1078,26 +687,8 @@ const Navbar = ({ docked }: NavbarProps) => {
 
             <button
               type="button"
-              onClick={() =>
-                navigateTo("/#contact")
-              }
-              className="
-                whitespace-nowrap
-                rounded-full
-                bg-[#3154C4]
-                px-5
-                py-2.5
-                font-['Inter']
-                text-xs
-                font-bold
-                text-white
-                transition-all
-                duration-200
-                hover:-translate-y-0.5
-                hover:bg-[#3B5FD0]
-                hover:shadow-[0_6px_16px_rgba(49,84,196,0.22)]
-                active:translate-y-0
-              "
+              onClick={() => navigateTo("/#contact")}
+              className="whitespace-nowrap rounded-full bg-[#3154C4] px-5 py-2.5 font-['Inter'] text-xs font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#3B5FD0] hover:shadow-[0_6px_16px_rgba(49,84,196,0.22)] active:translate-y-0"
             >
               Get a Quote
             </button>
@@ -1112,44 +703,15 @@ const Navbar = ({ docked }: NavbarProps) => {
             animate={{
               opacity: docked ? 1 : 0,
             }}
-            className="
-              relative
-              z-30
-              ml-auto
-              flex
-              items-center
-              gap-2
-              lg:hidden
-            "
+            className="relative z-30 ml-auto flex items-center gap-2 lg:hidden"
           >
-            {/* MOBILE SEARCH BUTTON */}
-
             <button
               type="button"
               aria-label="Open search"
               onClick={() =>
-                setMobileSearchOpen(
-                  (previous) => !previous,
-                )
+                setMobileSearchOpen((previous) => !previous)
               }
-              className={`
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-full
-                border
-                transition-all
-                duration-300
-                sm:h-10
-                sm:w-10
-                ${
-                  mobileSearchOpen
-                    ? "border-[#00AEEF] bg-[#00AEEF]/10 text-[#00AEEF]"
-                    : "border-white/25 bg-white/[0.03] text-white"
-                }
-              `}
+              className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-300 sm:h-10 sm:w-10 ${mobileSearchOpen ? "border-[#00AEEF] bg-[#00AEEF]/10 text-[#00AEEF]" : "border-white/25 bg-white/[0.03] text-white"}`}
             >
               <Search
                 size={18}
@@ -1157,33 +719,11 @@ const Navbar = ({ docked }: NavbarProps) => {
               />
             </button>
 
-            {/* MOBILE MENU BUTTON */}
-
             <button
               type="button"
               aria-label="Open menu"
-              onClick={() =>
-                setMobileMenuOpen(true)
-              }
-              className="
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-white/25
-                bg-white/[0.03]
-                text-white
-                transition-all
-                duration-200
-                hover:border-[#00AEEF]
-                hover:text-[#00AEEF]
-                active:scale-95
-                sm:h-10
-                sm:w-10
-              "
+              onClick={() => setMobileMenuOpen(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/[0.03] text-white transition-all duration-200 hover:border-[#00AEEF] hover:text-[#00AEEF] active:scale-95 sm:h-10 sm:w-10"
             >
               <Menu
                 size={21}
@@ -1217,70 +757,26 @@ const Navbar = ({ docked }: NavbarProps) => {
                 transition={{
                   duration: 0.2,
                 }}
-                className="
-                  absolute
-                  left-3
-                  right-3
-                  top-[calc(100%+8px)]
-                  z-[120]
-                  lg:hidden
-                "
+                className="absolute left-3 right-3 top-[calc(100%+8px)] z-[120] lg:hidden"
               >
-                <div
-                  className="
-                    flex
-                    h-12
-                    w-full
-                    items-center
-                    rounded-full
-                    border
-                    border-white/25
-                    bg-[#080F29]
-                    px-2
-                    pl-4
-                    shadow-[0_15px_35px_rgba(0,0,0,0.45)]
-                  "
-                >
+                <div className="flex h-12 w-full items-center rounded-full border border-white/25 bg-[#080F29] px-2 pl-4 shadow-[0_15px_35px_rgba(0,0,0,0.45)]">
                   <Search
                     size={18}
                     strokeWidth={1.8}
-                    className="
-                      shrink-0
-                      text-white/55
-                    "
+                    className="shrink-0 text-white/55"
                   />
 
                   <input
                     autoFocus
                     type="text"
                     placeholder="Search anything..."
-                    className="
-                      min-w-0
-                      flex-1
-                      bg-transparent
-                      px-3
-                      font-['Inter']
-                      text-sm
-                      text-white
-                      outline-none
-                      placeholder:text-white/40
-                    "
+                    className="min-w-0 flex-1 bg-transparent px-3 font-['Inter'] text-sm text-white outline-none placeholder:text-white/40"
                   />
 
                   <button
                     type="button"
                     aria-label="Search"
-                    className="
-                      flex
-                      h-9
-                      w-9
-                      shrink-0
-                      items-center
-                      justify-center
-                      rounded-full
-                      bg-white
-                      text-[#080F29]
-                    "
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#080F29]"
                   >
                     <Search
                       size={15}
@@ -1305,104 +801,40 @@ const Navbar = ({ docked }: NavbarProps) => {
               animate="visible"
               exit="exit"
               onMouseEnter={() =>
-                setHoveredNavItem(
-                  activeDropdown,
-                )
+                setHoveredNavItem(activeDropdown)
               }
               onMouseLeave={() => {
                 setActiveDropdown(null);
                 setHoveredNavItem(null);
               }}
-              className="
-                absolute
-                left-3
-                right-3
-                top-[calc(100%-2px)]
-                z-[90]
-                hidden
-                lg:block
-              "
+              className="absolute left-3 right-3 top-[calc(100%-2px)] z-[90] hidden lg:block"
             >
-              <div
-                className="
-                  mx-auto
-                  max-w-[1600px]
-                  overflow-hidden
-                  rounded-b-2xl
-                  rounded-t-xl
-                  border
-                  border-white/15
-                  bg-[#080F29]
-                  shadow-[0_18px_40px_rgba(0,0,0,0.45)]
-                "
-              >
-                <div
-                  className="
-                    grid
-                    grid-cols-2
-                    gap-7
-                    px-7
-                    py-6
-                    xl:grid-cols-3
-                    xl:px-9
-                  "
-                >
-                  {DROPDOWN_CONTENT[
-                    activeDropdown
-                  ]?.map((column) => (
-                    <div
-                      key={column.heading}
-                    >
-                      <p
-                        className="
-                          mb-3
-                          font-['Inter']
-                          text-[9px]
-                          font-bold
-                          uppercase
-                          tracking-[0.18em]
-                          text-[#20C997]
-                        "
-                      >
-                        {column.heading}
-                      </p>
+              <div className="mx-auto max-w-[1600px] overflow-hidden rounded-b-2xl rounded-t-xl border border-white/15 bg-[#080F29] shadow-[0_18px_40px_rgba(0,0,0,0.45)]">
+                <div className="grid grid-cols-2 gap-7 px-7 py-6 xl:grid-cols-3 xl:px-9">
+                  {DROPDOWN_CONTENT[activeDropdown]?.map(
+                    (column) => (
+                      <div key={column.heading}>
+                        <p className="mb-3 font-['Inter'] text-[9px] font-bold uppercase tracking-[0.18em] text-[#20C997]">
+                          {column.heading}
+                        </p>
 
-                      <div className="space-y-1">
-                        {column.items.map(
-                          (item) => (
+                        <div className="space-y-1">
+                          {column.items.map((item) => (
                             <button
                               key={item}
                               type="button"
                               onClick={() =>
-                                handleDropdownItemClick(
-                                  item,
-                                )
+                                handleDropdownItemClick(item)
                               }
-                              className="
-                                group
-                                block
-                                w-full
-                                rounded-lg
-                                px-3
-                                py-2
-                                text-left
-                                font-['Inter']
-                                text-xs
-                                text-white/65
-                                transition-all
-                                duration-200
-                                hover:bg-white/[0.045]
-                                hover:pl-4
-                                hover:text-[#00AEEF]
-                              "
+                              className="group block w-full rounded-lg px-3 py-2 text-left font-['Inter'] text-xs text-white/65 transition-all duration-200 hover:bg-white/[0.045] hover:pl-4 hover:text-[#00AEEF]"
                             >
                               {item}
                             </button>
-                          ),
-                        )}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               </div>
             </motion.div>
