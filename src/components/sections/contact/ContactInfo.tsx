@@ -299,7 +299,7 @@ const ContactInfo = () => {
         =================================================== */}
 
         <div className="mt-8 hidden font-['Inter'] text-[10px] font-medium uppercase tracking-[0.25em] text-white/20 sm:block">
-          Bytherix Technology
+          {/* Bytherix Technology */}
         </div>
       </div>
     </motion.aside>
