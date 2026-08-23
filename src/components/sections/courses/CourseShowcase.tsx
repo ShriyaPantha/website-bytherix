@@ -69,7 +69,7 @@ function CourseCard({
   const [hovered, setHovered] = useState(false);
 
   /* -------------------------------------------------------
-     3D TILT
+      3D TILT
   ------------------------------------------------------- */
 
   const rotateX = useMotionValue(0);
@@ -86,7 +86,7 @@ function CourseCard({
   });
 
   /* -------------------------------------------------------
-     CURSOR GLOW
+      CURSOR GLOW
   ------------------------------------------------------- */
 
   const mouseX = useMotionValue(50);
@@ -113,7 +113,7 @@ function CourseCard({
   );
 
   /* -------------------------------------------------------
-     MOUSE MOVE
+      MOUSE MOVE
   ------------------------------------------------------- */
 
   const handleMouseMove = (
@@ -141,7 +141,7 @@ function CourseCard({
   };
 
   /* -------------------------------------------------------
-     MOUSE LEAVE
+      MOUSE LEAVE
   ------------------------------------------------------- */
 
   const handleMouseLeave = () => {
@@ -168,9 +168,7 @@ function CourseCard({
       whileTap={{ scale: 0.985 }}
       className={`group relative flex-none overflow-hidden rounded-[20px] border bg-[var(--course-card-bg)] snap-start transition-all duration-300 ${featured ? "w-[calc(100vw-70px)] sm:w-[330px] lg:w-[calc((100vw-152px)/4)] lg:max-w-[340px]" : "w-[calc((100vw-60px)/2)] sm:w-[255px] lg:w-[285px]"}`}
     >
-      {/* ===================================================
-          CURSOR GLOW
-      =================================================== */}
+      {/* Cursor Glow */}
 
       <motion.div
         aria-hidden="true"
@@ -183,9 +181,7 @@ function CourseCard({
         }}
       />
 
-      {/* ===================================================
-          IMAGE
-      =================================================== */}
+      {/* Image */}
 
       <div className={`relative overflow-hidden bg-black/10 ${featured ? "h-[175px] sm:h-[195px] lg:h-[165px]" : "h-[125px] sm:h-[155px] lg:h-[165px]"}`}>
         <motion.img
@@ -233,9 +229,7 @@ function CourseCard({
         </div>
       </div>
 
-      {/* ===================================================
-          CONTENT
-      =================================================== */}
+      {/* Content */}
 
       <div className="relative z-10 p-3 sm:p-4 lg:p-5">
         <p
@@ -340,9 +334,9 @@ function SectionHeading({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.55 }}
-      className="mb-6 sm:mb-7"
+      className="mb-5 sm:mb-6"
     >
-      <h2 className="text-2xl font-bold leading-tight tracking-[-0.04em] text-[var(--course-card-text)] sm:text-3xl lg:text-[38px]">
+      <h2 className="text-xl font-bold leading-tight tracking-[-0.04em] text-[var(--course-card-text)] sm:text-2xl lg:text-[28px]">
         {children}
       </h2>
     </motion.div>
@@ -367,7 +361,7 @@ function CourseCarousel({
   const [initialScrollLeft, setInitialScrollLeft] = useState(0);
 
   /* -------------------------------------------------------
-     SCROLL WIDTH
+      SCROLL WIDTH
   ------------------------------------------------------- */
 
   const getScrollAmount = () => {
@@ -387,7 +381,7 @@ function CourseCarousel({
   };
 
   /* -------------------------------------------------------
-     SCROLL
+      SCROLL
   ------------------------------------------------------- */
 
   const scroll = (direction: "left" | "right") => {
@@ -404,7 +398,7 @@ function CourseCarousel({
   };
 
   /* -------------------------------------------------------
-     DRAG
+      DRAG
   ------------------------------------------------------- */
 
   const handleMouseDown = (event: MouseEvent<HTMLDivElement>) => {
@@ -517,18 +511,6 @@ function CourseCarousel({
 ========================================================= */
 
 export default function CourseShowcase() {
-  /* -------------------------------------------------------
-     FEATURED COURSES
-     
-     First 3:
-     - Web Development
-     - App Development
-     - Cyber Security
-
-     4th:
-     - Game Development
-  ------------------------------------------------------- */
-
   const featuredCourses = [
     ...courses.filter((course) => course.featured === true),
     ...courses.filter((course) => course.title === "Game Development"),
@@ -540,11 +522,9 @@ export default function CourseShowcase() {
   return (
     <section
       id="courses"
-      className="relative isolate overflow-hidden bg-[var(--bg-primary)] py-12 transition-colors duration-500 sm:py-16 lg:py-20"
+      className="relative isolate overflow-hidden bg-[var(--bg-primary)] lg:py-10 transition-colors duration-500"
     >
-      {/* =================================================
-          BACKGROUND GLOW
-      ================================================= */}
+      {/* Background Glow */}
 
       <motion.div
         aria-hidden="true"
@@ -580,14 +560,10 @@ export default function CourseShowcase() {
         }}
       />
 
-      {/* =================================================
-          MAIN CONTAINER
-      ================================================= */}
+      {/* Main Container */}
 
       <div className="relative z-10 w-full px-6 sm:px-12 lg:px-20">
-        {/* =================================================
-            INTRO
-        ================================================= */}
+        {/* Intro Heading */}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -596,24 +572,21 @@ export default function CourseShowcase() {
           transition={{ duration: 0.65 }}
           className="mb-10 max-w-3xl sm:mb-12"
         >
-          <h1 className="text-4xl font-bold leading-[1.03] tracking-[-0.05em] text-[var(--course-card-text)] sm:text-5xl lg:text-6xl">
-            Build skills.
-            <br />
-            <span style={{ color: "var(--course-navy)" }}>
-              Build the future.
+          <h1 className="text-[32px] lg:text-[46px] xl:text-[52px] font-semibold leading-tight tracking-[-0.04em] text-[var(--course-card-text)] transition-colors duration-500">
+            Our{" "}
+            <span className="text-[var(--color-navy)] ">
+              Courses
             </span>
           </h1>
 
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-[var(--course-card-muted)] sm:text-base sm:leading-7">
+          <p className="mt-4 max-w- text-[13px] leading-7 text-[var(--course-card-muted)] transition-colors duration-500">
             Learn practical, in-demand technology skills through hands-on courses designed for real-world development.
           </p>
         </motion.div>
 
-        {/* =================================================
-            FEATURED COURSES
-        ================================================= */}
+        {/* Featured Courses */}
 
-        <div className="mb-12 sm:mb-16">
+        <div className="mb-10 sm:mb-12">
           <SectionHeading>
             Featured Courses
           </SectionHeading>
@@ -624,14 +597,12 @@ export default function CourseShowcase() {
           />
         </div>
 
-        {/* =================================================
-            TOP COURSES
-        ================================================= */}
+        {/* Top Courses */}
 
         <div>
           <SectionHeading>
             Top Courses in{" "}
-            <span style={{ color: "var(--course-navy)" }}>
+            <span className="text-[var(--color-navy)] ">
               IT & Software
             </span>
           </SectionHeading>

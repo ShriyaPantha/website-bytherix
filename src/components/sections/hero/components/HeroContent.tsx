@@ -1,5 +1,6 @@
 import gsap from "gsap";
 import { useLayoutEffect, useRef } from "react";
+
 import SocialProof from "./SocialProof";
 
 interface HeroContentProps {
@@ -33,19 +34,21 @@ const HeroContent = ({ docked }: HeroContentProps) => {
     if (!words.length) return;
 
     const ctx = gsap.context(() => {
-
+      // Initial state
       gsap.set(words, {
         opacity: 0,
         y: 28,
         filter: "blur(6px)",
       });
 
+      // First word
       gsap.set(words[0], {
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
       });
 
+      // Rotating words timeline
       const timeline = gsap.timeline({
         repeat: -1,
         paused: true,
@@ -55,10 +58,12 @@ const HeroContent = ({ docked }: HeroContentProps) => {
         const nextWord = words[(index + 1) % words.length];
 
         timeline
+          // Hold current word
           .to({}, {
             duration: 1,
           })
 
+          // Exit current word
           .to(word, {
             opacity: 0,
             y: -24,
@@ -67,12 +72,14 @@ const HeroContent = ({ docked }: HeroContentProps) => {
             ease: "power2.inOut",
           })
 
+          // Prepare next word
           .set(nextWord, {
             opacity: 0,
             y: 26,
             filter: "blur(6px)",
           })
 
+          // Enter next word
           .to(nextWord, {
             opacity: 1,
             y: 0,
@@ -89,7 +96,9 @@ const HeroContent = ({ docked }: HeroContentProps) => {
       };
     }, rotator);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -106,14 +115,12 @@ const HeroContent = ({ docked }: HeroContentProps) => {
       "
       style={{
         opacity: docked ? 1 : 0,
-        transform: docked
-          ? "translateY(0)"
-          : "translateY(20px)",
+        transform: docked ? "translateY(0)" : "translateY(20px)",
         transition:
           "opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1)",
       }}
     >
-
+      {/* Heading */}
       <div>
         <h1
           className="
@@ -131,17 +138,27 @@ const HeroContent = ({ docked }: HeroContentProps) => {
           We Build
         </h1>
 
-
+        {/* Rotating Words */}
         <div
           ref={rotatorRef}
           className="
             relative
+
+            /* Responsive right shift */
+            ml-7
+            sm:ml-10
+            md:ml-12
+            lg:ml-15
+            xl:ml-20
+
             mt-3
+
             h-[3.2rem]
             sm:h-[3.7rem]
             md:h-[4.2rem]
             lg:h-[4.7rem]
             xl:h-[5rem]
+
             overflow-hidden
           "
         >
@@ -175,8 +192,7 @@ const HeroContent = ({ docked }: HeroContentProps) => {
                 will-change-transform
               "
               style={{
-                textShadow:
-                  "0 0 35px rgba(56,189,248,0.10)",
+                textShadow: "0 0 35px rgba(56,189,248,0.10)",
               }}
             >
               {word}
@@ -185,6 +201,7 @@ const HeroContent = ({ docked }: HeroContentProps) => {
         </div>
       </div>
 
+      {/* Description */}
       <p
         className="
           mt-6
@@ -205,11 +222,12 @@ const HeroContent = ({ docked }: HeroContentProps) => {
         and custom hardware.
       </p>
 
+      {/* Social Proof */}
       <div className="mt-5">
         <SocialProof />
       </div>
 
-
+      {/* Reserved spacing for future content */}
       <div
         className="
           mt-7
@@ -223,8 +241,7 @@ const HeroContent = ({ docked }: HeroContentProps) => {
           tracking-[0.22em]
           text-white/20
         "
-      >
-      </div>
+      />
     </div>
   );
 };
