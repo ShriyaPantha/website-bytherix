@@ -21,7 +21,7 @@ export default function Services() {
   const [isPaused, setIsPaused] = useState(false);
 
   /* -------------------------------------------------
-     Responsive card count
+      Responsive card count
   ------------------------------------------------- */
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function Services() {
   }, []);
 
   /* -------------------------------------------------
-     Measure carousel width
+      Measure carousel width
   ------------------------------------------------- */
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function Services() {
   }, []);
 
   /* -------------------------------------------------
-     Carousel calculations
+      Carousel calculations
   ------------------------------------------------- */
 
   const maxIndex = Math.max(
@@ -79,7 +79,7 @@ export default function Services() {
       : 0;
 
   /* -------------------------------------------------
-     Keep active index valid after resize
+      Keep active index valid after resize
   ------------------------------------------------- */
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export default function Services() {
   }, [maxIndex]);
 
   /* -------------------------------------------------
-     Auto carousel
+      Auto carousel
   ------------------------------------------------- */
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function Services() {
   }, [isPaused, maxIndex]);
 
   /* -------------------------------------------------
-     Navigation
+      Navigation
   ------------------------------------------------- */
 
   const goNext = () => {
@@ -127,7 +127,7 @@ export default function Services() {
   };
 
   /* -------------------------------------------------
-     Card interaction
+      Card interaction
   ------------------------------------------------- */
 
   const handleCardSelect = (index: number) => {
@@ -148,7 +148,10 @@ export default function Services() {
   };
 
   return (
-    <section id="services" className="relative overflow-hidden bg-[var(--bg-primary)] py-20 transition-colors duration-500 sm:py-24 lg:py-28">
+    <section 
+      id="services" 
+      className="relative isolate overflow-hidden bg-[var(--bg-primary)] lg:py-10 transition-colors duration-500"
+    >
       {/* -------------------------------------------------
           Subtle brand background
       ------------------------------------------------- */}
@@ -162,8 +165,7 @@ export default function Services() {
       {/* -------------------------------------------------
           MAIN CONTAINER
           
-          Same horizontal alignment as Hero
-          and CourseShowcase
+          Matching inspect layout: relative z-10 w-full px-6 sm:px-12 lg:px-20
       ------------------------------------------------- */}
 
       <div className="relative z-10 w-full px-6 sm:px-12 lg:px-20">
@@ -176,16 +178,16 @@ export default function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-12 max-w-2xl lg:mb-14"
+          className="mb-10 max-w-2xl lg:mb-12"
         >
-          <h2 className="text-4xl font-semibold tracking-[-0.04em] text-[var(--text-primary)] transition-colors duration-500 sm:text-5xl">
-            Technology that moves{" "}
-            <span className="text-[var(--color-navy)] dark:text-cyan-400">
-              business forward.
+          <h2 className="text-[32px] lg:text-[46px] xl:text-[52px] font-semibold tracking-[-0.04em] leading-tight text-[var(--text-primary)] transition-colors duration-500">
+            Our{" "}
+            <span className="text-[var(--color-navy)] ">
+              Services
             </span>
           </h2>
 
-          <p className="mt-5 max-w-xl text-[15px] leading-7 text-[var(--text-secondary)] transition-colors duration-500">
+          <p className="mt-4 max-w-xl text-[15px] leading-7 text-[var(--text-secondary)] transition-colors duration-500">
             From digital products and cloud infrastructure to AI, security and creative solutions, we build technology that helps businesses grow.
           </p>
         </motion.div>
@@ -194,7 +196,12 @@ export default function Services() {
             Carousel
         ------------------------------------------------- */}
 
-        <div ref={containerRef} className="relative" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+        <div 
+          ref={containerRef} 
+          className="relative" 
+          onMouseEnter={() => setIsPaused(true)} 
+          onMouseLeave={() => setIsPaused(false)}
+        >
           <div className="overflow-hidden">
             <motion.div
               drag="x"
@@ -235,7 +242,7 @@ export default function Services() {
             Bottom navigation
         ------------------------------------------------- */}
 
-        <div className="mt-9 flex items-center justify-between border-t border-[var(--border-secondary)] pt-5 transition-colors duration-500">
+        <div className="mt-8 flex items-center justify-between border-t border-[var(--border-secondary)] pt-5 transition-colors duration-500">
           {/* Progress */}
 
           <div className="flex items-center gap-1.5">
@@ -245,7 +252,11 @@ export default function Services() {
                 type="button"
                 aria-label={`Go to service ${index + 1}`}
                 onClick={() => goTo(index)}
-                className={`h-1 rounded-full transition-all duration-500 ${activeIndex === index ? "w-8 bg-[var(--color-green)]" : "w-2 bg-[var(--border-primary)]"}`}
+                className={`h-1 rounded-full transition-all duration-500 ${
+                  activeIndex === index 
+                    ? "w-8 bg-[var(--color-green)]" 
+                    : "w-2 bg-[var(--border-primary)]"
+                }`}
               />
             ))}
           </div>

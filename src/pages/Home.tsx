@@ -6,7 +6,7 @@ const About = lazy( () => import("../components/sections/about/About"));
 
 const Services = lazy(() => import("../components/sections/Services"));
 const Courses = lazy(() => import("../components/sections/courses/Courses"));
-const Testimonials = lazy(() => import("../components/sections/Testimonials"));
+const Testimonials = lazy(() => import("../components/sections/testimonials/Testimonials"));
 
 
 const ContactHero = lazy(() => import("../components/sections/contact/ContactHero"));

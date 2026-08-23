@@ -115,9 +115,12 @@ const ContactForm = () => {
     setSubmitted(true);
   };
 
-  // Compact input height
+  /* =========================================================
+     INPUT STYLE
+  ========================================================= */
+
   const inputClass = (hasError = false) => `
-    h-8
+    h-11
     w-full
     border
     ${
@@ -126,8 +129,8 @@ const ContactForm = () => {
         : "border-[var(--border-primary)]"
     }
     bg-[var(--surface-secondary)]
-    px-3
-    text-xs
+    px-3.5
+    text-sm
     text-[var(--text-primary)]
     outline-none
     placeholder:text-[var(--text-muted)]
@@ -141,22 +144,29 @@ const ContactForm = () => {
 
     disabled:cursor-not-allowed
     disabled:opacity-60
-
-    sm:h-9
   `;
 
+  /* =========================================================
+     LABEL STYLE
+  ========================================================= */
+
   const labelClass = `
-    mb-0.5
+    mb-1.5
     block
-    text-[10px]
-    font-medium
+    text-xs
+    font-semibold
+    leading-4
     text-[var(--text-primary)]
   `;
 
+  /* =========================================================
+     ERROR STYLE
+  ========================================================= */
+
   const errorClass = `
-    mt-0.5
-    text-[9px]
-    leading-3
+    mt-1
+    text-[11px]
+    leading-4
     text-red-500
   `;
 
@@ -180,20 +190,22 @@ const ContactForm = () => {
       }}
       className="w-full"
     >
-      {/* Header */}
-      <div className="mb-3">
-      
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
+
+      <div className="mb-5">
         <h2
           id="contact-form-heading"
           className="
             font-['Inter']
-            text-xl
+            text-2xl
             font-bold
-            leading-none
+            leading-tight
             tracking-tight
             text-[var(--text-primary)]
-            sm:text-2xl
-            lg:text-[1.75rem]
+            sm:text-3xl
+            lg:text-[2rem]
           "
         >
           Send Us A Message
@@ -201,12 +213,12 @@ const ContactForm = () => {
 
         <p
           className="
-            mt-1
+            mt-2
             max-w-2xl
-            text-[10px]
-            leading-4
+            text-xs
+            leading-5
             text-[var(--text-muted)]
-            sm:text-[11px]
+            sm:text-sm
           "
         >
           Tell us a little about your project, idea,
@@ -215,15 +227,22 @@ const ContactForm = () => {
         </p>
       </div>
 
-      {/* Form */}
+      {/* =====================================================
+          FORM
+      ===================================================== */}
+
       <form
         onSubmit={handleSubmit}
         noValidate
-        className="space-y-2"
+        className="space-y-3.5"
       >
-        {/* Company + Name */}
-        <div className="grid gap-2 sm:grid-cols-2">
+        {/* ===================================================
+            COMPANY + NAME
+        =================================================== */}
+
+        <div className="grid gap-3 sm:grid-cols-2">
           {/* Company */}
+
           <div>
             <label
               htmlFor="companyName"
@@ -245,6 +264,7 @@ const ContactForm = () => {
           </div>
 
           {/* Name */}
+
           <div>
             <label
               htmlFor="name"
@@ -287,9 +307,13 @@ const ContactForm = () => {
           </div>
         </div>
 
-        {/* Email + Phone */}
-        <div className="grid gap-2 sm:grid-cols-2">
+        {/* ===================================================
+            EMAIL + PHONE
+        =================================================== */}
+
+        <div className="grid gap-3 sm:grid-cols-2">
           {/* Email */}
+
           <div>
             <label
               htmlFor="email"
@@ -332,6 +356,7 @@ const ContactForm = () => {
           </div>
 
           {/* Phone */}
+
           <div>
             <label
               htmlFor="phone"
@@ -353,7 +378,10 @@ const ContactForm = () => {
           </div>
         </div>
 
-        {/* Subject */}
+        {/* ===================================================
+            SUBJECT
+        =================================================== */}
+
         <div>
           <label
             htmlFor="subject"
@@ -394,7 +422,10 @@ const ContactForm = () => {
           )}
         </div>
 
-        {/* Message */}
+        {/* ===================================================
+            MESSAGE
+        =================================================== */}
+
         <div>
           <label
             htmlFor="message"
@@ -418,9 +449,9 @@ const ContactForm = () => {
                 ? "message-error"
                 : undefined
             }
-            rows={3}
+            rows={4}
             className={`
-              min-h-[65px]
+              min-h-[100px]
               w-full
               resize-y
               border
@@ -430,10 +461,10 @@ const ContactForm = () => {
                   : "border-[var(--border-primary)]"
               }
               bg-[var(--surface-secondary)]
-              px-3
-              py-1.5
-              text-xs
-              leading-4
+              px-3.5
+              py-3
+              text-sm
+              leading-5
               text-[var(--text-primary)]
               outline-none
               placeholder:text-[var(--text-muted)]
@@ -458,20 +489,23 @@ const ContactForm = () => {
           )}
         </div>
 
-        {/* I'm not a robot */}
+        {/* ===================================================
+            RECAPTCHA
+        =================================================== */}
+
         <div
           className="
             flex
-            min-h-[36px]
+            min-h-[44px]
             w-full
-            max-w-[280px]
+            max-w-[350px]
             items-center
             justify-between
             border
             border-[var(--border-primary)]
             bg-[var(--surface-secondary)]
-            px-2
-            py-1
+            px-3
+            py-2
           "
         >
           <label
@@ -479,14 +513,14 @@ const ContactForm = () => {
               flex
               cursor-pointer
               items-center
-              gap-1.5
+              gap-2
             "
           >
             <input
               type="checkbox"
               className="
-                h-3
-                w-3
+                h-4
+                w-4
                 cursor-pointer
                 accent-[var(--color-green)]
               "
@@ -494,7 +528,8 @@ const ContactForm = () => {
 
             <span
               className="
-                text-[9px]
+                text-xs
+                font-medium
                 text-[var(--text-primary)]
               "
             >
@@ -505,8 +540,8 @@ const ContactForm = () => {
           <div
             className="
               text-right
-              text-[7px]
-              leading-3
+              text-[9px]
+              leading-4
               text-[var(--text-muted)]
             "
           >
@@ -516,24 +551,27 @@ const ContactForm = () => {
 
             <br />
 
-            <span className="text-[6px]">
+            <span className="text-[8px]">
               Privacy - Terms
             </span>
           </div>
         </div>
 
-        {/* Submit */}
-        <div className="pt-0">
+        {/* ===================================================
+            SUBMIT BUTTON
+        =================================================== */}
+
+        <div className="pt-1">
           <button
             type="submit"
             className="
               inline-flex
-              h-8
+              h-11
               items-center
               justify-center
               bg-[var(--color-green)]
-              px-4
-              text-[11px]
+              px-6
+              text-sm
               font-semibold
               text-white
               outline-none
@@ -552,14 +590,17 @@ const ContactForm = () => {
           </button>
         </div>
 
-        {/* Success */}
+        {/* ===================================================
+            SUCCESS MESSAGE
+        =================================================== */}
+
         {submitted && (
           <p
             role="status"
             className="
-              text-[9px]
+              text-xs
               font-medium
-              leading-3
+              leading-4
               text-[var(--color-green)]
             "
           >

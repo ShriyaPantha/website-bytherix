@@ -2016,77 +2016,75 @@ export default function About() {
     return FEATURE_GREEN;
   };
 
-  return (
-    <section
-      ref={sectionRef}
-      className="
-        relative
-        isolate
-        overflow-hidden
-        bg-white
-        text-slate-900
-        dark:bg-[#020817]
-        dark:text-white
-        pt-6
-        pb-0
-        sm:pt-8
-        sm:pb-0
-        lg:pt-10
-        lg:pb-0
-      "
-    >
+ return (
+  <section
+    ref={sectionRef}
+    className="
+      relative
+      isolate
+      overflow-hidden
+      bg-white
+      text-slate-900
+      dark:bg-[#020817]
+      dark:text-white
+      py-6
+      sm:py-8
+      lg:py-10
+    "
+  >
       {/* ===================================================
           BACKGROUND
-      =================================================== */}
+    =================================================== */}
 
-      <div
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          -z-10
-        "
-      >
-        <div
-          className="
-            absolute
-            -right-40
-            -top-48
-            h-[600px]
-            w-[600px]
-            rounded-full
-            bg-[#3157d5]/[0.07]
-            blur-[130px]
-            dark:bg-[#3157d5]/[0.07]
-          "
-        />
+<div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+  {/* Right Blur Glow */}
+  <div
+    className="
+      absolute
+      -right-20
+      -top-20
+      h-[450px]
+      w-[450px]
+      rounded-full
+      bg-[#3157d5]/[0.1]
+      blur-[120px]
+      dark:bg-[#3157d5]/[0.1]
+      sm:-right-32
+      md:h-[600px]
+      md:w-[600px]
+    "
+  />
 
-        <div
-          className="
-            absolute
-            bottom-[-250px]
-            left-[10%]
-            h-[500px]
-            w-[500px]
-            rounded-full
-            bg-[#fd3b30]/[0.045]
-            blur-[130px]
-            dark:bg-[#fd3b30]/[0.04]
-          "
-        />
+  {/* Left Blur Glow */}
+  <div
+    className="
+      absolute
+      -bottom-20
+      left-0
+      h-[400px]
+      w-[400px]
+      rounded-full
+      bg-[#fd3b30]/[0.05]
+      blur-[120px]
+      dark:bg-[#fd3b30]/[0.04]
+      md:h-[500px]
+      md:w-[500px]
+    "
+  />
 
-        <div
-          className="
-            absolute
-            inset-0
-            opacity-[0.025]
-            [background-image:linear-gradient(rgba(0,174,239,.35)_1px,transparent_1px),linear-gradient(90deg,rgba(0,174,239,.35)_1px,transparent_1px)]
-            [background-size:70px_70px]
-            dark:opacity-[0.018]
-            dark:[background-image:linear-gradient(rgba(0,174,239,.5)_1px,transparent_1px),linear-gradient(90deg,rgba(0,174,239,.5)_1px,transparent_1px)]
-          "
-        />
-      </div>
+  {/* Grid Pattern */}
+  <div
+    className="
+      absolute
+      inset-0
+      opacity-[0.025]
+      [background-image:linear-gradient(rgba(0,174,239,.35)_1px,transparent_1px),linear-gradient(90deg,rgba(0,174,239,.35)_1px,transparent_1px)]
+      [background-size:70px_70px]
+      dark:opacity-[0.018]
+      dark:[background-image:linear-gradient(rgba(0,174,239,.5)_1px,transparent_1px),linear-gradient(90deg,rgba(0,174,239,.5)_1px,transparent_1px)]
+    "
+  />
+</div>
 
       {/* ===================================================
           GLOBE
@@ -2163,319 +2161,309 @@ export default function About() {
 
       {/* ===================================================
           CONTENT
-      =================================================== */}
+    =================================================== */}
 
-      <div
+<div className="relative z-10 w-full px-6 sm:px-12 lg:px-20">
+  {/* =================================================
+      TOP SECTION
+  ================================================= */}
+
+  <div
+    className="
+      grid
+      items-center
+      gap-6
+      lg:grid-cols-[0.88fr_1.12fr]
+      lg:gap-4
+      xl:gap-6
+    "
+  >
+    {/* =================================================
+        LEFT
+    ================================================= */}
+
+    <div className="relative z-20">
+      <motion.h2
+        initial={
+          reducedMotion
+            ? false
+            : {
+                opacity: 0,
+                y: 24,
+              }
+        }
+        whileInView={
+          reducedMotion
+            ? undefined
+            : {
+                opacity: 1,
+                y: 0,
+              }
+        }
+        viewport={{
+          once: true,
+        }}
+        transition={{
+          duration: 0.7,
+          ease: [
+            0.22,
+            1,
+            0.36,
+            1,
+          ],
+        }}
         className="
-          relative
-          z-10
-          mx-auto
-          max-w-[1400px]
-          px-5
-          sm:px-8
-          lg:px-12
-          xl:px-16
+          max-w-[520px]
+          text-[32px]
+          font-bold
+          leading-[1]
+          tracking-[-0.04em]
+          text-slate-900
+          dark:text-white
+          sm:text-[42px]
+          md:text-[48px]
+          lg:text-[46px]
+          xl:text-[52px]
         "
       >
-        {/* =================================================
-            TOP SECTION
-        ================================================= */}
+        We engineer{" "}
+        <span className="text-[#3157d5] dark:text-[#3157d5]">
+          the
+        </span>
+        <br />
 
-        <div
-          className="
-            grid
-            items-center
-            gap-6
-            lg:grid-cols-[0.88fr_1.12fr]
-            lg:gap-4
-            xl:gap-6
-          "
+        <span className="text-[#3157d5] dark:text-[#3157d5]">
+          future
+        </span>
+        <br />
+
+        <span className="text-slate-900 dark:text-white">
+          one system at a time.
+        </span>
+      </motion.h2>
+
+      <motion.p
+        initial={
+          reducedMotion
+            ? false
+            : {
+                opacity: 0,
+                y: 20,
+              }
+        }
+        whileInView={
+          reducedMotion
+            ? undefined
+            : {
+                opacity: 1,
+                y: 0,
+              }
+        }
+        viewport={{
+          once: true,
+        }}
+        transition={{
+          duration: 0.6,
+          delay: 0.08,
+        }}
+        className="
+          mt-4
+          max-w-[500px]
+          text-[12px]
+          leading-[1.7]
+          text-slate-600
+          dark:text-slate-300
+          sm:text-[13px]
+        "
+      >
+        Bytherix is Nepal&apos;s
+        full-spectrum technology
+        partner. We design and build
+        web applications, AI solutions,
+        IoT systems, robotics, mobile
+        apps, and custom PCBs — all
+        protected by enterprise-grade
+        cybersecurity.
+      </motion.p>
+
+      {/* =================================================
+          INFO CARD
+      ================================================= */}
+
+      <motion.div
+        initial={
+          reducedMotion
+            ? false
+            : {
+                opacity: 0,
+                y: 28,
+              }
+        }
+        whileInView={
+          reducedMotion
+            ? undefined
+            : {
+                opacity: 1,
+                y: 0,
+              }
+        }
+        viewport={{
+          once: true,
+          margin: "-80px",
+        }}
+        transition={{
+          duration: 0.65,
+          delay: 0.16,
+        }}
+        className="
+          group
+          mt-6
+          overflow-hidden
+          rounded-[18px]
+          border
+          border-[#3157d5]/25
+          bg-gradient-to-br
+          from-[#3157d5]/[0.08]
+          via-white/95
+          to-[#fd3b30]/[0.06]
+          p-3.5
+          shadow-[0_25px_80px_rgba(0,174,239,.10)]
+          backdrop-blur-xl
+          dark:border-white/[0.13]
+          dark:bg-gradient-to-br
+          dark:from-[#071522]/95
+          dark:via-[#07111f]/90
+          dark:to-[#160b0b]/95
+          dark:shadow-[0_25px_80px_rgba(0,0,0,.25)]
+          transition-[background-color,border-color,box-shadow,color]
+          duration-150
+          ease-out
+        "
+      >
+        <motion.div
+          key={`info-${activeSlide}`}
+          initial={
+            reducedMotion
+              ? false
+              : {
+                  opacity: 0,
+                  y: 8,
+                }
+          }
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration:
+              reducedMotion
+                ? 0
+                : 0.7,
+            ease: [
+              0.22,
+              1,
+              0.36,
+              1,
+            ],
+          }}
+          className="flex gap-4"
         >
-          {/* =================================================
-              LEFT
-          ================================================= */}
-
-          <div className="relative z-20">
-            <motion.h2
-              initial={
-                reducedMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 24,
-                    }
-              }
-              whileInView={
-                reducedMotion
-                  ? undefined
-                  : {
-                      opacity: 1,
-                      y: 0,
-                    }
-              }
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 0.7,
-                ease: [
-                  0.22,
-                  1,
-                  0.36,
-                  1,
-                ],
-              }}
+          <div
+            className="
+              flex
+              h-[62px]
+              w-[62px]
+              shrink-0
+              items-center
+              justify-center
+              rounded-[11px]
+              border
+              border-[#3157d5]/30
+              bg-gradient-to-br
+              from-[#3157d5]/[0.20]
+              via-[#3157d5]/[0.08]
+              to-[#fd3b30]/[0.12]
+              dark:border-[#3157d5]/30
+              dark:from-[#3157d5]/[0.25]
+              dark:via-[#3157d5]/[0.10]
+              dark:to-[#fd3b30]/[0.15]
+            "
+          >
+            <svg
+              viewBox="0 0 64 64"
               className="
-                max-w-[520px]
-                text-[32px]
-                font-bold
-                leading-[1]
-                tracking-[-0.04em]
+                h-9
+                w-9
+                text-[#3157d5]
+              "
+              fill="none"
+            >
+              <path
+                d="M15 13h22c8 0 12 5 12 12v18c0 5-4 8-9 8H25c-6 0-10-4-10-10V13Z"
+                fill="currentColor"
+                opacity=".18"
+              />
+
+              <path
+                d="M18 18 31 31 20 42"
+                stroke="currentColor"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              <path
+                d="M35 42h13"
+                stroke="currentColor"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
+          <div className="min-w-0">
+            <div
+              className="
+                font-mono
+                text-[11px]
+                font-semibold
+                uppercase
+                tracking-[0.14em]
+                text-[#3157d5]
+              "
+            >
+              {currentSlide.label}
+            </div>
+
+            <h3
+              className="
+                mt-1
+                text-[14px]
+                font-semibold
                 text-slate-900
                 dark:text-white
-                sm:text-[42px]
-                md:text-[48px]
-                lg:text-[46px]
-                xl:text-[52px]
               "
             >
-              We engineer{" "}
-              <span className="text-[#3157d5] dark:text-[#3157d5]">
-                the
-              </span>
-              <br />
+              {currentSlide.title}
+            </h3>
 
-              <span className="text-[#3157d5] dark:text-[#3157d5]">
-                future
-              </span>
-              <br />
-
-              <span className="text-slate-900 dark:text-white">
-                one system at a time.
-              </span>
-            </motion.h2>
-
-            <motion.p
-              initial={
-                reducedMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 20,
-                    }
-              }
-              whileInView={
-                reducedMotion
-                  ? undefined
-                  : {
-                      opacity: 1,
-                      y: 0,
-                    }
-              }
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 0.6,
-                delay: 0.08,
-              }}
+            <p
               className="
-                mt-4
-                max-w-[500px]
-                text-[12px]
-                leading-[1.7]
+                mt-1
+                whitespace-pre-line
+                text-[11px]
+                leading-[1.6]
                 text-slate-600
                 dark:text-slate-300
-                sm:text-[13px]
               "
             >
-              Bytherix is Nepal&apos;s
-              full-spectrum technology
-              partner. We design and build
-              web applications, AI solutions,
-              IoT systems, robotics, mobile
-              apps, and custom PCBs — all
-              protected by enterprise-grade
-              cybersecurity.
-            </motion.p>
-
-            {/* =================================================
-                INFO CARD
-            ================================================= */}
-
-            <motion.div
-              initial={
-                reducedMotion
-                  ? false
-                  : {
-                      opacity: 0,
-                      y: 28,
-                    }
-              }
-              whileInView={
-                reducedMotion
-                  ? undefined
-                  : {
-                      opacity: 1,
-                      y: 0,
-                    }
-              }
-              viewport={{
-                once: true,
-                margin: "-80px",
-              }}
-              transition={{
-                duration: 0.65,
-                delay: 0.16,
-              }}
-              className="
-                group
-                mt-6
-                overflow-hidden
-                rounded-[18px]
-                border
-                border-[#3157d5]/25
-                bg-gradient-to-br
-                from-[#3157d5]/[0.08]
-                via-white/95
-                to-[#fd3b30]/[0.06]
-                p-3.5
-                shadow-[0_25px_80px_rgba(0,174,239,.10)]
-                backdrop-blur-xl
-                dark:border-white/[0.13]
-                dark:bg-gradient-to-br
-                dark:from-[#071522]/95
-                dark:via-[#07111f]/90
-                dark:to-[#160b0b]/95
-                dark:shadow-[0_25px_80px_rgba(0,0,0,.25)]
-                transition-[background-color,border-color,box-shadow,color]
-                duration-150
-                ease-out
-              "
-            >
-              <motion.div
-                key={`info-${activeSlide}`}
-                initial={
-                  reducedMotion
-                    ? false
-                    : {
-                        opacity: 0,
-                        y: 8,
-                      }
-                }
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  duration:
-                    reducedMotion
-                      ? 0
-                      : 0.7,
-                  ease: [
-                    0.22,
-                    1,
-                    0.36,
-                    1,
-                  ],
-                }}
-                className="flex gap-4"
-              >
-                <div
-                  className="
-                    flex
-                    h-[62px]
-                    w-[62px]
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-[11px]
-                    border
-                    border-[#3157d5]/30
-                    bg-gradient-to-br
-                    from-[#3157d5]/[0.20]
-                    via-[#3157d5]/[0.08]
-                    to-[#fd3b30]/[0.12]
-                    dark:border-[#3157d5]/30
-                    dark:from-[#3157d5]/[0.25]
-                    dark:via-[#3157d5]/[0.10]
-                    dark:to-[#fd3b30]/[0.15]
-                  "
-                >
-                  <svg
-                    viewBox="0 0 64 64"
-                    className="
-                      h-9
-                      w-9
-                      text-[#3157d5]
-                    "
-                    fill="none"
-                  >
-                    <path
-                      d="M15 13h22c8 0 12 5 12 12v18c0 5-4 8-9 8H25c-6 0-10-4-10-10V13Z"
-                      fill="currentColor"
-                      opacity=".18"
-                    />
-
-                    <path
-                      d="M18 18 31 31 20 42"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-
-                    <path
-                      d="M35 42h13"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
-
-                <div className="min-w-0">
-                  <div
-                    className="
-                      font-mono
-                      text-[11px]
-                      font-semibold
-                      uppercase
-                      tracking-[0.14em]
-                      text-[#3157d5]
-                    "
-                  >
-                    {currentSlide.label}
-                  </div>
-
-                  <h3
-                    className="
-                      mt-1
-                      text-[14px]
-                      font-semibold
-                      text-slate-900
-                      dark:text-white
-                    "
-                  >
-                    {currentSlide.title}
-                  </h3>
-
-                  <p
-                    className="
-                      mt-1
-                      whitespace-pre-line
-                      text-[11px]
-                      leading-[1.6]
-                      text-slate-600
-                      dark:text-slate-300
-                    "
-                  >
-                    {currentSlide.body}
-                  </p>
-                </div>
-              </motion.div>
-            </motion.div>
+              {currentSlide.body}
+            </p>
           </div>
+        </motion.div>
+      </motion.div>
+    </div>
 
           {/* =================================================
               IMAGE / FLIP
@@ -3293,3 +3281,4 @@ export default function About() {
     </section>
   );
 }
+ 
