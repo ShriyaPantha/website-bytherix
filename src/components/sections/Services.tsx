@@ -150,7 +150,7 @@ export default function Services() {
   return (
     <section 
       id="services" 
-      className="relative isolate overflow-hidden bg-[var(--bg-primary)] lg:py-10 transition-colors duration-500"
+      className="relative isolate overflow-hidden bg-[var(--bg-primary)] pt-0 pb-0 transition-colors duration-500"
     >
       {/* -------------------------------------------------
           Subtle brand background
