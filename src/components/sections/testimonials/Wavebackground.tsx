@@ -12,14 +12,13 @@ const DARK_PRIMARY = new THREE.Color("#00f0ff");
 const DARK_SECONDARY = new THREE.Color("#1d4ed8");
 
 // Light Mode Palette (High-contrast Indigo & Deep Cyan)
-const LIGHT_PRIMARY = new THREE.Color("#0369a1"); // Deep Cyan/Sky
-const LIGHT_SECONDARY = new THREE.Color("#4338ca"); // Deep Indigo
+const LIGHT_PRIMARY = new THREE.Color("#0369a1");
+const LIGHT_SECONDARY = new THREE.Color("#4338ca");
 
 function ParticleWave({ isDark, paused }: { isDark: boolean; paused: boolean }) {
   const pointsRef = useRef<THREE.Points>(null!);
   const { viewport, invalidate } = useThree();
 
-  // Force WebGL frame update immediately on mount / theme change
   useEffect(() => {
     invalidate();
   }, [isDark, invalidate]);
@@ -88,7 +87,6 @@ function ParticleWave({ isDark, paused }: { isDark: boolean; paused: boolean }) 
         const baseX = basePositions[idx];
         const baseY = basePositions[idx + 1];
 
-        // Right-to-left flow direction (+ time instead of - time)
         const waveZ =
           Math.sin(baseX * 1.8 + time + baseY * 0.8) * 0.45 +
           Math.cos(baseY * 1.5 + time * 0.8) * 0.35;
@@ -106,14 +104,16 @@ function ParticleWave({ isDark, paused }: { isDark: boolean; paused: boolean }) 
     posAttribute.needsUpdate = true;
   });
 
-  const scale = Math.max(viewport.width / 8, viewport.height / 8, 0.7);
+  const scale = Math.max(viewport.width / 7.5, viewport.height / 7.5, 0.85);
 
   return (
     <points
       ref={pointsRef}
       scale={[scale, scale, scale]}
-      rotation={[-Math.PI / 4, Math.PI / 5, -Math.PI / 12]}
-      position={[1.8, -0.2, 0]}
+      // Rotated to angle the entire mesh from lower-left up towards top-right
+      rotation={[-Math.PI / 3.5, -Math.PI / 4, Math.PI / 6]}
+      // Shifted left and down so the wave originates near the bottom-left text/cards
+      position={[-0.2, -0.6, 0]}
     >
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
@@ -173,16 +173,15 @@ const WaveBackground = ({
         left-auto
         w-full
         overflow-hidden
-        md:w-3/5
-        xl:w-1/2
+        md:w-4/5
+        xl:w-3/4
         ${className}
       `}
       style={{
-        // Alpha-based masking fix for Light Mode compatibility
         maskImage:
-          "radial-gradient(ellipse at 82% 50%, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 75%)",
+          "radial-gradient(ellipse at 65% 55%, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
         WebkitMaskImage:
-          "radial-gradient(ellipse at 82% 50%, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 75%)",
+          "radial-gradient(ellipse at 65% 55%, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
       }}
     >
       <Canvas
@@ -196,5 +195,11 @@ const WaveBackground = ({
     </div>
   );
 };
+
+
+
+
+
+
 
 export default WaveBackground;
