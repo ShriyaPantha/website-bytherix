@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-import TeamCard from "../components/sections/team/TeamCard";
-import { teamMembers } from "../data/team";
+import TeamCard from "./TeamCard";
+import { teamMembers } from "../../../data/team";
 
 export default function Team() {
   const [activeIndex, setActiveIndex] = useState(0);
