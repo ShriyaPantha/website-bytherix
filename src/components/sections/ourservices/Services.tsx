@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-import ServiceCard from "../ui/ServiceCard";
-import { services } from "../../data/services";
+import ServiceCard from "../../ui/ServiceCard";
+import { services } from "../../../data/services";
 
 const GAP = 20;
 
