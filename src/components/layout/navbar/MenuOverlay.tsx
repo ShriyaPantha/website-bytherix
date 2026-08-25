@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { ChevronDown, ArrowRight, X, Search, Heart, Bell, UserRound } from "lucide-react";
-
 import logo from "../../../assets/logo.png";
 import { DROPDOWN_CONTENT, NAV_ITEMS } from "./navbar.constants";
 import MegaMenuItem from "./MegaMenuItem";
-// import demonHunterLogo from "../../../public/demon hunter.png";
 
 interface MenuOverlayProps {
   open: boolean;
   onClose: () => void;
   handleDropdownItemClick: (item: string) => void;
+  handleNavItemClick: (item: string) => void;
 }
 
 const panelVariants: Variants = {
@@ -43,7 +42,7 @@ const childVariants: Variants = {
 
 type ActionType = "wishlist" | "demon" | "notifications" | "profile";
 
-const MenuOverlay = ({ open, onClose, handleDropdownItemClick }: MenuOverlayProps) => {
+const MenuOverlay = ({ open, onClose, handleDropdownItemClick, handleNavItemClick }: MenuOverlayProps) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<ActionType | null>(null);
 
@@ -62,8 +61,14 @@ const MenuOverlay = ({ open, onClose, handleDropdownItemClick }: MenuOverlayProp
     handleClose();
   };
 
+  const handleMainNavClick = (label: string) => {
+    handleNavItemClick(label);
+    handleClose();
+  };
+
   const actionClass = (action: ActionType) => {
     const selected = selectedAction === action;
+
     return `flex h-11 w-11 shrink-0 items-center justify-center rounded-full border bg-white/[0.03] transition-all duration-200 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#00AEEF]/40 ${selected ? "border-[#00AEEF] bg-[#00AEEF]/10 text-[#00AEEF]" : "border-white/20 text-white/85"} hover:border-[#00AEEF] hover:text-[#00AEEF]`;
   };
 
@@ -75,7 +80,7 @@ const MenuOverlay = ({ open, onClose, handleDropdownItemClick }: MenuOverlayProp
 
           <motion.aside variants={panelVariants} initial="hidden" animate="visible" exit="exit" className="fixed inset-y-0 left-0 z-[200] flex w-[88%] max-w-[410px] flex-col overflow-hidden border-r border-white/10 bg-[#080F29] shadow-[18px_0_50px_rgba(0,0,0,0.5)] lg:hidden">
             <div className="flex h-[78px] shrink-0 items-center justify-between border-b border-white/10 px-5">
-              <a href="/" onClick={handleClose} className="flex items-center gap-2.5">
+              <button type="button" onClick={() => { handleClose(); handleMainNavClick("Home"); }} className="flex items-center gap-2.5">
                 <div className="h-10 w-10 overflow-hidden rounded-full border border-white/20 bg-white shadow-[0_0_8px_rgba(255,255,255,0.04)]">
                   <img src={logo} alt="Bytherix Technology" className="h-full w-full scale-125 object-cover" />
                 </div>
@@ -88,7 +93,7 @@ const MenuOverlay = ({ open, onClose, handleDropdownItemClick }: MenuOverlayProp
                   </span>
                   <span className="mt-1 font-['Inter'] text-[7px] font-medium uppercase tracking-[0.18em] text-white/70">Technology</span>
                 </div>
-              </a>
+              </button>
 
               <button type="button" onClick={handleClose} aria-label="Close menu" className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/[0.04] text-white/80 transition-all duration-200 hover:border-[#00AEEF] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] active:scale-95">
                 <X size={17} strokeWidth={1.8} />
@@ -139,10 +144,10 @@ const MenuOverlay = ({ open, onClose, handleDropdownItemClick }: MenuOverlayProp
                         <ChevronDown size={14} strokeWidth={1.8} className={`transition-all duration-200 ${isExpanded ? "rotate-180 text-[#00AEEF]" : "text-white/45"} group-hover:text-[#00AEEF]`} />
                       </button>
                     ) : (
-                      <a href={`#${item.label.toLowerCase()}`} onClick={handleClose} className="group flex w-full items-center justify-between py-4 font-['Inter'] text-[11px] font-bold uppercase tracking-[0.08em] text-white/85 transition-all duration-200 hover:text-[#00AEEF] focus-visible:text-[#00AEEF] focus-visible:outline-none">
+                      <button type="button" onClick={() => handleMainNavClick(item.label)} className="group flex w-full items-center justify-between py-4 font-['Inter'] text-[11px] font-bold uppercase tracking-[0.08em] text-white/85 transition-all duration-200 hover:text-[#00AEEF] focus-visible:text-[#00AEEF] focus-visible:outline-none">
                         {item.label}
                         <ArrowRight size={14} strokeWidth={1.7} className="translate-x-[-6px] text-[#00AEEF] opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100" />
-                      </a>
+                      </button>
                     )}
 
                     <AnimatePresence initial={false}>
@@ -161,13 +166,7 @@ const MenuOverlay = ({ open, onClose, handleDropdownItemClick }: MenuOverlayProp
 
                                   <div className="space-y-2">
                                     {section.items.map((child) => (
-                                      <MegaMenuItem
-                                        key={child.label}
-                                        label={child.label}
-                                        icon={child.icon}
-                                        compact
-                                        onClick={() => handleChildClick(child.label)}
-                                      />
+                                      <MegaMenuItem key={child.label} label={child.label} icon={child.icon} compact onClick={() => handleChildClick(child.label)} />
                                     ))}
                                   </div>
                                 </div>
@@ -184,13 +183,13 @@ const MenuOverlay = ({ open, onClose, handleDropdownItemClick }: MenuOverlayProp
 
             <div className="shrink-0 border-t border-white/10 px-5 py-5">
               <div className="flex items-center gap-2">
-                <a href="#contact" onClick={handleClose} className="flex-1 rounded-full bg-[#3154C4] px-5 py-3 text-center font-['Inter'] text-xs font-bold text-white transition-all duration-200 hover:bg-[#3B5FD0] hover:shadow-[0_6px_16px_rgba(49,84,196,0.22)] active:scale-[0.98]">
+                <button type="button" onClick={() => handleDropdownItemClick("Contact Us")} className="flex-1 rounded-full bg-[#3154C4] px-5 py-3 text-center font-['Inter'] text-xs font-bold text-white transition-all duration-200 hover:bg-[#3B5FD0] hover:shadow-[0_6px_16px_rgba(49,84,196,0.22)] active:scale-[0.98]">
                   Get a Quote
-                </a>
+                </button>
 
-                <a href="#contact" onClick={handleClose} aria-label="Contact" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-white/75 transition-all duration-200 hover:border-[#00AEEF] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] active:scale-95">
+                <button type="button" onClick={() => handleDropdownItemClick("Contact Us")} aria-label="Contact" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-white/75 transition-all duration-200 hover:border-[#00AEEF] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] active:scale-95">
                   <ArrowRight size={16} strokeWidth={1.8} />
-                </a>
+                </button>
               </div>
             </div>
           </motion.aside>
