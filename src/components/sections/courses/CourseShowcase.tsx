@@ -522,7 +522,7 @@ export default function CourseShowcase() {
   return (
     <section
       id="courses"
-      className="relative isolate overflow-hidden bg-[var(--bg-primary)] lg:py-10 transition-colors duration-500"
+      className="relative isolate overflow-hidden bg-[var(--bg-primary)] py-3 transition-colors duration-500"
     >
       {/* Background Glow */}
 
@@ -579,7 +579,7 @@ export default function CourseShowcase() {
             </span>
           </h1>
 
-          <p className="mt-4 max-w- text-[13px] leading-7 text-[var(--course-card-muted)] transition-colors duration-500">
+          <p className="mt-4 max-w- text-[15px] leading-7 text-[var(--course-card-muted)] transition-colors duration-500">
             Learn practical, in-demand technology skills through hands-on courses designed for real-world development.
           </p>
         </motion.div>
