@@ -1,8 +1,40 @@
 import type { Variants } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
-import { Blocks, BookOpen, Bot, Box, BriefcaseBusiness, Building2, ChartNoAxesCombined, CircleHelp, CloudCog, Code2, Contact, Cpu, Gamepad2, GraduationCap, Headset, Layers3, Mail, Megaphone, MessageSquareQuote, Newspaper, Palette, PenTool, ShieldCheck, ShoppingBag, Sparkles, Store, UserRoundCheck, Users, Wrench } from "lucide-react";
+
+import {
+  Blocks,
+  BookOpen,
+  Bot,
+  Box,
+  BriefcaseBusiness,
+  Building2,
+  ChartNoAxesCombined,
+  CircleHelp,
+  CloudCog,
+  Code2,
+  Contact,
+  Cpu,
+  Gamepad2,
+  GraduationCap,
+  Headset,
+  Layers3,
+  Mail,
+  Megaphone,
+  MessageSquareQuote,
+  Newspaper,
+  Palette,
+  PenTool,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  Store,
+  UserRoundCheck,
+  Users,
+  Wrench,
+} from "lucide-react";
 
 export const BRAND = "BYTHERIX";
+
 export const TECHNOLOGY = "TECHNOLOGY";
 
 export const NAV_ITEMS = [
@@ -47,17 +79,6 @@ export const DROPDOWN_CONTENT: Record<string, DropdownSection[]> = {
 
   Services: [
     {
-      heading: "Development",
-      sectionIcon: Code2,
-      items: [
-        { label: "Web Development", icon: Code2 },
-        { label: "App Development", icon: Contact },
-        { label: "Game Development", icon: Gamepad2 },
-        { label: "E-commerce Development", icon: ShoppingBag },
-        { label: "Maintenance & AMC", icon: Wrench },
-      ],
-    },
-    {
       heading: "Technology",
       sectionIcon: Cpu,
       items: [
@@ -67,6 +88,17 @@ export const DROPDOWN_CONTENT: Record<string, DropdownSection[]> = {
         { label: "IoT & Robotics", icon: Cpu },
         { label: "Blockchain & Web3", icon: Blocks },
         { label: "Data Analytics & BI", icon: ChartNoAxesCombined },
+      ],
+    },
+    {
+      heading: "Development",
+      sectionIcon: Code2,
+      items: [
+        { label: "Web Development", icon: Code2 },
+        { label: "App Development", icon: Contact },
+        { label: "Game Development", icon: Gamepad2 },
+        { label: "E-commerce Development", icon: ShoppingBag },
+        { label: "Maintenance & AMC", icon: Wrench },
       ],
     },
     {
@@ -93,7 +125,10 @@ export const DROPDOWN_CONTENT: Record<string, DropdownSection[]> = {
       heading: "Solutions",
       sectionIcon: BriefcaseBusiness,
       items: [
-        { label: "One For All Management System", icon: BriefcaseBusiness },
+        {
+          label: "One For All Management System",
+          icon: BriefcaseBusiness,
+        },
       ],
     },
   ],
@@ -127,6 +162,7 @@ export const introLetterVariants: Variants = {
     y: 24,
     filter: "blur(5px)",
   },
+
   visible: (index: number) => ({
     opacity: 1,
     y: 0,
@@ -140,8 +176,11 @@ export const introLetterVariants: Variants = {
 };
 
 export const INTRO_LETTERS = BRAND.length + TECHNOLOGY.length;
+
 export const INTRO_DURATION = 0.28;
+
 export const INTRO_STAGGER = (INTRO_LETTERS - 1) * 0.035;
+
 export const INTRO_FINISH = INTRO_STAGGER + INTRO_DURATION;
 
 export const INTRO_TOTAL_MS = Math.ceil((INTRO_FINISH + 0.45) * 1000);
@@ -152,6 +191,7 @@ export const dropdownVariants: Variants = {
     y: -8,
     scale: 0.985,
   },
+
   visible: {
     opacity: 1,
     y: 0,
@@ -161,6 +201,7 @@ export const dropdownVariants: Variants = {
       ease: [0.22, 1, 0.36, 1],
     },
   },
+
   exit: {
     opacity: 0,
     y: -6,
