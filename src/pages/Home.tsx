@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 const Hero = lazy(() => import("../components/sections/hero/Hero"));
 const About = lazy( () => import("../components/sections/about/About"));
 
-const Services = lazy(() => import("../components/sections/Services"));
+const Services = lazy(() => import("../components/sections/ourservices/Services"));
 const Courses = lazy(() => import("../components/sections/courses/Courses"));
 const Testimonials = lazy(() => import("../components/sections/testimonials/Testimonials"));
 
