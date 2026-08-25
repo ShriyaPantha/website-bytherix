@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 
-import Navbar, { INTRO_TOTAL_MS } from "./components/layout/Navbar";
+import Navbar from "./components/layout/navbar/Navbar";
+import { INTRO_TOTAL_MS } from "./components/layout/navbar/navbar.constants";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "./components/ui/ThemeToggle";
 import TeamProfile from "./components/sections/team/TeamProfile";
