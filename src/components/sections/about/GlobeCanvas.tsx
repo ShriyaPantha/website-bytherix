@@ -11,55 +11,24 @@ export default function GlobeCanvas() {
 
     if (!canvas) return;
 
-    // =========================================================
-    // RENDERER
-    // =========================================================
-
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha: true,
       antialias: true,
     });
 
-    renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio, 2)
-    );
-
-    // =========================================================
-    // SCENE
-    // =========================================================
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     const scene = new THREE.Scene();
 
-    // =========================================================
-    // CAMERA
-    // =========================================================
-
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      1,
-      0.1,
-      100
-    );
-
-    camera.position.set(0, 0, 6.5);
-
-    // =========================================================
-    // GLOBE GROUP
-    // =========================================================
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    camera.position.set(0, 0, 7.5);
 
     const group = new THREE.Group();
 
     scene.add(group);
 
-    // =========================================================
-    // MAIN WIREFRAME GLOBE
-    // =========================================================
-
-    const wireGeo = new THREE.IcosahedronGeometry(
-      2.1,
-      3
-    );
+    const wireGeo = new THREE.IcosahedronGeometry(2.1, 3);
 
     const wireMat = new THREE.MeshBasicMaterial({
       color: 0x60a5fa,
@@ -68,25 +37,13 @@ export default function GlobeCanvas() {
       opacity: 0.65,
     });
 
-    const wireGlobe = new THREE.Mesh(
-      wireGeo,
-      wireMat
-    );
+    const wireGlobe = new THREE.Mesh(wireGeo, wireMat);
 
     group.add(wireGlobe);
 
-    // =========================================================
-    // GLOBE NODES
-    // =========================================================
+    const positionAttribute = wireGeo.attributes.position;
 
-    const positionAttribute =
-      wireGeo.attributes.position;
-
-    const nodeGeo = new THREE.SphereGeometry(
-      0.028,
-      8,
-      8
-    );
+    const nodeGeo = new THREE.SphereGeometry(0.028, 8, 8);
 
     const nodeMat = new THREE.MeshBasicMaterial({
       color: 0xf87171,
@@ -94,15 +51,8 @@ export default function GlobeCanvas() {
       opacity: 0.9,
     });
 
-    for (
-      let i = 0;
-      i < positionAttribute.count;
-      i += 8
-    ) {
-      const node = new THREE.Mesh(
-        nodeGeo,
-        nodeMat
-      );
+    for (let i = 0; i < positionAttribute.count; i += 8) {
+      const node = new THREE.Mesh(nodeGeo, nodeMat);
 
       node.position.set(
         positionAttribute.getX(i),
@@ -113,15 +63,7 @@ export default function GlobeCanvas() {
       group.add(node);
     }
 
-    // =========================================================
-    // OUTER SHELL
-    // =========================================================
-
-    const shellGeo = new THREE.SphereGeometry(
-      2.6,
-      32,
-      32
-    );
+    const shellGeo = new THREE.SphereGeometry(2.55, 32, 32);
 
     const shellMat = new THREE.MeshBasicMaterial({
       color: 0x93c5fd,
@@ -130,38 +72,23 @@ export default function GlobeCanvas() {
       opacity: 0.2,
     });
 
-    const shell = new THREE.Mesh(
-      shellGeo,
-      shellMat
-    );
+    const shell = new THREE.Mesh(shellGeo, shellMat);
 
     group.add(shell);
-
-    // =========================================================
-    // RESPONSIVE GLOBE SIZE
-    // =========================================================
 
     const updateGlobeSize = (): void => {
       const width = window.innerWidth;
 
       if (width < 640) {
-        // Mobile
         group.scale.setScalar(0.58);
       } else if (width < 1024) {
-        // Tablet
         group.scale.setScalar(0.72);
       } else if (width < 1280) {
-        // Small desktop
         group.scale.setScalar(0.85);
       } else {
-        // Large desktop
-        group.scale.setScalar(1);
+        group.scale.setScalar(1.12);
       }
     };
-
-    // =========================================================
-    // RESPONSIVE CANVAS
-    // =========================================================
 
     const resize = (): void => {
       const width = canvas.clientWidth;
@@ -171,14 +98,9 @@ export default function GlobeCanvas() {
         return;
       }
 
-      renderer.setSize(
-        width,
-        height,
-        false
-      );
+      renderer.setSize(width, height, false);
 
       camera.aspect = width / height;
-
       camera.updateProjectionMatrix();
 
       updateGlobeSize();
@@ -186,46 +108,25 @@ export default function GlobeCanvas() {
 
     resize();
 
-    window.addEventListener(
-      "resize",
-      resize
-    );
-
-    // =========================================================
-    // ROTATION ONLY
-    // =========================================================
+    window.addEventListener("resize", resize);
 
     let frameId: number = 0;
 
     const animate = (): void => {
-      frameId = requestAnimationFrame(
-        animate
-      );
+      frameId = requestAnimationFrame(animate);
 
-      // Globe position NEVER changes.
-      // Only rotation changes.
       group.rotation.y += 0.0025;
       group.rotation.x += 0.0007;
 
-      renderer.render(
-        scene,
-        camera
-      );
+      renderer.render(scene, camera);
     };
 
     animate();
 
-    // =========================================================
-    // CLEANUP
-    // =========================================================
-
     return () => {
       cancelAnimationFrame(frameId);
 
-      window.removeEventListener(
-        "resize",
-        resize
-      );
+      window.removeEventListener("resize", resize);
 
       renderer.dispose();
 
@@ -243,11 +144,8 @@ export default function GlobeCanvas() {
   }, []);
 
   return (
-    <div className="relative h-full w-full">
-      <canvas
-        ref={canvasRef}
-        className="h-full w-full"
-      />
+    <div className="relative h-full w-full overflow-visible">
+      <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   );
 }
