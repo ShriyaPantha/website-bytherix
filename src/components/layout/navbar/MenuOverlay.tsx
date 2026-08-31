@@ -6,6 +6,9 @@ import {
   type Variants,
 } from "framer-motion";
 
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
+
 import {
   ChevronDown,
   ArrowRight,
@@ -14,6 +17,10 @@ import {
   Heart,
   Bell,
   UserRound,
+  LogOut,
+  UserCircle2,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 
 import logo from "../../../assets/logo.png";
@@ -137,9 +144,8 @@ const childVariants: Variants = {
 
 type ActionType =
   | "wishlist"
-  | "demon"
   | "notifications"
-  | "profile";
+  | "account";
 
 const MenuOverlay = ({
   open,
@@ -152,6 +158,9 @@ const MenuOverlay = ({
 
   const [selectedAction, setSelectedAction] =
     useState<ActionType | null>(null);
+
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setExpandedItem(null);
@@ -173,6 +182,17 @@ const MenuOverlay = ({
   const handleMainNavClick = (label: string) => {
     handleNavItemClick(label);
     handleClose();
+  };
+
+  const handleAccountNavigate = (path: string) => {
+    handleClose();
+    navigate(path);
+  };
+
+  const handleLogoutClick = () => {
+    logout();
+    handleClose();
+    navigate("/");
   };
 
   const actionClass = (action: ActionType) => {
@@ -301,27 +321,18 @@ const MenuOverlay = ({
                   <Heart size={20} strokeWidth={1.7} />
                 </button>
 
-                <button
-                  type="button"
+                <Link
+                  to="/demon-hunter"
+                  onClick={handleClose}
                   aria-label="Demon Hunter"
-                  aria-pressed={
-                    selectedAction === "demon"
-                  }
-                  onClick={() =>
-                    handleActionClick("demon")
-                  }
-                  className={`group flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-black transition-all duration-200 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#00AEEF]/40 ${
-                    selectedAction === "demon"
-                      ? "border-[#00AEEF] shadow-[0_0_14px_rgba(0,174,239,0.18)]"
-                      : "border-white/20"
-                  } hover:border-[#00AEEF]`}
+                  className="group flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-black transition-all duration-200 hover:scale-105 hover:border-[#00AEEF] active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#00AEEF]/40"
                 >
                   <img
                     src="/demon hunter.png"
                     alt="Demon Hunter"
                     className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
                   />
-                </button>
+                </Link>
 
                 <button
                   type="button"
@@ -343,18 +354,77 @@ const MenuOverlay = ({
 
                 <button
                   type="button"
-                  aria-label="Profile"
-                  aria-pressed={
-                    selectedAction === "profile"
-                  }
-                  onClick={() =>
-                    handleActionClick("profile")
-                  }
-                  className={actionClass("profile")}
+                  aria-label="Account"
+                  aria-pressed={selectedAction === "account"}
+                  aria-expanded={selectedAction === "account"}
+                  onClick={() => handleActionClick("account")}
+                  className={actionClass("account")}
                 >
                   <UserRound size={19} strokeWidth={1.7} />
                 </button>
               </motion.div>
+
+              <AnimatePresence initial={false}>
+                {selectedAction === "account" && (
+                  <motion.div
+                    variants={childVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-3 space-y-1.5 rounded-2xl border border-white/[0.1] bg-white/[0.02] p-2">
+                      {isAuthenticated ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleAccountNavigate("/profile")
+                            }
+                            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
+                          >
+                            <UserCircle2 size={16} strokeWidth={1.8} />
+                            My Profile
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={handleLogoutClick}
+                            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#FF6575]"
+                          >
+                            <LogOut size={16} strokeWidth={1.8} />
+                            Logout
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleAccountNavigate("/login")
+                            }
+                            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
+                          >
+                            <LogIn size={16} strokeWidth={1.8} />
+                            Login
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleAccountNavigate("/register")
+                            }
+                            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
+                          >
+                            <UserPlus size={16} strokeWidth={1.8} />
+                            Register
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             <nav className="flex-1 overflow-y-auto px-5 py-4 scrollbar-none">

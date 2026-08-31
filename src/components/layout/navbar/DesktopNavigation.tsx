@@ -1,4 +1,8 @@
+import { useRef, useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 import {
   ArrowRight,
@@ -7,6 +11,10 @@ import {
   Bell,
   UserRound,
   ChevronDown,
+  LogOut,
+  UserCircle2,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 
 import {
@@ -28,6 +36,31 @@ interface DesktopNavigationProps {
   handleNavItemClick: (item: string) => void;
 }
 
+const userMenuVariants = {
+  hidden: {
+    opacity: 0,
+    y: -8,
+    scale: 0.96,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.18,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -6,
+    scale: 0.96,
+    transition: {
+      duration: 0.12,
+    },
+  },
+};
+
 const DesktopNavigation = ({
   docked,
   activeDropdown,
@@ -38,6 +71,40 @@ const DesktopNavigation = ({
   handleDropdownItemClick,
   handleNavItemClick,
 }: DesktopNavigationProps) => {
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setUserMenuOpen(false);
+    navigate("/");
+  };
+
+  const handleUserMenuNavigate = (path: string) => {
+    setUserMenuOpen(false);
+    navigate(path);
+  };
+
   return (
     <>
       <motion.div
@@ -93,9 +160,7 @@ const DesktopNavigation = ({
                 <button
                   type="button"
                   onClick={() =>
-                    setActiveDropdown(
-                      isDropdownOpen ? null : item.label,
-                    )
+                    setActiveDropdown(isDropdownOpen ? null : item.label)
                   }
                   className={`group relative flex items-center gap-1.5 whitespace-nowrap font-['Inter'] text-[12px] font-bold uppercase tracking-[0.035em] transition-all duration-200 ${
                     isHovered ? "text-[#00AEEF]" : "text-white/85"
@@ -107,9 +172,7 @@ const DesktopNavigation = ({
                     size={12}
                     strokeWidth={2}
                     className={`transition-all duration-200 ${
-                      isHovered
-                        ? "rotate-180 text-[#00AEEF]"
-                        : "text-white/65"
+                      isHovered ? "rotate-180 text-[#00AEEF]" : "text-white/65"
                     }`}
                   />
 
@@ -165,8 +228,8 @@ const DesktopNavigation = ({
           <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#FF6575] ring-2 ring-[#080F29]" />
         </button>
 
-        <button
-          type="button"
+        <Link
+          to="/demon-hunter"
           aria-label="Demon Hunter"
           className="group flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-black transition-all duration-200 hover:scale-105 hover:border-[#00AEEF] focus-visible:border-[#00AEEF] focus-visible:outline-none"
         >
@@ -175,15 +238,83 @@ const DesktopNavigation = ({
             alt="Demon Hunter"
             className="h-full w-full object-cover transition-all duration-200 group-hover:scale-105"
           />
-        </button>
+        </Link>
 
-        <button
-          type="button"
-          aria-label="Profile"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-white/80 transition-all duration-200 hover:scale-105 hover:border-[#00AEEF] hover:text-[#00AEEF] focus-visible:border-[#00AEEF] focus-visible:text-[#00AEEF] focus-visible:outline-none"
-        >
-          <UserRound size={18} strokeWidth={1.7} />
-        </button>
+        <div className="relative" ref={userMenuRef}>
+          <button
+            type="button"
+            aria-label="Account"
+            aria-haspopup="menu"
+            aria-expanded={userMenuOpen}
+            onClick={() => setUserMenuOpen((previous) => !previous)}
+            className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 hover:scale-105 focus-visible:outline-none ${
+              userMenuOpen
+                ? "border-[#00AEEF] text-[#00AEEF]"
+                : "border-white/25 text-white/80 hover:border-[#00AEEF] hover:text-[#00AEEF] focus-visible:border-[#00AEEF] focus-visible:text-[#00AEEF]"
+            }`}
+          >
+            <UserRound size={18} strokeWidth={1.7} />
+          </button>
+
+          <AnimatePresence>
+            {userMenuOpen && (
+              <motion.div
+                role="menu"
+                variants={userMenuVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="absolute right-0 top-[calc(100%+10px)] z-[95] w-52 overflow-hidden rounded-2xl border border-white/[0.14] bg-[#080F29]/95 shadow-[0_18px_42px_rgba(0,0,0,0.45),0_0_30px_rgba(0,174,239,0.08)] backdrop-blur-xl"
+              >
+                {isAuthenticated ? (
+                  <div className="p-2">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => handleUserMenuNavigate("/profile")}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
+                    >
+                      <UserCircle2 size={16} strokeWidth={1.8} />
+                      My Profile
+                    </button>
+
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#FF6575]"
+                    >
+                      <LogOut size={16} strokeWidth={1.8} />
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-2">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => handleUserMenuNavigate("/login")}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
+                    >
+                      <LogIn size={16} strokeWidth={1.8} />
+                      Login
+                    </button>
+
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => handleUserMenuNavigate("/register")}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
+                    >
+                      <UserPlus size={16} strokeWidth={1.8} />
+                      Register
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         <button
           type="button"
@@ -215,9 +346,7 @@ const DesktopNavigation = ({
                 <div className="flex justify-center px-5 pt-5 xl:px-6">
                   <button
                     type="button"
-                    onClick={() =>
-                      handleDropdownItemClick("Our Services")
-                    }
+                    onClick={() => handleDropdownItemClick("Our Services")}
                     className="group inline-flex items-center gap-2 rounded-full border border-[#00AEEF]/30 bg-[#00AEEF]/[0.06] px-6 py-3 font-['Inter'] text-[11px] font-bold uppercase tracking-[0.1em] text-white/90 transition-all duration-200 hover:border-[#00AEEF]/70 hover:bg-[#00AEEF]/[0.12] hover:text-[#00AEEF]"
                   >
                     <span>Our Services</span>
@@ -268,9 +397,7 @@ const DesktopNavigation = ({
                               label={item.label}
                               icon={item.icon}
                               onClick={() =>
-                                handleDropdownItemClick(
-                                  item.label,
-                                )
+                                handleDropdownItemClick(item.label)
                               }
                             />
                           ))}

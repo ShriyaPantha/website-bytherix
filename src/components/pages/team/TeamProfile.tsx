@@ -1,4 +1,24 @@
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Brain,
+  Cpu,
+  Bot,
+  Code2,
+  ShieldCheck,
+  Terminal,
+  Wrench,
+  Microscope,
+  Users,
+  ClipboardList,
+  CalendarCheck2,
+  Target,
+  Crown,
+  Briefcase,
+  UserPlus,
+  HeartHandshake,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { teamMembers } from "../../../data/team";
@@ -8,13 +28,95 @@ interface TeamProfileProps {
   onBack?: () => void;
 }
 
+// =====================================================
+// SKILL ICON MAPPING
+// =====================================================
+
+const SKILL_ICON_RULES: Array<{
+  keywords: string[];
+  icon: LucideIcon;
+}> = [
+  {
+    keywords: ["ai", "machine learning", "ml"],
+    icon: Brain,
+  },
+  {
+    keywords: ["iot"],
+    icon: Cpu,
+  },
+  {
+    keywords: ["robot"],
+    icon: Bot,
+  },
+  {
+    keywords: ["cyber", "security"],
+    icon: ShieldCheck,
+  },
+  {
+    keywords: ["hack", "penetration"],
+    icon: Terminal,
+  },
+  {
+    keywords: ["software", "development", "app", "web"],
+    icon: Code2,
+  },
+  {
+    keywords: ["engineer"],
+    icon: Wrench,
+  },
+  {
+    keywords: ["research"],
+    icon: Microscope,
+  },
+  {
+    keywords: ["recruitment"],
+    icon: UserPlus,
+  },
+  {
+    keywords: ["human resources", "employee", "relations"],
+    icon: HeartHandshake,
+  },
+  {
+    keywords: ["team"],
+    icon: Users,
+  },
+  {
+    keywords: ["project"],
+    icon: ClipboardList,
+  },
+  {
+    keywords: ["planning"],
+    icon: CalendarCheck2,
+  },
+  {
+    keywords: ["strategy"],
+    icon: Target,
+  },
+  {
+    keywords: ["leadership"],
+    icon: Crown,
+  },
+  {
+    keywords: ["management", "business"],
+    icon: Briefcase,
+  },
+];
+
+function getSkillIcon(skill: string): LucideIcon {
+  const normalized = skill.toLowerCase();
+
+  const match = SKILL_ICON_RULES.find(({ keywords }) =>
+    keywords.some((keyword) => normalized.includes(keyword)),
+  );
+
+  return match ? match.icon : Sparkles;
+}
+
 export default function TeamProfile({
   slug,
   onBack,
 }: TeamProfileProps) {
-  const member = teamMembers.find(
-    (item) => item.slug === slug,
-  );
+  const member = teamMembers.find((item) => item.slug === slug);
 
   const handleBack = () => {
     if (onBack) {
@@ -30,6 +132,10 @@ export default function TeamProfile({
     window.history.pushState({}, "", "/our-team");
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
+
+  // =====================================================
+  // MEMBER NOT FOUND
+  // =====================================================
 
   if (!member) {
     return (
@@ -56,9 +162,17 @@ export default function TeamProfile({
     );
   }
 
+  // =====================================================
+  // JOURNEY CONTENT
+  // =====================================================
+
   const journeyParagraphs = member.journeying
     ? member.journeying.split("\n\n")
     : ["More details about this journey will be shared soon."];
+
+  // =====================================================
+  // PROFILE
+  // =====================================================
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -77,7 +191,6 @@ export default function TeamProfile({
               size={15}
               className="text-[#3157D5] transition-transform duration-300 group-hover:-translate-x-1"
             />
-
             Back to Team
           </button>
 
@@ -194,19 +307,47 @@ export default function TeamProfile({
 
             {member.skills && member.skills.length > 0 && (
               <div className="mt-8">
-                <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.2em] text-[#3157D5]">
+                <p className="mb-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#3157D5]">
+                  <span className="h-px w-4 bg-[#3157D5]" />
                   Skills
                 </p>
 
-                <div className="flex max-w-2xl flex-wrap gap-2.5">
-                  {member.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-full border border-[#DCE3F2] bg-white/40 px-4 py-2 text-xs font-medium text-[var(--text-primary)] transition-all duration-300 hover:border-[#3157D5] hover:bg-[#3157D5] hover:text-white"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                <div className="grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2">
+                  {member.skills.map((skill, index) => {
+                    const Icon = getSkillIcon(skill);
+
+                    return (
+                      <motion.div
+                        key={`${skill}-${index}`}
+                        initial={{
+                          opacity: 0,
+                          y: 10,
+                        }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                        }}
+                        transition={{
+                          duration: 0.45,
+                          delay: 0.05 * index,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        className="group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[#00AEEF]/40 hover:bg-[#00AEEF]/[0.06] hover:shadow-[0_8px_30px_-8px_rgba(0,174,239,0.45)]"
+                      >
+                        {/* Soft ambient glow */}
+
+                        <div className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#00AEEF]/0 blur-2xl transition-all duration-500 group-hover:bg-[#00AEEF]/25" />
+
+                        <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#00AEEF]/25 bg-[#00AEEF]/10 text-[#00AEEF] transition-all duration-300 group-hover:border-[#00AEEF]/60 group-hover:bg-[#00AEEF]/20 group-hover:shadow-[0_0_16px_rgba(0,174,239,0.55)]">
+                          <Icon size={17} strokeWidth={2} />
+                        </span>
+
+                        <span className="relative text-[13px] font-medium leading-tight text-[var(--text-primary)] sm:text-sm">
+                          {skill}
+                        </span>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </div>
             )}
