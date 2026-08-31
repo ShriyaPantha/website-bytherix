@@ -1,7 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-
 import { Search, Menu } from "lucide-react";
-
 import MenuOverlay from "./MenuOverlay";
 
 interface MobileNavigationProps {
@@ -16,7 +14,6 @@ interface MobileNavigationProps {
 }
 
 const MobileNavigation = ({
-  docked,
   mobileMenuOpen,
   mobileSearchOpen,
   setMobileMenuOpen,
@@ -27,38 +24,53 @@ const MobileNavigation = ({
 }: MobileNavigationProps) => {
   return (
     <>
+      {/* =========================
+          MOBILE ACTIONS
+      ========================== */}
       <motion.div
         initial={false}
         animate={{
-          opacity: docked ? 1 : 0,
+          opacity: 1,
+          y: 0,
         }}
-        className="relative z-30 ml-auto flex items-center gap-2 lg:hidden"
+        className="relative z-30 ml-auto flex shrink-0 items-center gap-2 lg:hidden"
       >
+        {/* Search Button */}
         <button
           type="button"
           aria-label="Open search"
-          onClick={() =>
-            setMobileSearchOpen(!mobileSearchOpen)
-          }
+          aria-expanded={mobileSearchOpen}
+          onClick={() => {
+            setMobileSearchOpen(!mobileSearchOpen);
+            setMobileMenuOpen(false);
+          }}
           className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-300 sm:h-10 sm:w-10 ${
             mobileSearchOpen
               ? "border-[#00AEEF] bg-[#00AEEF]/10 text-[#00AEEF]"
-              : "border-white/25 bg-white/[0.03] text-white"
+              : "border-white/25 bg-white/[0.03] text-white hover:border-[#00AEEF] hover:text-[#00AEEF]"
           }`}
         >
           <Search size={18} strokeWidth={1.8} />
         </button>
 
+        {/* Menu Button */}
         <button
           type="button"
           aria-label="Open menu"
-          onClick={() => setMobileMenuOpen(true)}
+          aria-expanded={mobileMenuOpen}
+          onClick={() => {
+            setMobileMenuOpen(true);
+            setMobileSearchOpen(false);
+          }}
           className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/[0.03] text-white transition-all duration-200 hover:border-[#00AEEF] hover:text-[#00AEEF] active:scale-95 sm:h-10 sm:w-10"
         >
           <Menu size={21} strokeWidth={1.8} />
         </button>
       </motion.div>
 
+      {/* =========================
+          MOBILE SEARCH
+      ========================== */}
       <AnimatePresence>
         {mobileSearchOpen && (
           <motion.div
@@ -79,6 +91,7 @@ const MobileNavigation = ({
             }}
             transition={{
               duration: 0.2,
+              ease: "easeOut",
             }}
             className="absolute left-3 right-3 top-[calc(100%+8px)] z-[120] lg:hidden"
           >
@@ -99,18 +112,18 @@ const MobileNavigation = ({
               <button
                 type="button"
                 aria-label="Search"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#080F29]"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#080F29] transition-transform duration-200 hover:scale-105 active:scale-95"
               >
-                <Search
-                  size={15}
-                  strokeWidth={2.5}
-                />
+                <Search size={15} strokeWidth={2.5} />
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* =========================
+          MOBILE MENU OVERLAY
+      ========================== */}
       <MenuOverlay
         open={mobileMenuOpen}
         onClose={closeMenu}

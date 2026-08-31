@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 
 import { Link, useNavigate } from "react-router-dom";
+
 import { useAuth } from "../../../context/AuthContext";
 
 import {
@@ -21,7 +22,18 @@ import {
   UserCircle2,
   LogIn,
   UserPlus,
+  Mail,
+  Send,
 } from "lucide-react";
+
+import {
+  FaLinkedin,
+  FaGithub,
+  FaInstagram,
+  FaYoutube,
+  FaFacebook,
+  FaTiktok,
+} from "react-icons/fa";
 
 import logo from "../../../assets/logo.png";
 
@@ -147,6 +159,44 @@ type ActionType =
   | "notifications"
   | "account";
 
+/* =========================================================
+   SOCIAL LINKS
+   Same social links as desktop navigation
+   ========================================================= */
+
+const SOCIAL_LINKS = [
+  {
+    icon: FaLinkedin,
+    href: "https://www.linkedin.com/in/bytherix-technology-84b660420/",
+    label: "LinkedIn",
+  },
+  {
+    icon: FaGithub,
+    href: "https://github.com/bytherix",
+    label: "GitHub",
+  },
+  {
+    icon: FaFacebook,
+    href: "https://www.facebook.com/profile.php?id=61591150259850",
+    label: "Facebook",
+  },
+  {
+    icon: FaInstagram,
+    href: "https://www.instagram.com/bytherix_/",
+    label: "Instagram",
+  },
+  {
+    icon: FaYoutube,
+    href: "https://www.youtube.com/@Bytherix_1",
+    label: "YouTube",
+  },
+  {
+    icon: FaTiktok,
+    href: "https://www.tiktok.com/@bytherix",
+    label: "TikTok",
+  },
+];
+
 const MenuOverlay = ({
   open,
   onClose,
@@ -159,12 +209,17 @@ const MenuOverlay = ({
   const [selectedAction, setSelectedAction] =
     useState<ActionType | null>(null);
 
+  const [newsletterEmail, setNewsletterEmail] =
+    useState("");
+
   const { isAuthenticated, logout } = useAuth();
+
   const navigate = useNavigate();
 
   const handleClose = () => {
     setExpandedItem(null);
     setSelectedAction(null);
+    setNewsletterEmail("");
     onClose();
   };
 
@@ -195,6 +250,18 @@ const MenuOverlay = ({
     navigate("/");
   };
 
+  const handleNewsletterSubmit = (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+
+    /*
+     * Connect your newsletter API here.
+     * Keeping current UI behaviour unchanged.
+     */
+    setNewsletterEmail("");
+  };
+
   const actionClass = (action: ActionType) => {
     const selected = selectedAction === action;
 
@@ -205,10 +272,26 @@ const MenuOverlay = ({
     } hover:border-[#00AEEF] hover:text-[#00AEEF]`;
   };
 
+  /*
+   * Desktop social icon effect replicated for mobile.
+   *
+   * Includes:
+   * - hover glow
+   * - active/touch feedback
+   * - focus-visible glow
+   * - smooth transition
+   */
+  const socialIconClass =
+    "group flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/[0.09] bg-white/[0.025] text-white/65 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-105 hover:border-[#00AEEF]/40 hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] hover:shadow-[0_0_18px_rgba(0,174,239,0.14)] active:translate-y-0 active:scale-95 active:border-[#00AEEF]/60 active:bg-[#00AEEF]/15 active:text-[#00AEEF] active:shadow-[0_0_22px_rgba(0,174,239,0.22)] focus-visible:-translate-y-0.5 focus-visible:scale-105 focus-visible:border-[#00AEEF]/50 focus-visible:bg-[#00AEEF]/10 focus-visible:text-[#00AEEF] focus-visible:shadow-[0_0_20px_rgba(0,174,239,0.18)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#00AEEF]/30";
+
   return (
     <AnimatePresence>
       {open && (
         <>
+          {/* =================================================
+              MOBILE BACKDROP
+              ================================================= */}
+
           <motion.div
             variants={backdropVariants}
             initial="hidden"
@@ -218,6 +301,10 @@ const MenuOverlay = ({
             className="fixed inset-0 z-[190] bg-black/65 backdrop-blur-[2px] lg:hidden"
           />
 
+          {/* =================================================
+              MOBILE MENU PANEL
+              ================================================= */}
+
           <motion.aside
             variants={panelVariants}
             initial="hidden"
@@ -225,6 +312,10 @@ const MenuOverlay = ({
             exit="exit"
             className="fixed inset-y-0 left-0 z-[200] flex w-[88%] max-w-[410px] flex-col overflow-hidden border-r border-white/10 bg-[#080F29] shadow-[18px_0_50px_rgba(0,0,0,0.5)] lg:hidden"
           >
+            {/* =================================================
+                HEADER
+                ================================================= */}
+
             <div className="flex h-[78px] shrink-0 items-center justify-between border-b border-white/10 px-5">
               <button
                 type="button"
@@ -244,9 +335,15 @@ const MenuOverlay = ({
 
                 <div className="flex flex-col leading-none">
                   <span className="font-['Inter'] text-base font-bold tracking-wide">
-                    <span className="text-[#00AEEF]">BY</span>
-                    <span className="text-[#20C997]">THE</span>
-                    <span className="text-[#FF3B30]">RIX</span>
+                    <span className="text-[#00AEEF]">
+                      BY
+                    </span>
+                    <span className="text-[#20C997]">
+                      THE
+                    </span>
+                    <span className="text-[#FF3B30]">
+                      RIX
+                    </span>
                   </span>
 
                   <span className="mt-1 font-['Inter'] text-[7px] font-medium uppercase tracking-[0.18em] text-white/70">
@@ -261,9 +358,16 @@ const MenuOverlay = ({
                 aria-label="Close menu"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/[0.04] text-white/80 transition-all duration-200 hover:border-[#00AEEF] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] active:scale-95"
               >
-                <X size={17} strokeWidth={1.8} />
+                <X
+                  size={17}
+                  strokeWidth={1.8}
+                />
               </button>
             </div>
+
+            {/* =================================================
+                SEARCH + ACTIONS
+                ================================================= */}
 
             <div className="shrink-0 border-b border-white/10 px-5 py-4">
               <motion.div
@@ -307,6 +411,8 @@ const MenuOverlay = ({
                 animate="visible"
                 className="flex items-center justify-between gap-2"
               >
+                {/* Wishlist */}
+
                 <button
                   type="button"
                   aria-label="Wishlist"
@@ -318,8 +424,13 @@ const MenuOverlay = ({
                   }
                   className={actionClass("wishlist")}
                 >
-                  <Heart size={20} strokeWidth={1.7} />
+                  <Heart
+                    size={20}
+                    strokeWidth={1.7}
+                  />
                 </button>
+
+                {/* Demon Hunter */}
 
                 <Link
                   to="/demon-hunter"
@@ -334,6 +445,8 @@ const MenuOverlay = ({
                   />
                 </Link>
 
+                {/* Notifications */}
+
                 <button
                   type="button"
                   aria-label="Notifications"
@@ -341,28 +454,48 @@ const MenuOverlay = ({
                     selectedAction === "notifications"
                   }
                   onClick={() =>
-                    handleActionClick("notifications")
+                    handleActionClick(
+                      "notifications",
+                    )
                   }
                   className={`relative ${actionClass(
                     "notifications",
                   )}`}
                 >
-                  <Bell size={20} strokeWidth={1.7} />
+                  <Bell
+                    size={20}
+                    strokeWidth={1.7}
+                  />
 
                   <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#FF6575] ring-2 ring-[#080F29]" />
                 </button>
 
+                {/* Account */}
+
                 <button
                   type="button"
                   aria-label="Account"
-                  aria-pressed={selectedAction === "account"}
-                  aria-expanded={selectedAction === "account"}
-                  onClick={() => handleActionClick("account")}
+                  aria-pressed={
+                    selectedAction === "account"
+                  }
+                  aria-expanded={
+                    selectedAction === "account"
+                  }
+                  onClick={() =>
+                    handleActionClick("account")
+                  }
                   className={actionClass("account")}
                 >
-                  <UserRound size={19} strokeWidth={1.7} />
+                  <UserRound
+                    size={19}
+                    strokeWidth={1.7}
+                  />
                 </button>
               </motion.div>
+
+              {/* =================================================
+                  ACCOUNT DROPDOWN
+                  ================================================= */}
 
               <AnimatePresence initial={false}>
                 {selectedAction === "account" && (
@@ -379,11 +512,16 @@ const MenuOverlay = ({
                           <button
                             type="button"
                             onClick={() =>
-                              handleAccountNavigate("/profile")
+                              handleAccountNavigate(
+                                "/profile",
+                              )
                             }
                             className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
                           >
-                            <UserCircle2 size={16} strokeWidth={1.8} />
+                            <UserCircle2
+                              size={16}
+                              strokeWidth={1.8}
+                            />
                             My Profile
                           </button>
 
@@ -392,7 +530,10 @@ const MenuOverlay = ({
                             onClick={handleLogoutClick}
                             className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#FF6575]"
                           >
-                            <LogOut size={16} strokeWidth={1.8} />
+                            <LogOut
+                              size={16}
+                              strokeWidth={1.8}
+                            />
                             Logout
                           </button>
                         </>
@@ -401,22 +542,32 @@ const MenuOverlay = ({
                           <button
                             type="button"
                             onClick={() =>
-                              handleAccountNavigate("/login")
+                              handleAccountNavigate(
+                                "/login",
+                              )
                             }
                             className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
                           >
-                            <LogIn size={16} strokeWidth={1.8} />
+                            <LogIn
+                              size={16}
+                              strokeWidth={1.8}
+                            />
                             Login
                           </button>
 
                           <button
                             type="button"
                             onClick={() =>
-                              handleAccountNavigate("/register")
+                              handleAccountNavigate(
+                                "/register",
+                              )
                             }
                             className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
                           >
-                            <UserPlus size={16} strokeWidth={1.8} />
+                            <UserPlus
+                              size={16}
+                              strokeWidth={1.8}
+                            />
                             Register
                           </button>
                         </>
@@ -427,6 +578,10 @@ const MenuOverlay = ({
               </AnimatePresence>
             </div>
 
+            {/* =================================================
+                MOBILE NAVIGATION
+                ================================================= */}
+
             <nav className="flex-1 overflow-y-auto px-5 py-4 scrollbar-none">
               {NAV_ITEMS.map((item, index) => {
                 const isExpanded =
@@ -434,6 +589,9 @@ const MenuOverlay = ({
 
                 const sections =
                   DROPDOWN_CONTENT[item.label] ?? [];
+
+                const isCompany =
+                  item.label === "Company";
 
                 return (
                   <motion.div
@@ -444,6 +602,10 @@ const MenuOverlay = ({
                     animate="visible"
                     className="border-b border-white/[0.07]"
                   >
+                    {/* =================================================
+                        MAIN NAV ITEM
+                        ================================================= */}
+
                     {item.hasDropdown ? (
                       <button
                         type="button"
@@ -492,6 +654,10 @@ const MenuOverlay = ({
                       </button>
                     )}
 
+                    {/* =================================================
+                        DROPDOWN CONTENT
+                        ================================================= */}
+
                     <AnimatePresence initial={false}>
                       {item.hasDropdown &&
                         isExpanded && (
@@ -503,7 +669,12 @@ const MenuOverlay = ({
                             className="overflow-hidden"
                           >
                             <div className="mb-4">
-                              {item.label === "Services" && (
+                              {/* =================================================
+                                  SERVICES SHORTCUT
+                                  ================================================= */}
+
+                              {item.label ===
+                                "Services" && (
                                 <div className="mb-4 flex justify-center">
                                   <button
                                     type="button"
@@ -512,7 +683,7 @@ const MenuOverlay = ({
                                         "Our Services",
                                       )
                                     }
-                                    className="group inline-flex items-center gap-2 rounded-full border border-[#00AEEF]/30 bg-[#00AEEF]/[0.06] px-5 py-2.5 font-['Inter'] text-[10px] font-bold uppercase tracking-[0.1em] text-white/90 transition-all duration-200 hover:border-[#00AEEF]/70 hover:bg-[#00AEEF]/[0.1] hover:text-[#00AEEF]"
+                                    className="group inline-flex items-center gap-2 rounded-full border border-[#00AEEF]/30 bg-[#00AEEF]/[0.06] px-5 py-2.5 font-['Inter'] text-[10px] font-bold uppercase tracking-[0.1em] text-white/90 transition-all duration-200 hover:border-[#00AEEF]/70 hover:bg-[#00AEEF]/[0.1] hover:text-[#00AEEF] active:scale-95"
                                   >
                                     <span>
                                       Our Services
@@ -526,6 +697,10 @@ const MenuOverlay = ({
                                   </button>
                                 </div>
                               )}
+
+                              {/* =================================================
+                                  EXISTING DROPDOWN SECTIONS
+                                  ================================================= */}
 
                               <div className="space-y-4">
                                 {sections.map(
@@ -583,6 +758,122 @@ const MenuOverlay = ({
                                   },
                                 )}
                               </div>
+
+                              {/* =================================================
+                                  COMPANY ONLY
+                                  STAY UPDATED + SOCIAL LINKS
+                                  ================================================= */}
+
+                              {isCompany && (
+                                <div className="mt-6 border-t border-white/[0.08] pt-6">
+                                  {/* -----------------------------------------
+                                      STAY UPDATED HEADER
+                                      ----------------------------------------- */}
+
+                                  <div className="mb-5 flex items-start gap-3">
+                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#3154C4]/30 bg-[#00AEEF]/[0.08] text-[#00AEEF] shadow-[0_0_20px_rgba(0,174,239,0.06)]">
+                                      <Mail
+                                        size={18}
+                                        strokeWidth={1.8}
+                                      />
+                                    </span>
+
+                                    <div className="min-w-0">
+                                      <p className="font-['Inter'] text-[13px] font-bold uppercase tracking-[0.08em] text-white/90">
+                                        Stay Updated
+                                      </p>
+
+                                      <div className="mt-1.5 h-px w-10 bg-[#20C997]" />
+
+                                      <p className="mt-2 max-w-[280px] font-['Inter'] text-[11px] leading-relaxed text-white/45">
+                                        Subscribe to our
+                                        newsletter for the
+                                        latest updates and
+                                        insights.
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  {/* -----------------------------------------
+                                      NEWSLETTER FORM
+                                      ----------------------------------------- */}
+
+                                  <form
+                                    onSubmit={
+                                      handleNewsletterSubmit
+                                    }
+                                    className="mb-6 flex h-[54px] w-full items-center gap-2 rounded-2xl border border-white/[0.14] bg-white/[0.025] p-1.5 pl-4 transition-all duration-300 focus-within:border-[#00AEEF]/50 focus-within:bg-white/[0.04] focus-within:shadow-[0_0_20px_rgba(0,174,239,0.07)]"
+                                  >
+                                    <input
+                                      type="email"
+                                      required
+                                      value={
+                                        newsletterEmail
+                                      }
+                                      onChange={(
+                                        event,
+                                      ) =>
+                                        setNewsletterEmail(
+                                          event.target
+                                            .value,
+                                        )
+                                      }
+                                      placeholder="Your email address"
+                                      aria-label="Email address"
+                                      className="min-w-0 flex-1 bg-transparent font-['Inter'] text-[11px] text-white outline-none placeholder:text-white/35"
+                                    />
+
+                                    <button
+                                      type="submit"
+                                      aria-label="Subscribe"
+                                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#3154C4] text-white transition-all duration-200 hover:scale-105 hover:bg-[#3B5FD0] hover:shadow-[0_6px_18px_rgba(49,84,196,0.3)] active:scale-95 focus-visible:scale-105 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#00AEEF]/50"
+                                    >
+                                      <Send
+                                        size={15}
+                                        strokeWidth={2}
+                                      />
+                                    </button>
+                                  </form>
+
+                                  {/* -----------------------------------------
+                                      FOLLOW US
+                                      ----------------------------------------- */}
+
+                                  <div>
+                                    <p className="mb-3 font-['Inter'] text-[10px] font-bold uppercase tracking-[0.14em] text-white/55">
+                                      Follow Us
+                                    </p>
+
+                                    <div className="grid grid-cols-6 gap-2">
+                                      {SOCIAL_LINKS.map(
+                                        ({
+                                          icon: Icon,
+                                          href,
+                                          label,
+                                        }) => (
+                                          <a
+                                            key={label}
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={
+                                              label
+                                            }
+                                            className={
+                                              socialIconClass
+                                            }
+                                          >
+                                            <Icon
+                                              size={16}
+                                              className="transition-all duration-200 group-hover:scale-110 group-active:scale-105"
+                                            />
+                                          </a>
+                                        ),
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </motion.div>
                         )}
@@ -591,6 +882,10 @@ const MenuOverlay = ({
                 );
               })}
             </nav>
+
+            {/* =================================================
+                BOTTOM GET A QUOTE
+                ================================================= */}
 
             <div className="shrink-0 border-t border-white/10 px-5 py-5">
               <div className="flex items-center gap-2">

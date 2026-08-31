@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
@@ -15,7 +14,11 @@ import {
   UserCircle2,
   LogIn,
   UserPlus,
+  Mail,
+  Send,
 } from "lucide-react";
+
+import { FaLinkedin, FaGithub, FaInstagram, FaYoutube, FaFacebook, FaTiktok } from "react-icons/fa";
 
 import {
   NAV_ITEMS,
@@ -42,6 +45,7 @@ const userMenuVariants = {
     y: -8,
     scale: 0.96,
   },
+
   visible: {
     opacity: 1,
     y: 0,
@@ -51,6 +55,7 @@ const userMenuVariants = {
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
+
   exit: {
     opacity: 0,
     y: -6,
@@ -60,6 +65,40 @@ const userMenuVariants = {
     },
   },
 };
+
+/* Social links shown in the "Follow Us" row of the Company mega menu. */
+const SOCIAL_LINKS = [
+  {
+    icon: FaLinkedin,
+    href: "https://www.linkedin.com/in/bytherix-technology-84b660420/",
+    label: "LinkedIn",
+  },
+  {
+    icon: FaGithub,
+    href: "https://github.com/bytherix",
+    label: "GitHub",
+  },
+  {
+    icon: FaFacebook,
+    href: "https://www.facebook.com/profile.php?id=61591150259850",
+    label: "Twitter",
+  },
+  {
+    icon: FaInstagram,
+    href: "https://www.instagram.com/bytherix_/",
+    label: "Instagram",
+  },
+  {
+    icon: FaYoutube,
+    href: "https://www.youtube.com/@Bytherix_1",
+    label: "YouTube",
+  },
+  {
+    icon: FaTiktok,
+    href: "https://www.tiktok.com/@bytherix",
+    label: "TikTok",
+  },
+];
 
 const DesktopNavigation = ({
   docked,
@@ -76,6 +115,8 @@ const DesktopNavigation = ({
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement | null>(null);
+
+  const [newsletterEmail, setNewsletterEmail] = useState("");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,8 +146,20 @@ const DesktopNavigation = ({
     navigate(path);
   };
 
+  const handleNewsletterSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    // Wire this up to your actual newsletter/subscribe endpoint.
+    setNewsletterEmail("");
+  };
+
+  const showNewsletterColumn = activeDropdown === "Company";
+
   return (
     <>
+      {/* =========================
+          DESKTOP NAVIGATION
+      ========================== */}
       <motion.div
         initial={false}
         animate={{
@@ -160,7 +213,9 @@ const DesktopNavigation = ({
                 <button
                   type="button"
                   onClick={() =>
-                    setActiveDropdown(isDropdownOpen ? null : item.label)
+                    setActiveDropdown(
+                      isDropdownOpen ? null : item.label,
+                    )
                   }
                   className={`group relative flex items-center gap-1.5 whitespace-nowrap font-['Inter'] text-[12px] font-bold uppercase tracking-[0.035em] transition-all duration-200 ${
                     isHovered ? "text-[#00AEEF]" : "text-white/85"
@@ -172,7 +227,9 @@ const DesktopNavigation = ({
                     size={12}
                     strokeWidth={2}
                     className={`transition-all duration-200 ${
-                      isHovered ? "rotate-180 text-[#00AEEF]" : "text-white/65"
+                      isHovered
+                        ? "rotate-180 text-[#00AEEF]"
+                        : "text-white/65"
                     }`}
                   />
 
@@ -187,6 +244,7 @@ const DesktopNavigation = ({
           })}
         </nav>
 
+        {/* Search */}
         <div className="flex h-9 w-[180px] items-center rounded-full border border-white/25 bg-white/[0.035] pl-3 pr-1 transition-all duration-300 hover:border-white/40 hover:bg-white/[0.055] xl:h-10 xl:w-[205px]">
           <Search
             size={16}
@@ -210,6 +268,7 @@ const DesktopNavigation = ({
           </button>
         </div>
 
+        {/* Wishlist */}
         <button
           type="button"
           aria-label="Wishlist"
@@ -218,6 +277,7 @@ const DesktopNavigation = ({
           <Heart size={22} strokeWidth={1.7} />
         </button>
 
+        {/* Notifications */}
         <button
           type="button"
           aria-label="Notifications"
@@ -228,6 +288,7 @@ const DesktopNavigation = ({
           <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#FF6575] ring-2 ring-[#080F29]" />
         </button>
 
+        {/* Demon Hunter */}
         <Link
           to="/demon-hunter"
           aria-label="Demon Hunter"
@@ -240,6 +301,7 @@ const DesktopNavigation = ({
           />
         </Link>
 
+        {/* User Menu */}
         <div className="relative" ref={userMenuRef}>
           <button
             type="button"
@@ -271,7 +333,9 @@ const DesktopNavigation = ({
                     <button
                       type="button"
                       role="menuitem"
-                      onClick={() => handleUserMenuNavigate("/profile")}
+                      onClick={() =>
+                        handleUserMenuNavigate("/profile")
+                      }
                       className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
                     >
                       <UserCircle2 size={16} strokeWidth={1.8} />
@@ -293,7 +357,9 @@ const DesktopNavigation = ({
                     <button
                       type="button"
                       role="menuitem"
-                      onClick={() => handleUserMenuNavigate("/login")}
+                      onClick={() =>
+                        handleUserMenuNavigate("/login")
+                      }
                       className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
                     >
                       <LogIn size={16} strokeWidth={1.8} />
@@ -303,7 +369,9 @@ const DesktopNavigation = ({
                     <button
                       type="button"
                       role="menuitem"
-                      onClick={() => handleUserMenuNavigate("/register")}
+                      onClick={() =>
+                        handleUserMenuNavigate("/register")
+                      }
                       className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-['Inter'] text-[12px] font-semibold text-white/85 transition-all duration-150 hover:bg-white/[0.06] hover:text-[#00AEEF]"
                     >
                       <UserPlus size={16} strokeWidth={1.8} />
@@ -316,6 +384,7 @@ const DesktopNavigation = ({
           </AnimatePresence>
         </div>
 
+        {/* Get a Quote */}
         <button
           type="button"
           onClick={() => navigateTo("/#contact")}
@@ -325,6 +394,9 @@ const DesktopNavigation = ({
         </button>
       </motion.div>
 
+      {/* =========================
+          DESKTOP MEGA MENU
+      ========================== */}
       <AnimatePresence>
         {activeDropdown && (
           <motion.div
@@ -332,21 +404,27 @@ const DesktopNavigation = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            onMouseEnter={() => setHoveredNavItem(activeDropdown)}
+            onMouseEnter={() =>
+              setHoveredNavItem(activeDropdown)
+            }
             onMouseLeave={() => {
               setActiveDropdown(null);
               setHoveredNavItem(null);
             }}
             className="absolute left-3 right-3 top-[calc(100%-2px)] z-[90] hidden lg:block"
           >
-            <div className="mx-auto max-w-[1100px] overflow-hidden rounded-b-2xl rounded-t-xl border border-white/[0.14] bg-[#080F29]/95 shadow-[0_18px_42px_rgba(0,0,0,0.45),0_0_30px_rgba(0,174,239,0.08)] backdrop-blur-xl">
-              <div className="mx-auto h-px w-28 bg-gradient-to-r from-transparent via-[#00AEEF]/55 to-transparent" />
+            <div className="mx-auto w-full max-w-[1600px] overflow-hidden rounded-b-2xl rounded-t-xl border border-white/[0.14] bg-[#080F29]/95 shadow-[0_18px_42px_rgba(0,0,0,0.45),0_0_30px_rgba(0,174,239,0.08)] backdrop-blur-xl">
+              {/* Top glow line */}
+              <div className="mx-auto h-px w-32 bg-gradient-to-r from-transparent via-[#00AEEF]/60 to-transparent" />
 
+              {/* Services shortcut */}
               {activeDropdown === "Services" && (
-                <div className="flex justify-center px-5 pt-5 xl:px-6">
+                <div className="flex justify-center px-7 pt-7">
                   <button
                     type="button"
-                    onClick={() => handleDropdownItemClick("Our Services")}
+                    onClick={() =>
+                      handleDropdownItemClick("Our Services")
+                    }
                     className="group inline-flex items-center gap-2 rounded-full border border-[#00AEEF]/30 bg-[#00AEEF]/[0.06] px-6 py-3 font-['Inter'] text-[11px] font-bold uppercase tracking-[0.1em] text-white/90 transition-all duration-200 hover:border-[#00AEEF]/70 hover:bg-[#00AEEF]/[0.12] hover:text-[#00AEEF]"
                   >
                     <span>Our Services</span>
@@ -360,13 +438,19 @@ const DesktopNavigation = ({
                 </div>
               )}
 
+              {/* =========================
+                  MAIN MEGA MENU GRID
+              ========================== */}
               <div
-                className={`grid gap-5 px-5 py-5 xl:px-6 ${
-                  DROPDOWN_CONTENT[activeDropdown]?.length === 3
-                    ? "grid-cols-3"
-                    : "grid-cols-2"
+                className={`grid gap-8 px-7 py-7 xl:px-9 ${
+                  showNewsletterColumn
+                    ? "grid-cols-[1fr_1fr_1.15fr]"
+                    : DROPDOWN_CONTENT[activeDropdown]?.length === 3
+                      ? "grid-cols-3"
+                      : "grid-cols-2"
                 }`}
               >
+                {/* Existing dropdown columns */}
                 {DROPDOWN_CONTENT[activeDropdown]?.map(
                   (column, columnIndex) => {
                     const SectionIcon = column.sectionIcon;
@@ -376,28 +460,41 @@ const DesktopNavigation = ({
                         key={column.heading}
                         className={`min-w-0 ${
                           columnIndex > 0
-                            ? "border-l border-white/[0.07] pl-5"
+                            ? "border-l border-white/[0.08] pl-8"
                             : ""
                         }`}
                       >
-                        <p className="mb-3 flex items-center gap-2 font-['Inter'] text-[9px] font-bold uppercase tracking-[0.16em] text-[#20C997]">
-                          <SectionIcon
-                            size={13}
-                            strokeWidth={1.8}
-                            className="text-[#00AEEF]"
-                          />
+                        {/* Section heading */}
+                        <div className="mb-5">
+                          <p className="flex items-center gap-3 font-['Inter'] text-[11px] font-bold uppercase tracking-[0.16em] text-[#20C997]">
+                            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#00AEEF]/10 bg-[#00AEEF]/[0.07]">
+                              <SectionIcon
+                                size={18}
+                                strokeWidth={1.8}
+                                className="text-[#00AEEF]"
+                              />
+                            </span>
 
-                          {column.heading}
-                        </p>
+                            <span>
+                              {column.heading}
+                            </span>
+                          </p>
 
-                        <div className="space-y-2">
+                          <div className="ml-14 mt-1.5 h-px w-10 bg-[#20C997]/70" />
+                        </div>
+
+                        {/* Menu items */}
+                        <div className="space-y-2.5">
                           {column.items.map((item) => (
                             <MegaMenuItem
                               key={item.label}
                               label={item.label}
                               icon={item.icon}
+                              sub={item.sub}
                               onClick={() =>
-                                handleDropdownItemClick(item.label)
+                                handleDropdownItemClick(
+                                  item.label,
+                                )
                               }
                             />
                           ))}
@@ -406,7 +503,104 @@ const DesktopNavigation = ({
                     );
                   },
                 )}
+
+                {/* =========================
+                    STAY UPDATED
+                ========================== */}
+                {showNewsletterColumn && (
+                  <div className="min-w-0 border-l border-white/[0.08] pl-8">
+                    {/* Newsletter header */}
+                    <div className="mb-5 flex items-start gap-3">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#3154C4]/30 bg-[#00AEEF]/[0.08] text-[#00AEEF] shadow-[0_0_20px_rgba(0,174,239,0.06)]">
+                        <Mail
+                          size={19}
+                          strokeWidth={1.8}
+                        />
+                      </span>
+
+                      <div className="min-w-0">
+                        <p className="font-['Inter'] text-[14px] font-bold uppercase tracking-[0.08em] text-white/90">
+                          Stay Updated
+                        </p>
+
+                        <div className="mt-1.5 h-px w-10 bg-[#20C997]" />
+
+                        <p className="mt-2 max-w-[320px] font-['Inter'] text-[12px] leading-relaxed text-white/45">
+                          Subscribe to our newsletter for the
+                          latest updates and insights.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Newsletter form */}
+                    <form
+                      onSubmit={handleNewsletterSubmit}
+                      className="mb-7 flex h-[58px] w-full items-center gap-2 rounded-2xl border border-white/[0.14] bg-white/[0.025] p-1.5 pl-5 transition-all duration-300 focus-within:border-[#00AEEF]/50 focus-within:bg-white/[0.04]"
+                    >
+                      <input
+                        type="email"
+                        required
+                        value={newsletterEmail}
+                        onChange={(event) =>
+                          setNewsletterEmail(
+                            event.target.value,
+                          )
+                        }
+                        placeholder="Your email address"
+                        aria-label="Email address"
+                        className="min-w-0 flex-1 bg-transparent font-['Inter'] text-[12px] text-white outline-none placeholder:text-white/35"
+                      />
+
+                      <button
+                        type="submit"
+                        aria-label="Subscribe"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#3154C4] text-white transition-all duration-200 hover:scale-105 hover:bg-[#3B5FD0] hover:shadow-[0_6px_18px_rgba(49,84,196,0.3)] active:scale-95"
+                      >
+                        <Send
+                          size={15}
+                          strokeWidth={2}
+                        />
+                      </button>
+                    </form>
+
+                    {/* Follow Us */}
+                    <div>
+                      <p className="mb-3 font-['Inter'] text-[11px] font-bold uppercase tracking-[0.14em] text-white/55">
+                        Follow Us
+                      </p>
+
+                      <div className="flex items-center gap-3">
+                        {SOCIAL_LINKS.map(
+                          ({
+                            icon: Icon,
+                            href,
+                            label,
+                          }) => (
+                            <a
+                              key={label}
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={label}
+                              className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.09] bg-white/[0.025] text-white/65 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#00AEEF]/40 hover:bg-[#00AEEF]/10 hover:text-[#00AEEF]"
+                            >
+                              <Icon
+                                size={17}
+                                strokeWidth={1.8}
+                              />
+                            </a>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
+
+              {/* Bottom subtle border */}
+              <div className="mx-7 h-px bg-white/[0.05] xl:mx-9" />
+
+              <div className="h-2" />
             </div>
           </motion.div>
         )}

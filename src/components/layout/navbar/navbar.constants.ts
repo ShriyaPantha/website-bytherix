@@ -52,6 +52,8 @@ export type DropdownSection = {
   items: {
     label: string;
     icon: LucideIcon;
+    // Optional one-line description shown under the label in the mega menu.
+    sub?: string;
   }[];
 };
 
@@ -61,18 +63,43 @@ export const DROPDOWN_CONTENT: Record<string, DropdownSection[]> = {
       heading: "Company",
       sectionIcon: Building2,
       items: [
-        { label: "About Us", icon: Building2 },
-        { label: "Our Team", icon: Users },
-        { label: "FAQs", icon: CircleHelp },
+        {
+          label: "About Company",
+          icon: Building2,
+          sub: "Learn about Bytherix and our mission",
+        },
+        {
+          label: "Our Team",
+          icon: Users,
+          sub: "Meet the people behind Bytherix",
+        },
+        {
+          label: "FAQs",
+          icon: CircleHelp,
+          sub: "Answers to common questions",
+        },
       ],
     },
+
     {
       heading: "Explore",
       sectionIcon: Sparkles,
       items: [
-        { label: "Blogs & Articles", icon: Newspaper },
-        { label: "Testimonials", icon: MessageSquareQuote },
-        { label: "Contact Us", icon: Mail },
+        {
+          label: "Blogs & Articles",
+          icon: Newspaper,
+          sub: "Insights, updates and news",
+        },
+        {
+          label: "Testimonials",
+          icon: MessageSquareQuote,
+          sub: "Hear from our happy clients",
+        },
+        {
+          label: "Contact Us",
+          icon: Mail,
+          sub: "Get in touch with us",
+        },
       ],
     },
   ],
