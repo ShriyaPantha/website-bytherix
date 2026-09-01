@@ -1,10 +1,18 @@
 import {
   lazy,
   Suspense,
-  useCallback,
   useEffect,
   useState,
 } from "react";
+
+import {
+  Routes,
+  Route,
+  Navigate,
+  useParams,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 import Navbar from "./components/layout/navbar/Navbar";
 import { INTRO_TOTAL_MS } from "./components/layout/navbar/navbar.constants";
@@ -46,22 +54,65 @@ const Blogs = lazy(
   () => import("./components/pages/blogs/BlogsPage")
 );
 
+const BlogArticle = lazy(
+  () => import("./components/pages/blogs/BlogArticle")
+);
+
+const DemonHunterPage = lazy(
+  () => import("./pages/DemonHunterPage")
+);
+
+const LoginPage = lazy(
+  () => import("./pages/auth/LoginPage")
+);
+
+const RegisterPage = lazy(
+  () => import("./pages/auth/RegisterPage")
+);
+
+const AboutCompany = lazy(
+  () => import("./components/pages/aboutcompany/AboutCompanyPage")
+);
+
+function TeamProfileRoute() {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+
+  return (
+    <TeamProfile
+      slug={slug ?? ""}
+      onBack={() => navigate("/our-team")}
+    />
+  );
+}
+
+/**
+ * Scrolls to the top whenever the route changes.
+ * React Router controls navigation, so no manual popstate
+ * handling is required.
+ */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   const [docked, setDocked] = useState(false);
 
-  const [pathname, setPathname] = useState(
-    () => window.location.pathname
-  );
-
   /**
-   * Navbar intro is controlled only from the initial application mount.
+   * Navbar intro animation is controlled only on the
+   * initial application mount.
    *
-   * The Navbar itself remains mounted while pathname changes,
-   * so changing:
-   *
-   * / -> /our-team -> /team/anish-parajuli
-   *
-   * will NOT recreate the Navbar component.
+   * Navbar remains mounted across route changes, so
+   * the intro animation does not restart when navigating.
    */
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -73,132 +124,121 @@ function App() {
     };
   }, []);
 
-  /**
-   * Keep the application pathname in sync with browser navigation.
-   */
-  useEffect(() => {
-    const handlePopState = () => {
-      setPathname(window.location.pathname);
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    };
-
-    window.addEventListener("popstate", handlePopState);
-
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, []);
-
-  /**
-   * Central SPA navigation helper.
-   *
-   * This keeps navigation inside the SPA instead of opening
-   * another browser tab or doing a full page reload.
-   */
-  const navigateTo = useCallback((path: string) => {
-    if (window.location.pathname === path) {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-
-      return;
-    }
-
-    window.history.pushState({}, "", path);
-
-    setPathname(path);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, []);
-
-  /**
-   * Team profile route:
-   *
-   * /team/anish-parajuli
-   * /team/nikesh-munikar
-   * etc.
-   */
-  const teamProfileMatch = pathname.match(
-    /^\/team\/([^/]+)\/?$/
-  );
-
-  /**
-   * Determine which page should be rendered.
-   *
-   * Navbar remains outside this conditional so it stays mounted
-   * while navigating between pages.
-   */
-  const renderPage = () => {
-    if (teamProfileMatch) {
-      return (
-        <TeamProfile
-          slug={teamProfileMatch[1]}
-          onBack={() => navigateTo("/our-team")}
-        />
-      );
-    }
-
-    switch (pathname) {
-      case "/":
-        return <Home docked={docked} />;
-
-      case "/our-team":
-        return <OurTeam />;
-
-      case "/shop":
-        return <Shop />;
-
-      case "/products":
-        return <OurProducts />;
-
-        case "/products/our-founder":
-    return <OurFounder />;
-
-  case "/products/one-for-all":
-    return <OneForAll />;
-
-      case "/portfolios":
-        return <OurPortfolios />;
-
-      case "/faqs":
-        return <FAQs />;
-
-      case "/blogs":
-        return <Blogs />;
-
-      default:
-        return <Home docked={docked} />;
-    }
-  };
-
   return (
     <ThemeProvider>
       <main className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <div className="relative">
           <ThemeToggle />
 
-          {/**
-           * IMPORTANT:
-           *
-           * Navbar stays mounted while Home, Team, Shop,
-           * Products, Portfolios, FAQs, Blogs and TeamProfile
-           * change.
-           *
-           * Therefore its intro animation does not restart
-           * on navigation.
-           */}
+          <ScrollToTop />
+
+          {/*
+            Navbar stays mounted while pages change,
+            so its intro animation does not restart
+            during navigation.
+          */}
           <Navbar docked={docked} />
 
           <Suspense fallback={<PageLoader />}>
-            {renderPage()}
+            <Routes>
+              {/* Home */}
+              <Route
+                path="/"
+                element={<Home docked={docked} />}
+              />
+
+              
+              {/* About Company */}
+              <Route
+                path="/about-company"
+                element={<AboutCompany />}
+              />
+
+              {/* Team */}
+              <Route
+                path="/our-team"
+                element={<OurTeam />}
+              />
+
+              <Route
+                path="/team/:slug"
+                element={<TeamProfileRoute />}
+              />
+
+              {/* Shop */}
+              <Route
+                path="/shop"
+                element={<Shop />}
+              />
+
+              {/* Products */}
+              <Route
+                path="/products"
+                element={<OurProducts />}
+              />
+
+              <Route
+                path="/products/our-founder"
+                element={<OurFounder />}
+              />
+
+              <Route
+                path="/products/one-for-all"
+                element={<OneForAll />}
+              />
+
+              {/* Portfolios */}
+              <Route
+                path="/portfolios"
+                element={<OurPortfolios />}
+              />
+
+              {/* FAQs */}
+              <Route
+                path="/faqs"
+                element={<FAQs />}
+              />
+
+              {/* Blog listing page */}
+              <Route
+                path="/blogs"
+                element={<Blogs />}
+              />
+
+              {/* Individual blog article page */}
+              <Route
+                path="/blogs/:slug"
+                element={<BlogArticle />}
+              />
+
+              {/* Demon Hunter */}
+              <Route
+                path="/demon-hunter"
+                element={<DemonHunterPage />}
+              />
+
+              {/* Authentication */}
+              <Route
+                path="/login"
+                element={<LoginPage />}
+              />
+
+              <Route
+                path="/register"
+                element={<RegisterPage />}
+              />
+
+              {/* Fallback */}
+              <Route
+                path="*"
+                element={
+                  <Navigate
+                    to="/"
+                    replace
+                  />
+                }
+              />
+            </Routes>
           </Suspense>
         </div>
       </main>

@@ -1,9 +1,7 @@
 import { useRef, useState } from "react";
 
 import NavbarBrand from "./NavbarBrand";
-
 import DesktopNavigation from "./DesktopNavigation";
-
 import MobileNavigation from "./MobileNavigation";
 
 export interface NavbarProps {
@@ -14,13 +12,13 @@ const Navbar = ({ docked }: NavbarProps) => {
   const introPlayedRef = useRef(false);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-
   const [hoveredNavItem, setHoveredNavItem] = useState<string | null>(null);
-
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
+  /* =========================
+     CLOSE ALL NAVIGATION STATES
+  ========================== */
   const closeMenu = () => {
     setMobileMenuOpen(false);
     setActiveDropdown(null);
@@ -28,9 +26,11 @@ const Navbar = ({ docked }: NavbarProps) => {
     setMobileSearchOpen(false);
   };
 
+  /* =========================
+     NAVIGATION
+  ========================== */
   const navigateTo = (path: string) => {
-    const currentPath =
-      window.location.pathname + window.location.hash;
+    const currentPath = window.location.pathname + window.location.hash;
 
     if (currentPath === path) {
       closeMenu();
@@ -57,6 +57,9 @@ const Navbar = ({ docked }: NavbarProps) => {
     }, 0);
   };
 
+  /* =========================
+     SCROLL TO SECTION
+  ========================== */
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
 
@@ -68,8 +71,12 @@ const Navbar = ({ docked }: NavbarProps) => {
     }
   };
 
+  /* =========================
+     DROPDOWN ITEM CLICK
+  ========================== */
   const handleDropdownItemClick = (item: string) => {
     const pageMap: Record<string, string> = {
+      "About Company": "/about-company",
       "Our Team": "/our-team",
       FAQs: "/faqs",
       "Blogs & Articles": "/blogs",
@@ -104,13 +111,10 @@ const Navbar = ({ docked }: NavbarProps) => {
     }
 
     const sectionMap: Record<string, string> = {
-      "About Us": "about",
       "Our Story": "story",
       Testimonials: "testimonials",
       "Contact Us": "contact",
-
       "Our Services": "services",
-
       Courses: "courses",
       "Featured Courses": "courses",
       Certifications: "courses",
@@ -125,15 +129,9 @@ const Navbar = ({ docked }: NavbarProps) => {
     }
 
     if (window.location.pathname !== "/") {
-      window.history.pushState(
-        {},
-        "",
-        `/#${sectionId}`,
-      );
+      window.history.pushState({}, "", `/#${sectionId}`);
 
-      window.dispatchEvent(
-        new PopStateEvent("popstate"),
-      );
+      window.dispatchEvent(new PopStateEvent("popstate"));
 
       window.setTimeout(() => {
         scrollToSection(sectionId);
@@ -144,11 +142,7 @@ const Navbar = ({ docked }: NavbarProps) => {
       return;
     }
 
-    window.history.replaceState(
-      {},
-      "",
-      `/#${sectionId}`,
-    );
+    window.history.replaceState({}, "", `/#${sectionId}`);
 
     window.setTimeout(() => {
       scrollToSection(sectionId);
@@ -157,6 +151,9 @@ const Navbar = ({ docked }: NavbarProps) => {
     closeMenu();
   };
 
+  /* =========================
+     MAIN NAV ITEM CLICK
+  ========================== */
   const handleNavItemClick = (item: string) => {
     const pageMap: Record<string, string> = {
       Portfolios: "/portfolios",
@@ -184,15 +181,9 @@ const Navbar = ({ docked }: NavbarProps) => {
     }
 
     if (window.location.pathname !== "/") {
-      window.history.pushState(
-        {},
-        "",
-        `/#${sectionId}`,
-      );
+      window.history.pushState({}, "", `/#${sectionId}`);
 
-      window.dispatchEvent(
-        new PopStateEvent("popstate"),
-      );
+      window.dispatchEvent(new PopStateEvent("popstate"));
 
       window.setTimeout(() => {
         scrollToSection(sectionId);
@@ -203,11 +194,7 @@ const Navbar = ({ docked }: NavbarProps) => {
       return;
     }
 
-    window.history.replaceState(
-      {},
-      "",
-      `/#${sectionId}`,
-    );
+    window.history.replaceState({}, "", `/#${sectionId}`);
 
     window.setTimeout(() => {
       scrollToSection(sectionId);
@@ -216,9 +203,10 @@ const Navbar = ({ docked }: NavbarProps) => {
     closeMenu();
   };
 
-  const handleLogoClick = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-  ) => {
+  /* =========================
+     LOGO CLICK
+  ========================== */
+  const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
 
     navigateTo("/");
@@ -234,21 +222,74 @@ const Navbar = ({ docked }: NavbarProps) => {
   return (
     <>
       <header
-        className="relative z-[100] w-full bg-[#050814] px-3 py-3 sm:px-4 sm:py-3 lg:px-5 lg:py-4 xl:px-6"
+        className="
+          relative
+          z-[100]
+          w-full
+          bg-[#050814]
+          px-3
+          py-3
+          sm:px-4
+          sm:py-3
+          lg:px-5
+          lg:py-4
+          xl:px-6
+        "
         onMouseLeave={() => {
           setActiveDropdown(null);
           setHoveredNavItem(null);
         }}
       >
-        <div className="relative mx-auto flex min-h-[62px] w-full max-w-[1600px] items-center rounded-[20px] border border-white/[0.16] bg-[#080F29] px-4 shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_25px_rgba(0,0,0,0.35)] sm:min-h-[66px] sm:px-5 lg:min-h-[68px] lg:rounded-[22px] lg:px-6 xl:min-h-[70px] xl:px-7">
-          <div className="pointer-events-none absolute inset-[1px] rounded-[19px] border border-white/[0.035] sm:rounded-[21px] lg:rounded-[21px]" />
+        <div
+          className="
+            relative
+            mx-auto
+            flex
+            min-h-[62px]
+            w-full
+            max-w-[1600px]
+            items-center
+            rounded-[20px]
+            border
+            border-white/[0.16]
+            bg-[#080F29]
+            px-4
+            shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_25px_rgba(0,0,0,0.35)]
+            sm:min-h-[66px]
+            sm:px-5
+            lg:min-h-[68px]
+            lg:rounded-[22px]
+            lg:px-6
+            xl:min-h-[70px]
+            xl:px-7
+          "
+        >
+          {/* Inner border */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-[1px]
+              rounded-[19px]
+              border
+              border-white/[0.035]
+              sm:rounded-[21px]
+              lg:rounded-[21px]
+            "
+          />
 
+          {/* =========================
+              LOGO
+          ========================== */}
           <NavbarBrand
             docked={docked}
             introPlayedRef={introPlayedRef}
             onLogoClick={handleLogoClick}
           />
 
+          {/* =========================
+              DESKTOP NAVIGATION
+          ========================== */}
           <DesktopNavigation
             docked={docked}
             activeDropdown={activeDropdown}
@@ -260,16 +301,31 @@ const Navbar = ({ docked }: NavbarProps) => {
             handleNavItemClick={handleNavItemClick}
           />
 
-          <MobileNavigation
-            docked={docked}
-            mobileMenuOpen={mobileMenuOpen}
-            mobileSearchOpen={mobileSearchOpen}
-            setMobileMenuOpen={setMobileMenuOpen}
-            setMobileSearchOpen={setMobileSearchOpen}
-            closeMenu={closeMenu}
-            handleDropdownItemClick={handleDropdownItemClick}
-            handleNavItemClick={handleNavItemClick}
-          />
+          {/* =========================
+              MOBILE NAVIGATION
+          ========================== */}
+          <div
+            className="
+              relative
+              z-[150]
+              ml-auto
+              flex
+              shrink-0
+              items-center
+              lg:hidden
+            "
+          >
+            <MobileNavigation
+              docked={true}
+              mobileMenuOpen={mobileMenuOpen}
+              mobileSearchOpen={mobileSearchOpen}
+              setMobileMenuOpen={setMobileMenuOpen}
+              setMobileSearchOpen={setMobileSearchOpen}
+              closeMenu={closeMenu}
+              handleDropdownItemClick={handleDropdownItemClick}
+              handleNavItemClick={handleNavItemClick}
+            />
+          </div>
         </div>
       </header>
     </>
