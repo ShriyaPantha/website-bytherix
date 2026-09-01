@@ -30,8 +30,7 @@ const Navbar = ({ docked }: NavbarProps) => {
      NAVIGATION
   ========================== */
   const navigateTo = (path: string) => {
-    const currentPath =
-      window.location.pathname + window.location.hash;
+    const currentPath = window.location.pathname + window.location.hash;
 
     if (currentPath === path) {
       closeMenu();
@@ -77,6 +76,7 @@ const Navbar = ({ docked }: NavbarProps) => {
   ========================== */
   const handleDropdownItemClick = (item: string) => {
     const pageMap: Record<string, string> = {
+      "About Company": "/about-company",
       "Our Team": "/our-team",
       FAQs: "/faqs",
       "Blogs & Articles": "/blogs",
@@ -111,7 +111,6 @@ const Navbar = ({ docked }: NavbarProps) => {
     }
 
     const sectionMap: Record<string, string> = {
-      "About Us": "about",
       "Our Story": "story",
       Testimonials: "testimonials",
       "Contact Us": "contact",
@@ -130,15 +129,9 @@ const Navbar = ({ docked }: NavbarProps) => {
     }
 
     if (window.location.pathname !== "/") {
-      window.history.pushState(
-        {},
-        "",
-        `/#${sectionId}`,
-      );
+      window.history.pushState({}, "", `/#${sectionId}`);
 
-      window.dispatchEvent(
-        new PopStateEvent("popstate"),
-      );
+      window.dispatchEvent(new PopStateEvent("popstate"));
 
       window.setTimeout(() => {
         scrollToSection(sectionId);
@@ -149,11 +142,7 @@ const Navbar = ({ docked }: NavbarProps) => {
       return;
     }
 
-    window.history.replaceState(
-      {},
-      "",
-      `/#${sectionId}`,
-    );
+    window.history.replaceState({}, "", `/#${sectionId}`);
 
     window.setTimeout(() => {
       scrollToSection(sectionId);
@@ -192,15 +181,9 @@ const Navbar = ({ docked }: NavbarProps) => {
     }
 
     if (window.location.pathname !== "/") {
-      window.history.pushState(
-        {},
-        "",
-        `/#${sectionId}`,
-      );
+      window.history.pushState({}, "", `/#${sectionId}`);
 
-      window.dispatchEvent(
-        new PopStateEvent("popstate"),
-      );
+      window.dispatchEvent(new PopStateEvent("popstate"));
 
       window.setTimeout(() => {
         scrollToSection(sectionId);
@@ -211,11 +194,7 @@ const Navbar = ({ docked }: NavbarProps) => {
       return;
     }
 
-    window.history.replaceState(
-      {},
-      "",
-      `/#${sectionId}`,
-    );
+    window.history.replaceState({}, "", `/#${sectionId}`);
 
     window.setTimeout(() => {
       scrollToSection(sectionId);
@@ -227,9 +206,7 @@ const Navbar = ({ docked }: NavbarProps) => {
   /* =========================
      LOGO CLICK
   ========================== */
-  const handleLogoClick = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-  ) => {
+  const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
 
     navigateTo("/");
@@ -345,9 +322,7 @@ const Navbar = ({ docked }: NavbarProps) => {
               setMobileMenuOpen={setMobileMenuOpen}
               setMobileSearchOpen={setMobileSearchOpen}
               closeMenu={closeMenu}
-              handleDropdownItemClick={
-                handleDropdownItemClick
-              }
+              handleDropdownItemClick={handleDropdownItemClick}
               handleNavItemClick={handleNavItemClick}
             />
           </div>

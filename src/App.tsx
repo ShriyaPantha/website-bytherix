@@ -70,6 +70,10 @@ const RegisterPage = lazy(
   () => import("./pages/auth/RegisterPage")
 );
 
+const AboutCompany = lazy(
+  () => import("./components/pages/aboutcompany/AboutCompanyPage")
+);
+
 function TeamProfileRoute() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -141,6 +145,13 @@ function App() {
               <Route
                 path="/"
                 element={<Home docked={docked} />}
+              />
+
+              
+              {/* About Company */}
+              <Route
+                path="/about-company"
+                element={<AboutCompany />}
               />
 
               {/* Team */}

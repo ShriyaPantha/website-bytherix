@@ -1,5 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import BlogBackground from "../blogs/BlogBackground";
 import { BLOG_POSTS } from "../../../data/blog.constants";
 
@@ -35,6 +36,7 @@ export default function BlogArticle() {
 
       <section className="relative z-10 px-5 pb-20 pt-24 sm:px-8 lg:px-16 lg:pt-32">
         <div className="mx-auto max-w-5xl">
+          {/* Back Button */}
           <button
             type="button"
             onClick={() => navigate("/blogs")}
@@ -44,7 +46,9 @@ export default function BlogArticle() {
             Back to Blogs
           </button>
 
+          {/* Article Card */}
           <div className="overflow-hidden rounded-[30px] bg-white shadow-[0_20px_80px_rgba(0,0,0,0.08)]">
+            {/* Featured Image */}
             <div className="aspect-[16/8] w-full overflow-hidden">
               <img
                 src={post.image}
@@ -53,35 +57,80 @@ export default function BlogArticle() {
               />
             </div>
 
+            {/* Article Content */}
             <article className="px-6 py-8 sm:px-10 sm:py-12 lg:px-16 lg:py-16">
+              {/* Title */}
               <h1 className="max-w-4xl text-3xl font-bold leading-tight text-[#0E1F5A] sm:text-4xl lg:text-5xl">
                 {post.title}
               </h1>
 
+              {/* Description / Intro */}
               <p className="mt-8 text-lg leading-8 text-black/80">
                 {post.description}
               </p>
 
-              <div className="mt-8 space-y-5 text-base leading-8 text-black/75">
-                <p>
-                  Technology continues to change the way businesses,
-                  communities, and individuals interact with the digital
-                  world. Nepal is also moving toward a more technology-driven
-                  future where innovative solutions can create new
-                  opportunities.
-                </p>
+              {/* Full Article */}
+              <div className="mt-10 space-y-7">
+                {post.content.map((block, index) => {
+                  /* Heading */
+                  if (block.type === "heading") {
+                    return (
+                      <h2
+                        key={index}
+                        className="pt-6 text-2xl font-bold leading-tight text-[#0E1F5A] sm:text-3xl"
+                      >
+                        {block.content as string}
+                      </h2>
+                    );
+                  }
 
-                <p>
-                  From artificial intelligence and cybersecurity to robotics
-                  and automation, these technologies can help solve practical
-                  problems and create sustainable digital ecosystems.
-                </p>
+                  /* Paragraph */
+                  if (block.type === "paragraph") {
+                    return (
+                      <p
+                        key={index}
+                        className="text-base leading-8 text-black/75 sm:text-[17px]"
+                      >
+                        {block.content as string}
+                      </p>
+                    );
+                  }
 
-                <p>
-                  Building the right infrastructure, developing skilled
-                  talent, and encouraging innovation will be important steps
-                  toward creating a stronger technology ecosystem in Nepal.
-                </p>
+                  /* List */
+                  if (block.type === "list") {
+                    return (
+                      <ul
+                        key={index}
+                        className="space-y-3 pl-6 text-base leading-8 text-black/75 sm:text-[17px]"
+                      >
+                        {(block.content as string[]).map(
+                          (item, itemIndex) => (
+                            <li
+                              key={itemIndex}
+                              className="list-disc pl-2"
+                            >
+                              {item}
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    );
+                  }
+
+                  /* Quote */
+                  if (block.type === "quote") {
+                    return (
+                      <blockquote
+                        key={index}
+                        className="my-8 rounded-r-2xl border-l-4 border-[#3157D5] bg-[#F4F7FF] px-6 py-5 text-base font-semibold leading-8 text-[#0E1F5A] sm:text-lg"
+                      >
+                        {block.content as string}
+                      </blockquote>
+                    );
+                  }
+
+                  return null;
+                })}
               </div>
             </article>
           </div>
