@@ -74,9 +74,9 @@ export const DROPDOWN_CONTENT: Record<string, DropdownSection[]> = {
           sub: "Meet the people behind Bytherix",
         },
         {
-          label: "FAQs",
+          label: "Our Story",
           icon: CircleHelp,
-          sub: "Answers to common questions",
+          sub: "Learn about our journey and mission",
         },
       ],
     },

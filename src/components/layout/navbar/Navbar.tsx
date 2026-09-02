@@ -78,7 +78,7 @@ const Navbar = ({ docked }: NavbarProps) => {
     const pageMap: Record<string, string> = {
       "About Company": "/about-company",
       "Our Team": "/our-team",
-      FAQs: "/faqs",
+      "Our Story": "/our-story",
       "Blogs & Articles": "/blogs",
       "Our Founder": "/products/our-founder",
       "One For All Management System": "/products/one-for-all",
@@ -159,7 +159,7 @@ const Navbar = ({ docked }: NavbarProps) => {
       Portfolios: "/portfolios",
       Shop: "/shop",
       Products: "/products",
-      FAQs: "/faqs",
+      "Our Story": "/our-story",
       Blogs: "/blogs",
     };
 

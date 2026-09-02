@@ -46,11 +46,11 @@ const OurPortfolios = lazy(
   () => import("./components/pages/portfolios/PortfoliosPage")
 );
 
-const FAQs = lazy(
-  () => import("./components/pages/faqs/FAQsPage")
+const OurStoryPage = lazy(
+  () => import("./components/pages/ourstory/OurStoryPage")
 );
 
-const Blogs = lazy(
+const BlogsPage = lazy(
   () => import("./components/pages/blogs/BlogsPage")
 );
 
@@ -73,6 +73,14 @@ const RegisterPage = lazy(
 const AboutCompany = lazy(
   () => import("./components/pages/aboutcompany/AboutCompanyPage")
 );
+
+/**
+ * Routes that render as dedicated, full-viewport
+ * experiences with no site chrome (navbar / theme
+ * toggle). Authentication pages own their entire
+ * screen per the Bytherix auth redesign.
+ */
+const CHROMELESS_ROUTES = ["/login", "/register"];
 
 function TeamProfileRoute() {
   const { slug } = useParams<{ slug: string }>();
@@ -104,6 +112,34 @@ function ScrollToTop() {
   return null;
 }
 
+/**
+ * Renders the persistent site chrome (navbar + theme
+ * toggle) on every route except the chromeless auth
+ * routes, where the page owns the full viewport.
+ */
+function SiteChrome({ docked }: { docked: boolean }) {
+  const { pathname } = useLocation();
+
+  const isChromeless = CHROMELESS_ROUTES.includes(pathname);
+
+  if (isChromeless) {
+    return null;
+  }
+
+  return (
+    <>
+      <ThemeToggle />
+
+      {/*
+        Navbar stays mounted while pages change,
+        so its intro animation does not restart
+        during navigation.
+      */}
+      <Navbar docked={docked} />
+    </>
+  );
+}
+
 function App() {
   const [docked, setDocked] = useState(false);
 
@@ -128,16 +164,9 @@ function App() {
     <ThemeProvider>
       <main className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <div className="relative">
-          <ThemeToggle />
-
           <ScrollToTop />
 
-          {/*
-            Navbar stays mounted while pages change,
-            so its intro animation does not restart
-            during navigation.
-          */}
-          <Navbar docked={docked} />
+          <SiteChrome docked={docked} />
 
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -193,16 +222,16 @@ function App() {
                 element={<OurPortfolios />}
               />
 
-              {/* FAQs */}
+              {/* Our Story */}
               <Route
-                path="/faqs"
-                element={<FAQs />}
+                path="/our-story"
+                element={<OurStoryPage />}
               />
 
               {/* Blog listing page */}
               <Route
                 path="/blogs"
-                element={<Blogs />}
+                element={<BlogsPage />}
               />
 
               {/* Individual blog article page */}
