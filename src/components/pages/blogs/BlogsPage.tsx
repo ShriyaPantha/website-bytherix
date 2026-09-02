@@ -5,9 +5,9 @@ import BlogGrid from "../../ui/BlogGrid";
 export default function Blog() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-white">
-      <BlogBackground />
-
+       <BlogBackground />
       <section className="relative z-10 px-5 pb-20 pt-24 sm:px-8 sm:pt-28 lg:px-12 lg:pb-28 lg:pt-32 xl:px-16">
+        <BlogBackground />
         <div className="mx-auto max-w-[1600px]">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
