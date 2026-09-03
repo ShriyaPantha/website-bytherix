@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:5000/api/v1";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -22,13 +23,15 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export interface AuthResponse {
   token: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
+  user: AuthUser;
 }
 
 export const registerUser = async (
