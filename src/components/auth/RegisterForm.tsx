@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -7,6 +7,7 @@ import {
   LockKeyhole,
   Mail,
   User,
+  Phone,
   Loader2,
   ArrowRight,
   Check,
@@ -14,17 +15,27 @@ import {
 } from "lucide-react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 
-import { registerUser } from "../../services/authService";
-import { useAuth } from "../../context/AuthContext";
+import { useAuthStore } from "../../services/authService";
+import GoogleLogin from "./GoogleLogin";
+
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const {
+    register,
+    isLoading,
+    error: authError,
+    clearError,
+  } = useAuthStore();
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -32,19 +43,10 @@ const RegisterForm = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState("");
 
-  /*
-   * Password strength
-   *
-   * 0 = empty
-   * 1 = weak
-   * 2 = fair
-   * 3 = good
-   * 4 = strong
-   */
   const passwordStrength = useMemo(() => {
-    if (!password) {
+    if (!formData.password) {
       return {
         score: 0,
         label: "",
@@ -55,10 +57,18 @@ const RegisterForm = () => {
 
     let score = 0;
 
-    if (password.length >= 8) score += 1;
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
-    if (/\d/.test(password)) score += 1;
-    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+    if (formData.password.length >= 8) score += 1;
+
+    if (
+      /[a-z]/.test(formData.password) &&
+      /[A-Z]/.test(formData.password)
+    ) {
+      score += 1;
+    }
+
+    if (/\d/.test(formData.password)) score += 1;
+
+    if (/[^A-Za-z0-9]/.test(formData.password)) score += 1;
 
     if (score <= 1) {
       return {
@@ -93,82 +103,105 @@ const RegisterForm = () => {
       color: "bg-emerald-500",
       width: "100%",
     };
-  }, [password]);
+  }, [formData.password]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
     setError("");
+    setSuccess("");
+    clearError();
+  };
 
-    if (!fullName.trim()) {
+
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    setError("");
+    setSuccess("");
+    clearError();
+
+    if (!formData.fullName.trim()) {
       setError("Please enter your full name.");
       return;
     }
 
-    if (!email.trim()) {
+    if (!formData.email.trim()) {
       setError("Please enter your email address.");
       return;
     }
 
-    if (!password) {
+    if (!formData.phone.trim()) {
+      setError("Please enter your phone number.");
+      return;
+    }
+
+    if (!formData.password) {
       setError("Please create a password.");
       return;
     }
 
-    if (password.length < 8) {
+    if (formData.password.length < 8) {
       setError("Password must be at least 8 characters long.");
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
     if (!agreeToTerms) {
-      setError("Please agree to the Terms of Service and Privacy Policy.");
+      setError(
+        "Please agree to the Terms of Service and Privacy Policy."
+      );
       return;
     }
 
-    try {
-      setIsLoading(true);
 
-      const response = await registerUser({
-        fullName: fullName.trim(),
-        email: email.trim(),
-        password,
+    const success = await register({
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      password: formData.password,
+    });
 
-        /*
-         * Your current RegisterPayload expects phone.
-         * Since the reference UI does not contain a phone field,
-         * an empty value is sent here.
-         *
-         * If your backend requires phone, add a phone field
-         * to this form and pass its value here.
-         */
-        phone: "",
-      });
 
-      login(response.token, response.user);
-
-      navigate("/", {
-        replace: true,
-      });
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.message ||
-        err?.response?.data?.error ||
-        "Unable to create your account. Please try again.";
-
-      setError(
-        Array.isArray(message) ? message.join(", ") : message
+    if (success) {
+      setSuccess(
+        "Registration successful. Please verify your email."
       );
-    } finally {
-      setIsLoading(false);
+
+      setTimeout(() => {
+        navigate("/login", {
+          replace: true,
+        });
+      }, 1500);
+
+      return;
+    }
+
+    if (authError) {
+      setError(authError);
     }
   };
 
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4"
+    >
       {/* =========================
           FULL NAME
       ========================== */}
@@ -185,9 +218,10 @@ const RegisterForm = () => {
 
           <input
             id="register-full-name"
+            name="fullName"
             type="text"
-            value={fullName}
-            onChange={(event) => setFullName(event.target.value)}
+            value={formData.fullName}
+            onChange={handleChange}
             placeholder="Enter your full name"
             autoComplete="name"
             disabled={isLoading}
@@ -212,11 +246,40 @@ const RegisterForm = () => {
 
           <input
             id="register-email"
+            name="email"
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            value={formData.email}
+            onChange={handleChange}
             placeholder="you@example.com"
             autoComplete="email"
+            disabled={isLoading}
+            className="h-11 w-full rounded-xl border border-white/[0.10] bg-white/[0.025] pl-11 pr-4 text-[12px] text-white outline-none transition-all placeholder:text-white/30 focus:border-logo-blue/60 focus:bg-logo-blue/[0.035] focus:ring-4 focus:ring-logo-blue/[0.08] disabled:cursor-not-allowed disabled:opacity-60"
+          />
+        </div>
+      </div>
+
+      {/* =========================
+          PHONE
+      ========================== */}
+      <div>
+        <label
+          htmlFor="register-phone"
+          className="mb-1.5 block text-[10px] font-medium text-white/75"
+        >
+          Phone Number
+        </label>
+
+        <div className="group relative">
+          <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35 transition-colors group-focus-within:text-logo-cyan" />
+
+          <input
+            id="register-phone"
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="Enter your phone number"
+            autoComplete="tel"
             disabled={isLoading}
             className="h-11 w-full rounded-xl border border-white/[0.10] bg-white/[0.025] pl-11 pr-4 text-[12px] text-white outline-none transition-all placeholder:text-white/30 focus:border-logo-blue/60 focus:bg-logo-blue/[0.035] focus:ring-4 focus:ring-logo-blue/[0.08] disabled:cursor-not-allowed disabled:opacity-60"
           />
@@ -239,9 +302,10 @@ const RegisterForm = () => {
 
           <input
             id="register-password"
+            name="password"
             type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            value={formData.password}
+            onChange={handleChange}
             placeholder="Create a strong password"
             autoComplete="new-password"
             disabled={isLoading}
@@ -250,10 +314,14 @@ const RegisterForm = () => {
 
           <button
             type="button"
-            onClick={() => setShowPassword((value) => !value)}
+            onClick={() =>
+              setShowPassword((value) => !value)
+            }
             disabled={isLoading}
             aria-label={
-              showPassword ? "Hide password" : "Show password"
+              showPassword
+                ? "Hide password"
+                : "Show password"
             }
             className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 transition-colors hover:text-white/70 disabled:pointer-events-none"
           >
@@ -269,11 +337,21 @@ const RegisterForm = () => {
             PASSWORD STRENGTH
             Only visible after typing
         ========================== */}
-        {password && (
+        {formData.password && (
           <motion.div
-            initial={{ opacity: 0, height: 0, y: -4 }}
-            animate={{ opacity: 1, height: "auto", y: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{
+              opacity: 0,
+              height: 0,
+              y: -4,
+            }}
+            animate={{
+              opacity: 1,
+              height: "auto",
+              y: 0,
+            }}
+            transition={{
+              duration: 0.2,
+            }}
             className="mt-2"
           >
             <div className="mb-1.5 flex items-center justify-between">
@@ -285,15 +363,14 @@ const RegisterForm = () => {
                 key={passwordStrength.label}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className={`text-[9px] font-semibold ${
-                  passwordStrength.score === 1
+                className={`text-[9px] font-semibold ${passwordStrength.score === 1
                     ? "text-red-400"
                     : passwordStrength.score === 2
                       ? "text-orange-400"
                       : passwordStrength.score === 3
                         ? "text-yellow-300"
                         : "text-emerald-400"
-                }`}
+                  }`}
               >
                 {passwordStrength.label}
               </motion.span>
@@ -317,19 +394,18 @@ const RegisterForm = () => {
                       duration: 0.25,
                       ease: "easeOut",
                     }}
-                    className={`h-full rounded-full ${
-                      segment <= passwordStrength.score
+                    className={`h-full rounded-full ${segment <= passwordStrength.score
                         ? passwordStrength.color
                         : ""
-                    }`}
+                      }`}
                   />
                 </div>
               ))}
             </div>
 
             <p className="mt-1.5 text-[8px] text-white/25">
-              Use 8+ characters with uppercase, lowercase, number
-              and special character.
+              Use 8+ characters with uppercase, lowercase,
+              number and special character.
             </p>
           </motion.div>
         )}
@@ -351,27 +427,33 @@ const RegisterForm = () => {
 
           <input
             id="register-confirm-password"
-            type={showConfirmPassword ? "text" : "password"}
-            value={confirmPassword}
-            onChange={(event) =>
-              setConfirmPassword(event.target.value)
+            name="confirmPassword"
+            type={
+              showConfirmPassword
+                ? "text"
+                : "password"
             }
+            value={formData.confirmPassword}
+            onChange={handleChange}
             placeholder="Confirm your password"
             autoComplete="new-password"
             disabled={isLoading}
-            className={`h-11 w-full rounded-xl border bg-white/[0.025] pl-11 pr-12 text-[12px] text-white outline-none transition-all placeholder:text-white/30 focus:ring-4 disabled:cursor-not-allowed disabled:opacity-60 ${
-              confirmPassword && password !== confirmPassword
+            className={`h-11 w-full rounded-xl border bg-white/[0.025] pl-11 pr-12 text-[12px] text-white outline-none transition-all placeholder:text-white/30 focus:ring-4 disabled:cursor-not-allowed disabled:opacity-60 ${formData.confirmPassword &&
+                formData.password !== formData.confirmPassword
                 ? "border-red-400/40 focus:border-red-400/50 focus:ring-red-400/[0.08]"
-                : confirmPassword && password === confirmPassword
+                : formData.confirmPassword &&
+                  formData.password === formData.confirmPassword
                   ? "border-emerald-400/35 focus:border-emerald-400/50 focus:ring-emerald-400/[0.08]"
                   : "border-white/[0.10] focus:border-logo-blue/60 focus:bg-logo-blue/[0.035] focus:ring-logo-blue/[0.08]"
-            }`}
+              }`}
           />
 
           <button
             type="button"
             onClick={() =>
-              setShowConfirmPassword((value) => !value)
+              setShowConfirmPassword(
+                (value) => !value
+              )
             }
             disabled={isLoading}
             aria-label={
@@ -389,12 +471,13 @@ const RegisterForm = () => {
           </button>
         </div>
 
-        {confirmPassword && password === confirmPassword && (
-          <div className="mt-1.5 flex items-center gap-1 text-[8px] text-emerald-400">
-            <Check className="h-3 w-3" />
-            Passwords match
-          </div>
-        )}
+        {formData.confirmPassword &&
+          formData.password === formData.confirmPassword && (
+            <div className="mt-1.5 flex items-center gap-1 text-[8px] text-emerald-400">
+              <Check className="h-3 w-3" />
+              Passwords match
+            </div>
+          )}
       </div>
 
       {/* =========================
@@ -406,16 +489,22 @@ const RegisterForm = () => {
             type="button"
             role="checkbox"
             aria-checked={agreeToTerms}
-            onClick={() => setAgreeToTerms((value) => !value)}
+            onClick={() =>
+              setAgreeToTerms(
+                (value) => !value
+              )
+            }
             disabled={isLoading}
-            className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[4px] border transition-all ${
-              agreeToTerms
+            className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[4px] border transition-all ${agreeToTerms
                 ? "border-logo-blue bg-logo-blue shadow-[0_0_10px_rgba(37,99,235,0.35)]"
                 : "border-white/20 bg-white/[0.025] hover:border-logo-blue/50"
-            }`}
+              }`}
           >
             {agreeToTerms && (
-              <Check className="h-3 w-3 text-white" strokeWidth={3} />
+              <Check
+                className="h-3 w-3 text-white"
+                strokeWidth={3}
+              />
             )}
           </button>
 
@@ -423,7 +512,9 @@ const RegisterForm = () => {
             I agree to the{" "}
             <button
               type="button"
-              onClick={(event) => event.preventDefault()}
+              onClick={(event) =>
+                event.preventDefault()
+              }
               className="font-medium text-logo-cyan transition-colors hover:text-white"
             >
               Terms of Service
@@ -431,7 +522,9 @@ const RegisterForm = () => {
             and{" "}
             <button
               type="button"
-              onClick={(event) => event.preventDefault()}
+              onClick={(event) =>
+                event.preventDefault()
+              }
               className="font-medium text-logo-cyan transition-colors hover:text-white"
             >
               Privacy Policy
@@ -441,16 +534,48 @@ const RegisterForm = () => {
       </div>
 
       {/* =========================
+          SUCCESS
+      ========================== */}
+      {success && (
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: -5,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          className="flex items-start gap-2 rounded-xl border border-emerald-400/15 bg-emerald-500/[0.07] px-3 py-2.5 text-[9px] leading-4 text-emerald-300"
+        >
+          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+
+          <span>
+            {success}
+          </span>
+        </motion.div>
+      )}
+
+      {/* =========================
           ERROR
       ========================== */}
-      {error && (
+      {(error || authError) && (
         <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{
+            opacity: 0,
+            y: -5,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
           className="flex items-start gap-2 rounded-xl border border-red-400/15 bg-red-500/[0.07] px-3 py-2.5 text-[9px] leading-4 text-red-300"
         >
           <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-400" />
-          <span>{error}</span>
+
+          <span>
+            {error || authError}
+          </span>
         </motion.div>
       )}
 
@@ -464,16 +589,16 @@ const RegisterForm = () => {
           isLoading
             ? undefined
             : {
-                y: -2,
-                scale: 1.01,
-              }
+              y: -2,
+              scale: 1.01,
+            }
         }
         whileTap={
           isLoading
             ? undefined
             : {
-                scale: 0.98,
-              }
+              scale: 0.98,
+            }
         }
         transition={{
           duration: 0.18,
@@ -491,6 +616,7 @@ const RegisterForm = () => {
         ) : (
           <>
             Create Account
+
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </>
         )}
@@ -502,7 +628,9 @@ const RegisterForm = () => {
       <div className="flex items-center justify-center gap-2 py-1 text-[8px] uppercase tracking-[0.16em] text-white/25">
         <span className="h-px flex-1 bg-white/[0.07]" />
 
-        <span>Or sign up with</span>
+        <span>
+          Or sign up with
+        </span>
 
         <span className="h-px flex-1 bg-white/[0.07]" />
       </div>
@@ -527,8 +655,7 @@ const RegisterForm = () => {
           }}
           className="flex h-10 flex-1 items-center justify-center gap-2 rounded-xl border border-white/[0.10] bg-white/[0.025] text-[11px] font-medium text-white/70 transition-all hover:border-logo-cyan/30 hover:bg-logo-cyan/[0.035] hover:text-white"
         >
-          <FaGoogle className="h-4 w-4" />
-          <span>Google</span>
+          <GoogleLogin />
         </motion.button>
 
         <motion.button
@@ -548,7 +675,10 @@ const RegisterForm = () => {
           className="flex h-10 flex-1 items-center justify-center gap-2 rounded-xl border border-white/[0.10] bg-white/[0.025] text-[11px] font-medium text-white/70 transition-all hover:border-logo-cyan/30 hover:bg-logo-cyan/[0.035] hover:text-white"
         >
           <FaGithub className="h-4 w-4" />
-          <span>GitHub</span>
+
+          <span>
+            GitHub
+          </span>
         </motion.button>
       </div>
     </form>

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Eye,
@@ -10,66 +10,43 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { useAuthStore } from "../../services/authService";
+import GoogleLogin from "./GoogleLogin";
 
-import { loginUser } from "../../services/authService";
-import { useAuth } from "../../context/AuthContext";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+
+  const { login, isLoading, error, clearError } = useAuthStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [showPassword, setShowPassword] =
-    useState(false);
-
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
 
-    setError("");
+    clearError();
 
     if (!email.trim()) {
-      setError("Please enter your email address.");
       return;
     }
 
     if (!password) {
-      setError("Please enter your password.");
       return;
     }
 
-    try {
-      setIsLoading(true);
+    const success = await login({
+      email: email.trim(),
+      password,
+    });
 
-      const response = await loginUser({
-        email: email.trim(),
-        password,
-      });
-
-      login(response.token, response.user);
-
+    if (success) {
       navigate("/", {
         replace: true,
       });
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.message ||
-        err?.response?.data?.error ||
-        "Unable to sign in. Please check your credentials and try again.";
-
-      setError(
-        Array.isArray(message)
-          ? message.join(", ")
-          : message
-      );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -97,9 +74,10 @@ const LoginForm = () => {
             id="login-email"
             type="email"
             value={email}
-            onChange={(event) =>
-              setEmail(event.target.value)
-            }
+            onChange={(event) => {
+              setEmail(event.target.value);
+              clearError();
+            }}
             placeholder="you@example.com"
             autoComplete="email"
             disabled={isLoading}
@@ -127,9 +105,10 @@ const LoginForm = () => {
             id="login-password"
             type={showPassword ? "text" : "password"}
             value={password}
-            onChange={(event) =>
-              setPassword(event.target.value)
-            }
+            onChange={(event) => {
+              setPassword(event.target.value);
+              clearError();
+            }}
             placeholder="Enter your password"
             autoComplete="current-password"
             disabled={isLoading}
@@ -141,7 +120,8 @@ const LoginForm = () => {
             onClick={() =>
               setShowPassword((value) => !value)
             }
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8290a8] transition-colors hover:text-white"
+            disabled={isLoading}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8290a8] transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
             aria-label={
               showPassword
                 ? "Hide password"
@@ -162,13 +142,23 @@ const LoginForm = () => {
       ====================================================== */}
 
       <div className="flex justify-end">
-        <button
-          type="button"
-          className="text-[12px] font-medium text-[#1687ff] transition-colors hover:text-[#42a5ff]"
+        <Link
+          to="/forgot-password"
+          aria-disabled={isLoading}
+          onClick={(event) => {
+            if (isLoading) {
+              event.preventDefault();
+            }
+          }}
+          className={`text-[12px] font-medium text-[#1687ff] transition-colors hover:text-[#42a5ff] ${isLoading
+              ? "pointer-events-none opacity-50"
+              : ""
+            }`}
         >
           Forgot Password?
-        </button>
+        </Link>
       </div>
+
 
       {/* =====================================================
           ERROR
@@ -191,16 +181,16 @@ const LoginForm = () => {
           isLoading
             ? undefined
             : {
-                y: -1,
-                scale: 1.005,
-              }
+              y: -1,
+              scale: 1.005,
+            }
         }
         whileTap={
           isLoading
             ? undefined
             : {
-                scale: 0.985,
-              }
+              scale: 0.985,
+            }
         }
         transition={{
           duration: 0.18,
@@ -250,9 +240,7 @@ const LoginForm = () => {
           }}
           className="flex h-11 flex-1 items-center justify-center gap-2 rounded-[9px] border border-[#263b61] bg-[#08142d]/75 text-[13px] text-[#e6ecf7] transition-all hover:border-[#1687ff]/40 hover:bg-[#0b1a38]"
         >
-          <FaGoogle className="h-[17px] w-[17px]" />
-
-          <span>Google</span>
+          <GoogleLogin />
         </motion.button>
 
         <motion.button
@@ -266,7 +254,6 @@ const LoginForm = () => {
           className="flex h-11 flex-1 items-center justify-center gap-2 rounded-[9px] border border-[#263b61] bg-[#08142d]/75 text-[13px] text-[#e6ecf7] transition-all hover:border-[#1687ff]/40 hover:bg-[#0b1a38]"
         >
           <FaGithub className="h-[17px] w-[17px]" />
-
           <span>GitHub</span>
         </motion.button>
       </div>
