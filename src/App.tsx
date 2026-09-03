@@ -19,6 +19,9 @@ import { INTRO_TOTAL_MS } from "./components/layout/navbar/navbar.constants";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "./components/ui/ThemeToggle";
 import TeamProfile from "./components/pages/team/TeamProfile";
+import Verification from "./pages/auth/Verification";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 const Home = lazy(() => import("./pages/Home"));
 
@@ -176,7 +179,7 @@ function App() {
                 element={<Home docked={docked} />}
               />
 
-              
+
               {/* About Company */}
               <Route
                 path="/about-company"
@@ -255,6 +258,18 @@ function App() {
               <Route
                 path="/register"
                 element={<RegisterPage />}
+              />
+              <Route
+                path="/verify-email/:accessToken"
+                element={<Verification />}
+              />
+              <Route
+                path="/forgot-password"
+                element={<ForgotPassword />}
+              />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
               />
 
               {/* Fallback */}
