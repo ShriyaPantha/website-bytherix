@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 
 import NavbarBrand from "./NavbarBrand";
-import DesktopNavigation from "./DesktopNavigation";
-import MobileNavigation from "./MobileNavigation";
+import DesktopNavigation from "./navigation/DesktopNavigation";
+import MobileNavigation from "./navigation/MobileNavigation";
 
 export interface NavbarProps {
   docked: boolean;
@@ -86,21 +86,21 @@ const Navbar = ({ docked }: NavbarProps) => {
       "Digital Products": "/shop",
       Software: "/shop",
 
-      "Web Development": "/services/web-development",
-      "App Development": "/services/app-development",
-      "Game Development": "/services/game-development",
-      "E-commerce Development": "/services/e-commerce-development",
-      "Maintenance & AMC": "/services/maintenance-amc",
-      "AI & Machine Learning": "/services/ai-machine-learning",
-      "Cloud & DevOps": "/services/cloud-devops",
-      "Cyber Security": "/services/cyber-security",
-      "IoT & Robotics": "/services/iot-robotics",
-      "Blockchain & Web3": "/services/blockchain-web3",
-      "Data Analytics & BI": "/services/data-analytics-bi",
-      "UI/UX Design": "/services/ui-ux-design",
-      "Digital Marketing": "/services/digital-marketing",
-      "Graphic Design": "/services/graphic-design",
-      "AR/VR & 3D": "/services/ar-vr-3d",
+      // "Web Development": "/services/web-development",
+      // "App Development": "/services/app-development",
+      // "Game Development": "/services/game-development",
+      // "E-commerce Development": "/services/e-commerce-development",
+      // "Maintenance & AMC": "/services/maintenance-amc",
+      // "AI & Machine Learning": "/services/ai-machine-learning",
+      // "Cloud & DevOps": "/services/cloud-devops",
+      // "Cyber Security": "/services/cyber-security",
+      // "IoT & Robotics": "/services/iot-robotics",
+      // "Blockchain & Web3": "/services/blockchain-web3",
+      // "Data Analytics & BI": "/services/data-analytics-bi",
+      // "UI/UX Design": "/services/ui-ux-design",
+      // "Digital Marketing": "/services/digital-marketing",
+      // "Graphic Design": "/services/graphic-design",
+      // "AR/VR & 3D": "/services/ar-vr-3d",
     };
 
     const pagePath = pageMap[item];
@@ -118,7 +118,8 @@ const Navbar = ({ docked }: NavbarProps) => {
       Courses: "courses",
       "Featured Courses": "courses",
       Certifications: "courses",
-      "Teach on Bytherix": "courses",
+      "Teach on Bytherix": "contact",
+      "Get a Quote": "contact",
     };
 
     const sectionId = sectionMap[item];

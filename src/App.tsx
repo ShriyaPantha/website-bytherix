@@ -15,12 +15,12 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/layout/navbar/Navbar";
-import { INTRO_TOTAL_MS } from "./components/layout/navbar/navbar.constants";
+import { INTRO_TOTAL_MS } from "./components/layout/navbar/constants/navbar.constants";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "./components/ui/ThemeToggle";
-import TeamProfile from "./components/pages/team/TeamProfile";
+import TeamProfile from "./components/pages/team/pages/TeamProfile";
 
-const Home = lazy(() => import("./pages/Home"));
+const Home = lazy(() => import("./components/pages/landing/Home"));
 
 const OurTeam = lazy(
   () => import("./components/pages/team/Team")
@@ -35,11 +35,11 @@ const OurProducts = lazy(
 );
 
 const OurFounder = lazy(
-  () => import("./components/pages/products/OurFounderPage")
+  () => import("./components/pages/products/pages/OurFounderPage")
 );
 
 const OneForAll = lazy(
-  () => import("./components/pages/products/OneForAllPage")
+  () => import("./components/pages/products/pages/OneForAllPage")
 );
 
 const OurPortfolios = lazy(
@@ -55,11 +55,7 @@ const BlogsPage = lazy(
 );
 
 const BlogArticle = lazy(
-  () => import("./components/pages/blogs/BlogArticle")
-);
-
-const DemonHunterPage = lazy(
-  () => import("./pages/DemonHunterPage")
+  () => import("./components/pages/blogs/pages/BlogArticle")
 );
 
 const LoginPage = lazy(
@@ -238,12 +234,6 @@ function App() {
               <Route
                 path="/blogs/:slug"
                 element={<BlogArticle />}
-              />
-
-              {/* Demon Hunter */}
-              <Route
-                path="/demon-hunter"
-                element={<DemonHunterPage />}
               />
 
               {/* Authentication */}

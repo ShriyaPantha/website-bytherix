@@ -6,9 +6,9 @@ import {
   type Variants,
 } from "framer-motion";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { useAuth } from "../../../context/AuthContext";
+// import { useAuth } from "../../../context/AuthContext";
 
 import {
   ChevronDown,
@@ -17,11 +17,11 @@ import {
   Search,
   Heart,
   Bell,
-  UserRound,
-  LogOut,
-  UserCircle2,
-  LogIn,
-  UserPlus,
+  // UserRound,
+  // LogOut,
+  // UserCircle2,
+  // LogIn,
+  // UserPlus,
   Mail,
   Send,
 } from "lucide-react";
@@ -40,7 +40,7 @@ import logo from "../../../assets/logo.png";
 import {
   DROPDOWN_CONTENT,
   NAV_ITEMS,
-} from "./navbar.constants";
+} from "./constants/navbar.constants";
 
 import MegaMenuItem from "./MegaMenuItem";
 
@@ -157,7 +157,7 @@ const childVariants: Variants = {
 type ActionType =
   | "wishlist"
   | "notifications"
-  | "account";
+  // | "account";
 
 /* =========================================================
    SOCIAL LINKS
@@ -212,9 +212,9 @@ const MenuOverlay = ({
   const [newsletterEmail, setNewsletterEmail] =
     useState("");
 
-  const { isAuthenticated, logout } = useAuth();
+  // const { isAuthenticated, logout } = useAuth();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleClose = () => {
     setExpandedItem(null);
@@ -239,16 +239,16 @@ const MenuOverlay = ({
     handleClose();
   };
 
-  const handleAccountNavigate = (path: string) => {
-    handleClose();
-    navigate(path);
-  };
+  // const handleAccountNavigate = (path: string) => {
+  //   handleClose();
+  //   navigate(path);
+  // };
 
-  const handleLogoutClick = () => {
-    logout();
-    handleClose();
-    navigate("/");
-  };
+  // const handleLogoutClick = () => {
+  //   logout();
+  //   handleClose();
+  //   navigate("/");
+  // };
 
   const handleNewsletterSubmit = (
     event: React.FormEvent<HTMLFormElement>,
@@ -472,7 +472,7 @@ const MenuOverlay = ({
 
                 {/* Account */}
 
-                <button
+                {/* <button
                   type="button"
                   aria-label="Account"
                   aria-pressed={
@@ -490,14 +490,14 @@ const MenuOverlay = ({
                     size={19}
                     strokeWidth={1.7}
                   />
-                </button>
+                </button> */}
               </motion.div>
 
               {/* =================================================
                   ACCOUNT DROPDOWN
                   ================================================= */}
 
-              <AnimatePresence initial={false}>
+              {/* <AnimatePresence initial={false}>
                 {selectedAction === "account" && (
                   <motion.div
                     variants={childVariants}
@@ -575,7 +575,7 @@ const MenuOverlay = ({
                     </div>
                   </motion.div>
                 )}
-              </AnimatePresence>
+              </AnimatePresence> */}
             </div>
 
             {/* =================================================
