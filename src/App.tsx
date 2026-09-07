@@ -35,11 +35,11 @@ const OurProducts = lazy(
 );
 
 const OurFounder = lazy(
-  () => import("./components/pages/products/pages/OurFounderPage")
+  () => import("./components/pages/products/pages/our-founder/OurFounderPage")
 );
 
 const OneForAll = lazy(
-  () => import("./components/pages/products/pages/OneForAllPage")
+  () => import("./components/pages/products/pages/one-for-all/OneForAllPage")
 );
 
 const OurPortfolios = lazy(
