@@ -1,18 +1,16 @@
-'use client';
+import StoryHero from "./sections/StoryHero";
+import StoryBeginning from "./sections/StoryBeginning";
+import StoryTurningPoint from "./sections/StoryTurningPoint";
+import StoryPurpose from "./sections/StoryPurpose";
+import StoryJourney from "./sections/StoryJourney";
+import StoryChallenges from "./sections/StoryChallenges";
+import StoryToday from "./sections/StoryToday";
+import StoryBeliefs from "./sections/StoryBeliefs";
+import StoryClosing from "./sections/StoryClosing";
 
-import StoryHero from './sections/StoryHero';
-import StoryBeginning from './sections/StoryBeginning';
-import StoryTurningPoint from './sections/StoryTurningPoint';
-import StoryPurpose from './sections/StoryPurpose';
-import StoryJourney from './sections/StoryJourney';
-import StoryChallenges from './sections/StoryChallenges';
-import StoryToday from './sections/StoryToday';
-import StoryBeliefs from './sections/StoryBeliefs';
-import StoryClosing from './sections/StoryClosing';
-
-export default function OurStoryPage() {
+const OurStoryPage = () => {
   return (
-    <main className="bg-[var(--bg-primary)]">
+    <main className="relative w-full overflow-x-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <StoryHero />
       <StoryBeginning />
       <StoryTurningPoint />
@@ -24,4 +22,6 @@ export default function OurStoryPage() {
       <StoryClosing />
     </main>
   );
-}
+};
+
+export default OurStoryPage;
