@@ -10,7 +10,7 @@ import {
   introLetterVariants,
   INTRO_FINISH,
   dockTransition,
-} from "./navbar.constants";
+} from "./constants/navbar.constants";
 
 interface NavbarBrandProps {
   docked: boolean;
