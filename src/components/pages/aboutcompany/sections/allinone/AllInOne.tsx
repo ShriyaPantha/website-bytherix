@@ -40,8 +40,9 @@ const AllInOne: React.FC = () => {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-white dark:bg-[#08142f] px-4 pt-1 pb-6 sm:px-6 sm:py-14 md:px-8 md:py-16 lg:px-12 xl:px-16 ">
-      
+      className="relative w-full overflow-hidden bg-white px-4 pt-[clamp(22px,3vw,38px)] pb-6 text-[#172867] transition-colors duration-300 dark:bg-[#050A18] dark:text-white md:px-[4vw]"
+    >
+
       {/* Top watermark decorations */}
       <svg
         aria-hidden="true"
@@ -99,29 +100,24 @@ const AllInOne: React.FC = () => {
         />
       </svg>
 
-      <div className="relative z-10 mx-auto w-full max-w-[1200px]">
+      <div className="relative z-10 w-full">
+
         {/* Header */}
-        <header className="mx-auto max-w-[850px] text-center">
-          <h2 className="font-sans text-3xl font-extrabold tracking-tight text-[#102866] dark:text-white sm:text-4xl lg:text-[46px] lg:leading-[1.1] ">
+        <header className="mx-auto w-full max-w-[1100px] text-center">
+          <h2 className="font-sans text-[clamp(38px,5.5vw,78px)] font-bold leading-none tracking-[-0.05em] text-[#172867] dark:text-white">
             All In One Digital Solution
           </h2>
 
-          <p
-            className="mx-auto mt-3 max-w-[850px] text-sm leading-relaxed text-gray-700 dark:text-gray-300 sm:text-base md:text-lg ">
+          <p className="mx-auto mt-[clamp(10px,1.5vw,18px)] w-full max-w-[850px] text-[clamp(13px,1.2vw,17px)] font-normal leading-[1.5] text-[#333333] dark:text-[#D4DAE8]">
             From your very first launch to ongoing growth—
-            <span className="text-[#d69a16]">
-              {" "}everything your brand needs
-            </span>{" "}
-            <span className="block text-[#15945e]">
-              under one roof.
-            </span>
+            <span className="text-[#d69a16]">{" "}everything your brand needs</span>{" "}
+            <span className="block text-[#15945e]">under one roof.</span>
           </p>
         </header>
 
         {/* Cards Section */}
-        <div className="mt-8 sm:mt-10">
-          <div
-            className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-7 xl:gap-10">
+        <div className="mt-[clamp(22px,3vw,30px)] w-full">
+          <div className="hidden w-full grid-cols-2 gap-[clamp(16px,2vw,28px)] md:grid lg:grid-cols-3">
             {visibleServices.map((service) => (
               <ServiceCard key={service.id} service={service} />
             ))}
@@ -135,8 +131,8 @@ const AllInOne: React.FC = () => {
         </div>
 
         {/* Navigation */}
-        <div
-          className="mt-6 flex items-center justify-center gap-2 sm:mt-8 sm:gap-3">
+        <div className="mt-[clamp(16px,2vw,22px)] flex items-center justify-center gap-[clamp(8px,1vw,12px)]">
+
           <button
             type="button"
             onClick={() => {
@@ -144,11 +140,12 @@ const AllInOne: React.FC = () => {
               previousMobileSlide();
             }}
             aria-label="Previous service"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#102866] dark:text-white transition-all duration-200 hover:bg-[#102866]/10 dark:hover:bg-white/10 hover:-translate-x-1 focus:outline-none focus:ring-2 focus:ring-[#102866]/30 dark:focus:ring-white/30 ">
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#172867] transition-all duration-200 hover:-translate-x-1 hover:bg-[#172867]/10 focus:outline-none focus:ring-2 focus:ring-[#172867]/30 dark:text-white dark:hover:bg-white/10 dark:focus:ring-white/30"
+          >
             <ChevronLeft size={22} strokeWidth={2.5} />
           </button>
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-[clamp(6px,0.7vw,10px)] md:flex">
             {Array.from({ length: totalPages }).map((_, index) => (
               <button
                 key={index}
@@ -156,13 +153,11 @@ const AllInOne: React.FC = () => {
                 onClick={() => setActivePage(index)}
                 aria-label={`Go to service group ${index + 1}`}
                 aria-current={activePage === index ? "true" : undefined}
-                className={`h-2 w-2 rounded-full transition-all duration-300
-                  ${
-                    activePage === index
-                      ? "scale-125 bg-[#102866] dark:bg-white"
-                      : "bg-[#102866]/30 dark:bg-white/30 hover:bg-[#102866]/60 dark:hover:bg-white/60"
-                  }
-                `}
+                className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                  activePage === index
+                    ? "scale-125 bg-[#172867] dark:bg-white"
+                    : "bg-[#172867]/30 hover:bg-[#172867]/60 dark:bg-white/30 dark:hover:bg-white/60"
+                }`}
               />
             ))}
           </div>
@@ -175,13 +170,11 @@ const AllInOne: React.FC = () => {
                 onClick={() => setActiveMobileIndex(index)}
                 aria-label={`Go to ${service.title}`}
                 aria-current={activeMobileIndex === index ? "true" : undefined}
-                className={`h-2 w-2 shrink-0 rounded-full transition-all duration-300
-                  ${
-                    activeMobileIndex === index
-                      ? "scale-125 bg-[#102866] dark:bg-white"
-                      : "bg-[#102866]/30 dark:bg-white/30 hover:bg-[#102866]/60 dark:hover:bg-white/60"
-                  }
-                `}
+                className={`h-2 w-2 shrink-0 rounded-full transition-all duration-300 ${
+                  activeMobileIndex === index
+                    ? "scale-125 bg-[#172867] dark:bg-white"
+                    : "bg-[#172867]/30 hover:bg-[#172867]/60 dark:bg-white/30 dark:hover:bg-white/60"
+                }`}
               />
             ))}
           </div>
@@ -193,9 +186,11 @@ const AllInOne: React.FC = () => {
               nextMobileSlide();
             }}
             aria-label="Next service"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#102866] dark:text-white transition-all duration-hover:bg-[#102866]/10 dark:hover:bg-white/10 hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-[#102866]/30 dark:focus:ring-white/30">
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#172867] transition-all duration-200 hover:translate-x-1 hover:bg-[#172867]/10 focus:outline-none focus:ring-2 focus:ring-[#172867]/30 dark:text-white dark:hover:bg-white/10 dark:focus:ring-white/30"
+          >
             <ChevronRight size={22} strokeWidth={2.5} />
           </button>
+
         </div>
       </div>
     </section>
