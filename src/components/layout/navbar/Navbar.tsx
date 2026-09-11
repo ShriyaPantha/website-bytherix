@@ -80,7 +80,7 @@ const Navbar = ({ docked }: NavbarProps) => {
       "Our Team": "/our-team",
       "Our Story": "/our-story",
       "Blogs & Articles": "/blogs",
-      "Our Founder": "/products/our-founder",
+      Founder: "/products/our-founder",
       "One For All Management System": "/products/one-for-all",
       "All Products": "/shop",
       "Digital Products": "/shop",

@@ -28,7 +28,7 @@ import {
   ShoppingBag,
   Sparkles,
   Store,
-  UserRoundCheck,
+  Swords,
   Users,
   Wrench,
 } from "lucide-react";
@@ -145,7 +145,7 @@ export const DROPDOWN_CONTENT: Record<string, DropdownSection[]> = {
       heading: "Products",
       sectionIcon: Box,
       items: [
-        { label: "Our Founder", icon: UserRoundCheck },
+        { label: "Founder", icon: Swords },
       ],
     },
     {
