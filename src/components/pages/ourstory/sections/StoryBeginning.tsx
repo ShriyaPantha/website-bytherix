@@ -11,7 +11,7 @@ const FACTS = [
 
 const StoryBeginning = () => {
   return (
-    <section className="relative bg-[var(--bg-secondary)] px-5 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
+    <section className="relative bg-[var(--bg-secondary)] px-3 py-8 lg:py-8 sm:px-10 sm:py-24 lg:px-8 ">
       <div className="mx-auto max-w-3xl lg:max-w-4xl">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }} className="space-y-10 sm:space-y-12">
           <div className="flex items-center gap-3">

@@ -25,8 +25,8 @@ const STAT_GRADIENT = `
   to-[#B48618]
   bg-clip-text
    dark:from-[#E8D7A8]
-  dark:via-[#6F5A2A]
-  dark:to-[#B48618]
+  dark:via-[#E8D7A8]
+  dark:to-[#E8D7A8]
   text-transparent
 `;
 

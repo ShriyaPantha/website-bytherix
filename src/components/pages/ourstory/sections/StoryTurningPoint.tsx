@@ -6,7 +6,7 @@ const PHILOSOPHY = ["Affordable prices", "Low cost", "High quality", "Because qu
 
 const StoryTurningPoint = () => {
   return (
-    <section className="relative bg-[var(--bg-primary)] px-5 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
+    <section className="relative bg-[var(--bg-primary)] px-5 py-8 lg:py-8 sm:px-10 sm:py-24 lg:px-20 ">
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-[var(--accent-green)]/5 to-[var(--accent-blue)]/5 blur-3xl sm:h-96 sm:w-96" />
 
       <div className="relative z-10 mx-auto max-w-2xl lg:max-w-3xl">

@@ -139,7 +139,7 @@ const OneForAllHero = () => {
   const reducedMotion = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden px-6 pb-20 pt-36 sm:pt-40 lg:pt-48">
+    <section className="relative overflow-hidden px-6 py-8 lg:py-8 sm:py-12">
       {/* Ambient background grid + glow, matches the site's dark-tech hero language */}
       <div
         aria-hidden="true"
