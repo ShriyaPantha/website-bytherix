@@ -43,7 +43,7 @@ const OneForAll = lazy(
 );
 
 const OurPortfolios = lazy(
-  () => import("./components/pages/portfolios/PortfoliosPage")
+  () => import("./components/pages/portfolios/PortfolioPage")
 );
 
 const OurStoryPage = lazy(
