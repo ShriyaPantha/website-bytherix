@@ -23,7 +23,7 @@ const itemVariants: Variants = {
 
 const StoryBeliefs = () => {
   return (
-    <section className="relative bg-[var(--bg-primary)] px-5 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
+    <section className="relative bg-[var(--bg-primary)] px-3 py-8 lg:py-8 sm:px-10 sm:py-24 lg:px-8 ">
       <div className="pointer-events-none absolute right-0 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-gradient-to-l from-[var(--accent-green)]/10 to-transparent blur-3xl sm:h-80 sm:w-80" />
 
       <div className="relative z-10 mx-auto max-w-3xl lg:max-w-5xl">

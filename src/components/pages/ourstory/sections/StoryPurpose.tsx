@@ -22,7 +22,7 @@ const itemVariants: Variants = {
 
 const StoryPurpose = () => {
   return (
-    <section className="relative bg-[var(--bg-secondary)] px-5 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
+    <section className="relative bg-[var(--bg-secondary)] px-5 py-8 lg:py-8 sm:px-10 sm:py-24 lg:px-20 ">
       <div className="mx-auto max-w-3xl lg:max-w-6xl">
         <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} className="space-y-10 sm:space-y-16">
           <motion.div variants={itemVariants} className="space-y-4 sm:space-y-6">

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const StoryClosing = () => {
   return (
-    <section className="relative min-h-screen overflow-hidden px-5 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
+    <section className="relative min-h-screen overflow-hidden px-5 py-8 lg:py-8 sm:px-10 sm:py-24 lg:px-20 ">
       <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-[var(--surface-secondary)] to-[var(--bg-primary)]" />
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-[var(--accent-green)]/10 via-[var(--accent-blue)]/10 to-[var(--accent-green)]/10 blur-3xl sm:h-96 sm:w-96" />
 

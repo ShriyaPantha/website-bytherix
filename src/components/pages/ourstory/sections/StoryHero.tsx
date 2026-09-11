@@ -14,7 +14,7 @@ const itemVariants: Variants = {
 
 const StoryHero = () => {
   return (
-    <section className="relative flex min-h-[90svh] w-full items-center overflow-hidden px-5 py-16 sm:min-h-screen sm:px-10 sm:py-24 lg:px-20 lg:py-32">
+    <section className="relative flex w-full items-center overflow-hidden px-5 py-8 sm:min-h-screen sm:px-10 sm:py-24 lg:px-20 lg:py-8">
       <div className="pointer-events-none absolute -right-24 top-10 h-56 w-56 rounded-full bg-[var(--accent-green)]/10 blur-3xl sm:h-72 sm:w-72 lg:h-96 lg:w-96" />
       <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[var(--accent-blue)]/5 blur-3xl sm:h-80 sm:w-80 lg:h-[26rem] lg:w-[26rem]" />
 
@@ -35,15 +35,15 @@ const StoryHero = () => {
             Three years ago, a group of friends sat together at a tea stall with nothing but ideas, ambition, and each other. Today, they are building Bytherix Technology — a company that started from zero to create opportunities for talented people everywhere.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="pt-4 sm:pt-8">
+          {/* <motion.div variants={itemVariants} className="pt-4 sm:pt-8">
             <span className="inline-flex flex-col items-center gap-2 text-[10px] uppercase tracking-widest text-[var(--text-muted)] sm:text-xs">
               <span>Scroll to discover</span>
               <motion.span animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }} className="text-base sm:text-lg">↓</motion.span>
             </span>
-          </motion.div>
+          </motion.div> */}
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.6 }} className="mt-10 flex justify-center sm:mt-16">
+        {/* <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.6 }} className="mt-10 flex justify-center sm:mt-16">
           <div className="relative h-36 w-36 sm:h-52 sm:w-52 lg:h-64 lg:w-64">
             <div className="absolute inset-0 rounded-full border-2 border-[var(--accent-green)]/30 bg-gradient-to-br from-[var(--accent-green)]/10 to-[var(--accent-blue)]/10" />
             <div className="absolute inset-0 flex items-center justify-center">
@@ -52,7 +52,7 @@ const StoryHero = () => {
             <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity }} className="absolute inset-0 rounded-full border border-[var(--accent-green)]/20" />
             <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 4, repeat: Infinity, delay: 0.2 }} className="absolute inset-2 rounded-full border border-[var(--accent-blue)]/15" />
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );

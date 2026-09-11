@@ -16,7 +16,7 @@ const MILESTONES = [
 
 const StoryJourney = () => {
   return (
-    <section className="relative bg-[var(--bg-primary)] px-5 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
+    <section className="relative bg-[var(--bg-primary)] px-5 py-8 lg:py-8 sm:px-10 sm:py-24 lg:px-20 ">
       <div className="mx-auto max-w-3xl lg:max-w-5xl">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }} className="space-y-10 sm:space-y-12">
           <div className="space-y-3 sm:space-y-4">

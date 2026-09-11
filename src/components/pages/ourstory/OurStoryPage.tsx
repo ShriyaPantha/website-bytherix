@@ -10,7 +10,7 @@ import StoryClosing from "./sections/StoryClosing";
 
 const OurStoryPage = () => {
   return (
-    <main className="relative w-full overflow-x-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="relative w-full overflow-x-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]  px-2 lg:px-4">
       <StoryHero />
       <StoryBeginning />
       <StoryTurningPoint />

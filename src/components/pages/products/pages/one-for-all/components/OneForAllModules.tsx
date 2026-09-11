@@ -16,7 +16,7 @@ const OneForAllModules = () => {
   const active = TABS.find((tab) => tab.key === activeTab) ?? TABS[0];
 
   return (
-    <section className="relative px-6 py-24 sm:py-28">
+    <section className="relative px-6 py-8 lg:py-8 sm:py-12">
       <div className="mx-auto max-w-[1400px]">
         <SectionHeading
           eyebrow="Common foundation, industry-ready"

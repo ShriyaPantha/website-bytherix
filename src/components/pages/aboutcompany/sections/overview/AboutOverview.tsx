@@ -104,17 +104,17 @@ const AboutOverview = ({
           CONTENT
       =================================================== */}
       <div
-        className="
-          relative
-          z-10
-          mx-auto
-          w-full
-          max-w-7xl
-          px-4
-          sm:px-6
-          lg:px-8
-        "
-      >
+  className="
+    relative
+    z-10
+    mx-auto
+    w-full
+    max-w-7xl
+    px-4
+    sm:px-5
+    lg:px-4
+  "
+>
         {/* Heading */}
         <div className="max-w-3xl">
           <h2
@@ -180,8 +180,8 @@ const AboutOverview = ({
   sm:text-base
   lg:text-lg
   dark:from-[#D6D6D6]
-  dark:via-[#9A7B68]
-  dark:to-[#C9A227]
+  dark:via-[#E8D7A8]
+  dark:to-[#E8D7A8]
 "
           >
             Based in Kathmandu, Bytherix Technology is a

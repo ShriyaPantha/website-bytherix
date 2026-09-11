@@ -6,7 +6,7 @@ const CHALLENGES = ["Times when projects failed", "Moments when money was tight"
 
 const StoryChallenges = () => {
   return (
-    <section className="relative overflow-hidden px-5 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
+    <section className="relative overflow-hidden px-3 py-8 lg:py-8 sm:px-10 sm:py-24 lg:px-8 ">
       <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-[var(--surface-secondary)] to-[var(--bg-primary)]" />
       <div className="pointer-events-none absolute -left-24 top-24 h-48 w-48 rounded-full bg-[var(--accent-blue)]/5 blur-3xl sm:h-64 sm:w-64" />
       <div className="pointer-events-none absolute -right-24 bottom-24 h-48 w-48 rounded-full bg-[var(--accent-red)]/5 blur-3xl sm:h-64 sm:w-64" />
